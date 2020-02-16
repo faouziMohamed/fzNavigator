@@ -1,4 +1,4 @@
-# FzNavigator
+# FzNavigator<a href="url"><img src="fznavigator_icones/web.png" align="left" height="48" width="48" ></a>
 A simple web Navigator based on [Chromium](https://wiki.qt.io/QtWebEngine), writed in c++ using [Qt(5.14.1)](https://download.qt.io/official_releases/qt/5.14/5.14.1/) framwork 
 
 ## Requirement 
