@@ -10,7 +10,8 @@ A simple web Navigator based on [Chromium](https://wiki.qt.io/QtWebEngine), writ
    
  - [_Qt Creator 4.11.1 (Comunity)_](https://download.qt.io/official_releases/qtcreator/4.11/4.11.1/)
    
-
+-----------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------
 #### Download Microsoft Windows Sdk Tool
  - For [Windows7](https://www.microsoft.com/en-us/download/details.aspx?id=8279)
  - For [Windows8](https://support.microsoft.com/en-us/help/2780680/an-update-is-available-for-windows-sdk-for-windows-8)
@@ -19,4 +20,4 @@ A simple web Navigator based on [Chromium](https://wiki.qt.io/QtWebEngine), writ
  
  #### QT
  - Download [Qt5 Framwork](https://download.qt.io/official_releases/qt/)
- - Qt[ Documentation](https://doc.qt.io/)
+ - Qt [Documentation](https://doc.qt.io/)
