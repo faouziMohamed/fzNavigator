@@ -1,5 +1,5 @@
 # FzNavigator
-A simple web Navifator based on QWebEngine (Webkit), writed in c++ using Qt(5.14.1) framwork 
+A simple web Navigator based on QWebEngine (Webkit), writed in c++ using [https://download.qt.io/official_releases/qt/5.14/5.14.1/](Qt(5.14.1)) framwork 
 
 ## Requirement 
  - ### On Windows
