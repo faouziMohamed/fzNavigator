@@ -3,7 +3,7 @@
 ######################################################################
 
 TEMPLATE = app
-TARGET = fzNavigator
+TARGET = fzNavigator.pro
 INCLUDEPATH += .
 QT += widgets core webenginewidgets
 

@@ -23,8 +23,42 @@ PrincipalWind::PrincipalWind(QWidget* parent)
     this->resize(1024,650);
 }
 
+/**
+ * @brief PrincipalWind::~PrincipalWind
+ * @brief ___________________________
+ * @brief Destruct every objects
+ */
+PrincipalWind::~PrincipalWind()
+{
+      delete newWindowsAction;
+      delete closeTabAction;
+      delete exitAction;
+      delete newTabAction;
+    delete fileMenu;
+
+    delete  helpMenu;
+
+    if(m_previous!=nullptr)
+    {
+        delete m_previous;
+        delete m_nextPage;
+        delete m_refresh;
+        delete m_stop;
+        delete m_home;
+    }
+
+    if(tabContainer!=nullptr)
+    {
+        delete tabContainer;
+    }
+}
 
 
+/**
+ * @brief PrincipalWind::createMenu
+ * @brief ___________________________________
+ * @brief Adding a menu bar and connections for some action in the main interface
+ */
 void PrincipalWind::createMenu()
 {
     newWindowsAction   = new QAction(tr("New window"),menuBar());
@@ -69,6 +103,11 @@ void PrincipalWind::createShortcut()
     exitAction->setShortcut(QKeySequence("CTRL+Q"));
 }
 
+/**
+ * @brief PrincipalWind::addNewTab
+ * @brief _________________________________
+ * @brief Creating a new instance of Web Engine and adding the widget in a tab in the main window
+ */
 void PrincipalWind::addNewTab()
 {
     WebEngineTools *web = new WebEngineTools(this);
@@ -87,13 +126,17 @@ void PrincipalWind::removeTab()
 }
 void PrincipalWind::removeTab(int index)
 {
-    if(tabContainer->count()<=1)
-        this->close();
+    if(tabContainer->count()<=1)//as the current window is a child of the main
+        this->close();          //window, it will be free by polmorphism
     else
+    {
         tabContainer->removeTab(index);
+        delete currentWindow();
+    }
 }
 void PrincipalWind::newWindow()
 {
+    //nullptr mean that this new window has no parent
     PrincipalWind *window = new PrincipalWind(nullptr);
     window->show();
 }

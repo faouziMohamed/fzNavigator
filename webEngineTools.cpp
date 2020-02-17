@@ -28,12 +28,11 @@ WebEngineTools::~WebEngineTools()
 WebEngineTools *WebEngineTools::newPage(QString url)
 {
 
-    this->setContentsMargins(0,0,0,0);
-    this->setTabShape(QTabWidget::Triangular);
-     QWidget *tab = new QWidget();
-       QVBoxLayout *layout = new QVBoxLayout;
+     QWidget *tab = new QWidget(this);
+     m_webPage = new QWebEngineView;
+
+     QVBoxLayout *layout = new QVBoxLayout(tab);
        layout->setContentsMargins(0,0,0,0);
-          m_webPage = new QWebEngineView;
        layout->addWidget(m_webPage);
      tab->setLayout(layout);
     this->setCentralWidget(tab);
@@ -115,14 +114,6 @@ void WebEngineTools::addToolbar()
       m_refreshAction      = new QAction(tr("Refresh"));
       m_stopAction         = new QAction(tr("Stop"));
       m_homeAction         = new QAction(tr("Home"));
-/*
-      liste.append(m_previousPageAction);
-      liste.append(m_nextPageAction);
-      liste.append(m_refreshAction);
-      liste.append(m_stopAction);
-      liste.append(m_homeAction);
-
-*/
 
     m_toolbar = this->addToolBar(tr("Navigation"));
     m_toolbar->addAction(m_previousPageAction);

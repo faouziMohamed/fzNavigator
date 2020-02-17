@@ -22,8 +22,8 @@ class PrincipalWind : public QMainWindow
 
   public:
     PrincipalWind(QWidget* parent);
+    ~PrincipalWind();
 
-    //QAction *
   private:
     void createShortcut();
     void createMenu();
