@@ -21,3 +21,5 @@ A simple web Navigator based on [Chromium](https://wiki.qt.io/QtWebEngine), writ
  #### QT
  - Download [Qt5 Framwork](https://download.qt.io/official_releases/qt/)
  - Qt [Documentation](https://doc.qt.io/)
+ #### How to Install MSVC (In Qt Creator) ?
+ Here a [thread](https://stackoverflow.com/questions/47773289/debugging-in-qtcreator-using-msvc2017-compiler#answers) on stackoverflow that answer the question and that show how to proceed
