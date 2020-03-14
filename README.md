@@ -11,6 +11,10 @@ A simple web Navigator based on [Chromium](https://wiki.qt.io/QtWebEngine), writ
  - [_Qt Creator 4.11.1 (Comunity)_](https://download.qt.io/official_releases/qtcreator/4.11/4.11.1/)
    
 -----------------------------------------------------------------------------------------
+### Download the binary File 
+- For windows
+  - Download the FzNavigator Installer(Wizzard) [here](https://github.com/faouziMohamed/fzNavigator/releases/tag/V0.2-wizzared)
+  - Download the FzNavigator Without installer (zipped) [here](https://github.com/faouziMohamed/fzNavigator/releases/tag/V0.2-zipped)
 -----------------------------------------------------------------------------------------
 #### Download Microsoft Windows Sdk Tool
  - For [Windows7](https://www.microsoft.com/en-us/download/details.aspx?id=8279)
