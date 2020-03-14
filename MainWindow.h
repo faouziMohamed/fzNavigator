@@ -8,7 +8,7 @@
 #include <QTranslator>
 #include "webEngineTools.h"
 
-class PrincipalWind : public QMainWindow
+class MainWindow : public QMainWindow
 {
     Q_OBJECT
   public slots:
@@ -21,8 +21,8 @@ class PrincipalWind : public QMainWindow
 
 
   public:
-    PrincipalWind(QWidget* parent);
-    ~PrincipalWind();
+    MainWindow(QWidget* parent);
+    ~MainWindow();
 
   private:
     void createShortcut();
@@ -43,7 +43,7 @@ class PrincipalWind : public QMainWindow
     QAction *m_nextPage;
     QAction *m_refresh;
     QAction *m_stop;
-    QAction *m_home;
+    QAction *m_go;
 
     /*Inside the main windows*/
     QTabWidget *tabContainer;

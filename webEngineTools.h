@@ -1,7 +1,7 @@
 #ifndef WEBENGINETOOLS_H
 #define WEBENGINETOOLS_H
 
-
+#define APPDIR QCoreApplication::applicationDirPath()
 #include <QtWidgets>
 #include <QTranslator>
 #include <QMainWindow>
