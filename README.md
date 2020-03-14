@@ -1,8 +1,9 @@
 # FzNavigator<a href="url"><img src="fznavigator_icones/web.png" align="left" height="48" width="48" ></a>
 A simple web Navigator based on [Chromium](https://wiki.qt.io/QtWebEngine), writed in c++ using [Qt(5.14.1)](https://download.qt.io/official_releases/qt/5.14/5.14.1/) framwork  
-> Goto   
+### Sections of this documentation  
  - [Requirement](https://github.com/faouziMohamed/fzNavigator/blob/master/README.md#requirement)  
  - [Download the binary File](https://github.com/faouziMohamed/fzNavigator/blob/master/README.md#download-the-binary-file)  
+ - [Download Microsoft Windows Sdk Tool](https://github.com/faouziMohamed/fzNavigator/blob/master/README.md#download-microsoft-windows-sdk-tool)   
 ## Requirement 
  - ### On Windows
    - [_Qt5_](https://download.qt.io/official_releases/qt/) or higher
@@ -18,7 +19,7 @@ A simple web Navigator based on [Chromium](https://wiki.qt.io/QtWebEngine), writ
   - Download the FzNavigator Installer(Wizzard) [here](https://github.com/faouziMohamed/fzNavigator/releases/tag/V0.2-wizzared)
   - Download the FzNavigator Without installer (zipped) [here](https://github.com/faouziMohamed/fzNavigator/releases/tag/V0.2-zipped)
   
------------------------------------------------------------------------------------------
+
 ## Download Microsoft Windows Sdk Tool
  - For [Windows7](https://www.microsoft.com/en-us/download/details.aspx?id=8279)
  - For [Windows8](https://support.microsoft.com/en-us/help/2780680/an-update-is-available-for-windows-sdk-for-windows-8)
