@@ -1,6 +1,8 @@
 # FzNavigator<a href="url"><img src="fznavigator_icones/web.png" align="left" height="48" width="48" ></a>
-A simple web Navigator based on [Chromium](https://wiki.qt.io/QtWebEngine), writed in c++ using [Qt(5.14.1)](https://download.qt.io/official_releases/qt/5.14/5.14.1/) framwork 
-
+A simple web Navigator based on [Chromium](https://wiki.qt.io/QtWebEngine), writed in c++ using [Qt(5.14.1)](https://download.qt.io/official_releases/qt/5.14/5.14.1/) framwork  
+> Goto   
+ - [Requirement](https://github.com/faouziMohamed/fzNavigator/blob/master/README.md#requirement)  
+ - [Download the binary File](https://github.com/faouziMohamed/fzNavigator/blob/master/README.md#download-the-binary-file)  
 ## Requirement 
  - ### On Windows
    - [_Qt5_](https://download.qt.io/official_releases/qt/) or higher
@@ -11,7 +13,7 @@ A simple web Navigator based on [Chromium](https://wiki.qt.io/QtWebEngine), writ
  - [_Qt Creator 4.11.1 (Comunity)_](https://download.qt.io/official_releases/qtcreator/4.11/4.11.1/)
    
 -----------------------------------------------------------------------------------------
-### Download the binary File 
+## Download the binary File 
 - For windows
   - Download the FzNavigator Installer(Wizzard) [here](https://github.com/faouziMohamed/fzNavigator/releases/tag/V0.2-wizzared)
   - Download the FzNavigator Without installer (zipped) [here](https://github.com/faouziMohamed/fzNavigator/releases/tag/V0.2-zipped)
