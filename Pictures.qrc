@@ -1,0 +1,13 @@
+<RCC>
+    <qresource prefix="/">
+        <file>fznavigator_icones/go.png</file>
+        <file>fznavigator_icones/home.png</file>
+        <file>fznavigator_icones/next.png</file>
+        <file>fznavigator_icones/prev.png</file>
+        <file>fznavigator_icones/refresh.png</file>
+        <file>fznavigator_icones/refreshh.png</file>
+        <file>fznavigator_icones/stop.png</file>
+        <file>fznavigator_icones/web.png</file>
+        <file>lang/fzNavigator_fr.qm</file>
+    </qresource>
+</RCC>

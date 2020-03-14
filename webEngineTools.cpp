@@ -6,7 +6,9 @@ WebEngineTools::WebEngineTools(QWidget* parent)
     addToolbar();
     addStatusBar();
     addShortcut();
-
+    //QWebEnginePage *p;
+    //p->createWindow(QWebEnginePage::WebBrowserTab);
+    //QWebEngineView::createWindow(QWebEnginePage::WebBrowserTab);
     newPage("www.google.fr");
     this->resize(1024,650);
 }
@@ -91,6 +93,8 @@ void WebEngineTools::initLoading()
 void WebEngineTools::loading(int value)
 {
     m_progress->setValue(value);
+    m_refreshAction->setVisible(false);
+    m_stopAction->setVisible(true);
 }
 void WebEngineTools::endOfLoad(bool visible)
 {
@@ -98,6 +102,8 @@ void WebEngineTools::endOfLoad(bool visible)
     {
         m_progress->setVisible(false);
         this->statusBar()->showMessage(tr("Ready"),3000);
+        m_refreshAction->setVisible(true);
+        m_stopAction->setVisible(false);
     }
 }
 void WebEngineTools::changeIcon(const QIcon &icon)
@@ -130,12 +136,12 @@ void WebEngineTools::addToolbar()
     m_submit = new QAction(tr("Go"));
     m_toolbar->addAction(m_submit);
 
-    m_previousPageAction->setIcon(QIcon("fznavigator_icones/prev.png"));
-        m_nextPageAction->setIcon(QIcon("fznavigator_icones/next.png"));
-         m_refreshAction->setIcon(QIcon("fznavigator_icones/refresh.png"));
-            m_homeAction->setIcon(QIcon("fznavigator_icones/home.png"));
-            m_stopAction->setIcon(QIcon("fznavigator_icones/stop.png"));
-                m_submit->setIcon(QIcon("fznavigator_icones/go.png"));
+    m_previousPageAction->setIcon(QIcon(":/fznavigator_icones/prev.png"));
+        m_nextPageAction->setIcon(QIcon(":/fznavigator_icones/next.png"));
+         m_refreshAction->setIcon(QIcon(":/fznavigator_icones/refresh.png"));
+            m_homeAction->setIcon(QIcon(":/fznavigator_icones/home.png"));
+            m_stopAction->setIcon(QIcon(":/fznavigator_icones/stop.png"));
+                m_submit->setIcon(QIcon(":/fznavigator_icones/go.png"));
 }
 void WebEngineTools::loadUrl()
 {

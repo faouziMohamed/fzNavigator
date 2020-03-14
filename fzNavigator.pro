@@ -3,15 +3,20 @@
 ######################################################################
 
 TEMPLATE = app
-TARGET = fzNavigator.pro
+TARGET = fzNavigator
 INCLUDEPATH += .
-QT += widgets core webenginewidgets
+QT += core webenginewidgets gui
 
 # Input
 SOURCES += main.cpp \
-    Principalwind.cpp \
+    MainWindow.cpp \
     webEngineTools.cpp
 
 HEADERS += \
-    Principalwind.h \
+    MainWindow.h \
     webEngineTools.h
+TRANSLATIONS = fzNavigator_fr.ts
+
+RESOURCES += \
+    Pictures.qrc
+RC_ICONS = web.ico
