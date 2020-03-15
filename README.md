@@ -1,5 +1,5 @@
 # FzNavigator<a href="url"><img src="fznavigator_icones/web.png" align="left" height="48" width="48" ></a>
-[![GitHub license](https://img.shields.io/github/license/faouziMohamed/fzNavigator)](https://github.com/faouziMohamed/fzNavigator/blob/master/LICENSE)    [![GitHub stars](https://img.shields.io/github/stars/faouziMohamed/fzNavigator)](https://github.com/faouziMohamed/fzNavigator/stargazers)     [![GitHub issues](https://img.shields.io/github/issues/faouziMohamed/fzNavigator)](https://github.com/faouziMohamed/fzNavigator/issues)
+[![GitHub license](https://img.shields.io/github/license/faouziMohamed/fzNavigator)](https://github.com/faouziMohamed/fzNavigator/blob/master/LICENSE)    [![GitHub stars](https://img.shields.io/github/stars/faouziMohamed/fzNavigator)](https://github.com/faouziMohamed/fzNavigator/stargazers)     [![GitHub issues](https://img.shields.io/github/issues/faouziMohamed/fzNavigator)](https://github.com/faouziMohamed/fzNavigator/issues)   [![Build Status](https://travis-ci.com/faouziMohamed/compilation.svg?branch=master)](https://travis-ci.com/faouziMohamed/compilation)
 
 A simple web Navigator based on [Chromium](https://wiki.qt.io/QtWebEngine), writed in c++ using [Qt(5.14.1)](https://download.qt.io/official_releases/qt/5.14/5.14.1/) framwork  
 ### Sections of this documentation  
