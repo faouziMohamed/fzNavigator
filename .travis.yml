@@ -1,3 +1,9 @@
 langage: cpp
-cpp:
- - "stable"
+"cpp": [
+    "stable"
+  ],
+  "language": "cpp",
+  "os": [
+    "linux"
+  ],
+  "dist": "xenial"
