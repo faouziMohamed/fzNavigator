@@ -1,1 +1,8 @@
 langage: cpp
+{
+  "language": "cpp",
+  "os": [
+    "linux"
+  ],
+  "dist": "xenial"
+}
