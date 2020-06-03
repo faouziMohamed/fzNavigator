@@ -6,7 +6,7 @@ A simple web Navigator based on [Chromium](https://wiki.qt.io/QtWebEngine), writ
  - [Requirement](https://github.com/faouziMohamed/fzNavigator/blob/master/README.md#requirement)  
  - [Download the binary File](https://github.com/faouziMohamed/fzNavigator/blob/master/README.md#download-the-binary-file)  
  - [Download Microsoft Windows Sdk Tool](https://github.com/faouziMohamed/fzNavigator/blob/master/README.md#download-microsoft-windows-sdk-tool)   
-## Requirement 
+## Requirements 
  - ### On Windows
    - [_Qt5_](https://download.qt.io/official_releases/qt/) or higher
    - MSVC2017 ([Microsoft windows sdk](https://developer.microsoft.com/en-US/windows/downloads/windows-10-sdk/))or higher (_The WebEngine does compile only with microsoft's compiler_), it doesn't compile with Mingw compiler.
