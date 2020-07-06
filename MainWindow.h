@@ -25,8 +25,17 @@ class MainWindow : public QMainWindow
     ~MainWindow();
 
   private:
-    void createShortcut();
+    void setBehaviorForTabs();
+    void createInitialTab();
+    void applyAndFinalizeTabsConfigurationsToTheCentralView();
+
+    void creatingTheMenuFileShortcutAndConnection();
+    void creatingTheMenuFileItems();
     void createMenu();
+    void addActionToTheMenu(QString name, QMenu *menuHeader, QList<QAction *> menuActions);
+    void createTheMenuFile();
+    void createTheMenuNavigation();
+    void createTheMenuHelp();
     WebEngineTools *currentWindow();
     QWebEngineView *currentPage();
 

@@ -1,26 +1,13 @@
 #include "MainWindow.h"
+#include <qdebug.h>
 
-/**
- * @brief MainWindow::MainWindow
- * @brief Principal constructor
- */
 MainWindow::MainWindow(QWidget* parent)
     :QMainWindow(parent)
 {
-    //WebEngineTools *page = new WebEngineTools;
     createMenu();
-
-    tabContainer = new QTabWidget();
-        tabContainer->setTabShape(QTabWidget::Triangular);
-        tabContainer->setTabsClosable(true);
-        tabContainer->setMovable(true);
-    //tabContainer->addTab(page->newPage(tr("www.google.fr")),tr("New Tab"));
-    addNewTab();
-    connect(tabContainer,SIGNAL(tabCloseRequested(int)),this,SLOT(removeTab(int)));
-    connect(tabContainer,SIGNAL(currentChanged(int)),this,SLOT(changeTab(int)));
-    setCentralWidget(tabContainer);
-    setWindowIcon(QIcon(":/fznavigator_icones/web.png"));
-    this->resize(1024,650);
+    setBehaviorForTabs();
+    createInitialTab();
+    applyAndFinalizeTabsConfigurationsToTheCentralView();
 }
 
 /**
@@ -53,54 +40,80 @@ MainWindow::~MainWindow()
     }
 }
 
-
-/**
- * @brief MainWindow::createMenu
- * @brief ___________________________________
- * @brief Adding a menu bar and connections for some action in the main interface
- */
-void MainWindow::createMenu()
-{
-    newWindowsAction   = new QAction(tr("New window"),menuBar());
-    exitAction         = new QAction(tr("Quit"),menuBar());
-    newTabAction       = new QAction(tr("New tab"),menuBar());
-    closeTabAction     = new QAction(tr("Close tab"),menuBar());
-
-    fileMenu = menuBar()->addMenu(tr("File"));
-      fileMenu->addAction(newWindowsAction);
-      fileMenu->addAction(closeTabAction);
-      fileMenu->addAction(newTabAction);
-      fileMenu->addAction(exitAction);
-
-    m_previous = new QAction(QIcon(":/fznavigator_icones/prev.png"),tr("Back"));
-    m_nextPage = new QAction(QIcon(":/fznavigator_icones/next.png"),tr("Forward"));
-    m_refresh  = new QAction(QIcon(":/fznavigator_icones/refresh.png"),tr("Reload"));
-    m_stop     = new QAction(QIcon(":/fznavigator_icones/stop.png"),tr("Stop"));
-    m_go       = new QAction(QIcon(":/fznavigator_icones/go.png"),tr("Go"));
-
-    navigationMenu = menuBar()->addMenu(tr("Navigation"));
-    navigationMenu->addAction(m_previous);
-    navigationMenu->addAction(m_nextPage);
-    navigationMenu->addAction(m_refresh);
-    navigationMenu->addAction(m_stop);
-    navigationMenu->addAction(m_go);
-
-    helpMenu = menuBar()->addMenu(tr("Help"));
-
-    createShortcut();
-
-   menuBar()->setVisible(true);
-   connect(newWindowsAction,SIGNAL(triggered()),this,SLOT(newWindow()));
-   connect(closeTabAction,SIGNAL(triggered()),this,SLOT(removeTab()));
-   connect(newTabAction,SIGNAL(triggered()),this,SLOT(addNewTab()));
-   connect(exitAction,SIGNAL(triggered()),this,SLOT(close()));
+void MainWindow::setBehaviorForTabs(){
+    tabContainer = new QTabWidget();
+    tabContainer->setTabShape(QTabWidget::Triangular);
+    tabContainer->setTabsClosable(true);
+    tabContainer->setMovable(true);
+    connect(tabContainer,SIGNAL(tabCloseRequested(int)),this,SLOT(removeTab(int)));
+    connect(tabContainer,SIGNAL(currentChanged(int)),this,SLOT(changeTab(int)));
 }
-void MainWindow::createShortcut()
+void MainWindow::createInitialTab(){
+    addNewTab();
+}
+void MainWindow::applyAndFinalizeTabsConfigurationsToTheCentralView(){
+    setCentralWidget(tabContainer);
+    setWindowIcon(QIcon(":/fznavigator_icones/web.png"));
+    this->resize(1024,650);
+}
+void MainWindow::addActionToTheMenu(QString name, QMenu* menuHeader,QList<QAction *> menuActions){
+
+    menuHeader = menuBar()->addMenu(tr(name.toStdString().data()));
+    for (int i=0;i<menuActions.size();++i) {
+        menuHeader->addAction(menuActions.at(i));
+    }
+}
+void MainWindow::creatingTheMenuFileShortcutAndConnection()
 {
     newWindowsAction->setShortcut(QKeySequence(QKeySequence::New));
     closeTabAction->setShortcut(QKeySequence("CTRL+W"));
     newTabAction->setShortcut(QKeySequence(QKeySequence::AddTab));
     exitAction->setShortcut(QKeySequence("CTRL+Q"));
+
+    connect(newWindowsAction,SIGNAL(triggered()),this,SLOT(newWindow()));
+    connect(closeTabAction,SIGNAL(triggered()),this,SLOT(removeTab()));
+    connect(newTabAction,SIGNAL(triggered()),this,SLOT(addNewTab()));
+    connect(exitAction,SIGNAL(triggered()),this,SLOT(close()));
+}
+void MainWindow::creatingTheMenuFileItems(){
+    fileMenu = menuBar()->addMenu(tr("File"));
+    newWindowsAction   = new QAction(tr("New window"), menuBar());
+    exitAction         = new QAction(tr("Quit"),       menuBar());
+    newTabAction       = new QAction(tr("New tab"),    menuBar());
+    closeTabAction     = new QAction(tr("Close tab"),  menuBar());
+
+    fileMenu->addAction(newWindowsAction);
+    fileMenu->addAction(exitAction);
+    fileMenu->addAction(newTabAction);
+    fileMenu->addAction(closeTabAction);
+}
+void MainWindow::createTheMenuFile(){
+    creatingTheMenuFileItems();
+    creatingTheMenuFileShortcutAndConnection();
+}
+void MainWindow::createTheMenuNavigation(){
+    navigationMenu = menuBar()->addMenu(tr("File"));
+    m_previous = new QAction(QIcon(":/fznavigator_icones/prev.png"),   tr("Back"));
+    m_nextPage = new QAction(QIcon(":/fznavigator_icones/next.png"),   tr("Forward"));
+    m_refresh  = new QAction(QIcon(":/fznavigator_icones/refresh.png"),tr("Reload"));
+    m_stop     = new QAction(QIcon(":/fznavigator_icones/stop.png"),   tr("Stop"));
+    m_go       = new QAction(QIcon(":/fznavigator_icones/go.png"),     tr("Go"));
+
+    navigationMenu->addAction(m_previous);
+    navigationMenu->addAction(m_nextPage);
+    navigationMenu->addAction(m_refresh);
+    navigationMenu->addAction(m_stop);
+    navigationMenu->addAction(m_go);
+}
+void MainWindow::createTheMenuHelp(){
+    helpMenu = menuBar()->addMenu(tr("Help"));
+}
+void MainWindow::createMenu()
+{
+    createTheMenuFile();
+    createTheMenuNavigation();
+    createTheMenuHelp();
+    menuBar()->setVisible(true);
 }
 
 /**
@@ -141,7 +154,6 @@ void MainWindow::newWindow()
     window->show();
 }
 
-
 WebEngineTools *MainWindow::currentWindow()
 {
     return (WebEngineTools*)(tabContainer->currentWidget());
@@ -158,7 +170,6 @@ void MainWindow::changeTab(int)
    else
         this->setWindowTitle(title + tr(" - fzNavigator"));
 }
-
 void MainWindow::changeTitle(QString title)
 {
     //truncate the title if it too long
