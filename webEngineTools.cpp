@@ -1,15 +1,16 @@
 #include "webEngineTools.h"
 
-WebEngineTools::WebEngineTools(QWidget* parent)
+WebEngineTools::WebEngineTools(QWidget* parent, QString url)
     :QMainWindow(parent)
 {
     addToolbar();
     addStatusBar();
     addShortcut();
-    //QWebEnginePage *p;
-    //p->createWindow(QWebEnginePage::WebBrowserTab);
-    //QWebEngineView::createWindow(QWebEnginePage::WebBrowserTab);
-    newPage("www.google.fr");
+
+    if(url.isEmpty ()){
+        url = "http://www.duckduckgo.com/";
+    }
+    newPage(url);
     this->resize(1024,650);
 }
 
@@ -29,7 +30,6 @@ WebEngineTools::~WebEngineTools()
 
 WebEngineTools *WebEngineTools::newPage(QString url)
 {
-
      QWidget *tab = new QWidget(this);
      m_webPage = new QWebEngineView;
 
@@ -221,4 +221,6 @@ void WebEngineTools::stop()
 {
    this->m_webPage->stop();
 }
-
+QWebEngineView* WebEngineTools::getWebEngine(){
+    return this->centralWidget()->findChild<QWebEngineView*>();
+}

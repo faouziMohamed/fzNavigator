@@ -1,3 +1,4 @@
+/**This class is used to wrap the web engine for every tab in the browser**/
 #ifndef WEBENGINETOOLS_H
 #define WEBENGINETOOLS_H
 
@@ -27,16 +28,15 @@ class WebEngineTools: public QMainWindow
   public:
 
 
-    WebEngineTools(QWidget *parent);
+    WebEngineTools(QWidget *parent, QString url="");
     ~WebEngineTools();
 
     WebEngineTools* newPage(QString url);
     const QIcon &icon() {return m_icon ;}
-          QString &title(){return m_title;}
+    QString &title(){return m_title;}
+    QWebEngineView *getWebEngine();
 
-        //  QVector<QAction*> allAction(){return liste;}
-
-  private:
+private:
     QString const defaultHomePage = "http://www.duckduckgo.com/";
     QString         m_title;
     QIcon           m_icon;

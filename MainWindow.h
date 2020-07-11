@@ -6,6 +6,7 @@
 #include <QtWidgets>
 #include <QWebEngineView>
 #include <QTranslator>
+#include <cstdarg>
 #include "webEngineTools.h"
 
 class MainWindow : public QMainWindow
@@ -15,27 +16,35 @@ class MainWindow : public QMainWindow
     void addNewTab();
     void removeTab();
     void removeTab(int);
-    void newWindow();
-    void changeTab(int);
-    void changeTitle(QString);
+    void openNewWindow();
+    void switchToAnOtherTab(int);
+    void changeTheWindowTitle(QString);
 
 
   public:
     MainWindow(QWidget* parent);
+    int numberOfTab();
+    QWebEngineView* newTab();
+    void closeThisWindow();
     ~MainWindow();
 
-  private:
+
+private:
     void setBehaviorForTabs();
     void createInitialTab();
     void applyAndFinalizeTabsConfigurationsToTheCentralView();
+    bool currentActionIsNotNull(QAction *action);
 
     void creatingTheMenuFileShortcutAndConnection();
     void creatingTheMenuFileItems();
     void createMenu();
-    void addActionToTheMenu(QString name, QMenu *menuHeader, QList<QAction *> menuActions);
+    void addMultipleActionsToTheMenu(QString name, QMenu *menuHeader, QList<QAction *> menuActions);
+    void addMultipleActionsToTheMenu(QMenu *menuHeader, QList<QAction *> menuActions);
+    void addMultipleActionsToTheMenu(QMenu *menuHeader,...);
     void createTheMenuFile();
     void createTheMenuNavigation();
     void createTheMenuHelp();
+    WebEngineTools *newWebEngine(WebEngineTools *webEngineContainer);
     WebEngineTools *currentWindow();
     QWebEngineView *currentPage();
 
@@ -48,11 +57,11 @@ class MainWindow : public QMainWindow
     QMenu *helpMenu;
 
 
-    QAction *m_previous;
-    QAction *m_nextPage;
-    QAction *m_refresh;
-    QAction *m_stop;
-    QAction *m_go;
+    QAction *m_previousAction;
+    QAction *m_nextPageAction;
+    QAction *m_refreshAction;
+    QAction *m_stopAction;
+    QAction *m_goAction;
 
     /*Inside the main windows*/
     QTabWidget *tabContainer;
