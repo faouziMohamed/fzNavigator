@@ -14,20 +14,6 @@ WebEngineTools::WebEngineTools(QWidget* parent, QString url)
     this->resize(1024,650);
 }
 
-WebEngineTools::~WebEngineTools()
-{
-    delete m_webPage;
-    delete m_toolbar;
-    delete m_homeAction;
-    delete m_submit;
-    delete m_urlField;
-    delete m_previousPageAction;
-    delete m_nextPageAction;
-    delete m_refreshAction;
-    delete m_stopAction;
-    delete m_progress;
-}
-
 WebEngineTools *WebEngineTools::newPage(QString url)
 {
      QWidget *tab = new QWidget(this);
@@ -223,4 +209,18 @@ void WebEngineTools::stop()
 }
 QWebEngineView* WebEngineTools::getWebEngine(){
     return this->centralWidget()->findChild<QWebEngineView*>();
+}
+
+WebEngineTools::~WebEngineTools()
+{
+    delete m_webPage;
+    delete m_toolbar;
+    delete m_homeAction;
+    delete m_submit;
+    delete m_urlField;
+    delete m_previousPageAction;
+    delete m_nextPageAction;
+    delete m_refreshAction;
+    delete m_stopAction;
+    delete m_progress;
 }
