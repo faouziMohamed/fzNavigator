@@ -29,6 +29,7 @@ before_script:
 - QTDIR="/opt/qt514"
 - PATH="$QTDIR/bin:$PATH"
 - source /opt/qt514/bin/qt514-env.sh
+- ln -sf /usr/bin/x86_64-linux-gnu-ld.gold /usr/bin/ld
 
 script:
 - qmake
