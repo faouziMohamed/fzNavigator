@@ -13,17 +13,17 @@ class WebEngineTools: public QMainWindow
   Q_OBJECT
   public slots:
     void changeUrl(QUrl);
-    void changeTitle(QString);
-    void initLoading();
+    void changeThisWindowTitle(QString);
     void loadUrl();
-    void loading(int);
-    void endOfLoad(bool);
-    void changeIcon(const QIcon&);
-    void previous();
-    void next();
-    void refresh();
-    void goHome();
-    void stop();
+    void atTheStartOfPageLoading();
+    void whilePageIsLoading(int);
+    void atTheEndOfPageLoading(bool);
+    void changeWindowFavcon(const QIcon&);
+    void previousPage();
+    void nextPage();
+    void refreshPage();
+    void goToHomePage();
+    void stopPageLoading();
 
   public:
 
@@ -51,20 +51,24 @@ private:
     QAction        *m_stopAction;
     QProgressBar   *m_progress;
 
+    void addToolbar();
+    void addStatusBar();
+    void configureToolbarActionsShortcuts();
+    void configureToolbarActionsConnections();
+    void configureOppeningWindowSize();
+    void initialURLLoad(QString url);
+
     void addActionsToTheToolbar(QToolBar *menuOfActions...);
     void insertActionInToTheToolbar();
     void initialiseMainToolbarAction();
     void insertURLFIeldInToTheToolbar();
     void linkToolbarActionsWithTheirIcons();
 
-    void addToolbar();
-    void addStatusBar();
-    void addShortcut();
     QWidget *createWebPageLayout();
     QString preconfigureUrl(QString url);
     void configureEngineConnection();
     void configureURLField();
 };
 bool currentActionIsNotNull(QAction *action);
-
+bool isNotAnUrlSyntaxe(QString url);
 #endif // WEBENGINETOOLS_H
