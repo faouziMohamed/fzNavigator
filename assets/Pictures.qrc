@@ -8,5 +8,7 @@
         <file>fznavigator_icones/refreshh.png</file>
         <file>fznavigator_icones/stop.png</file>
         <file>fznavigator_icones/web.png</file>
+        <file>lang/fzNavigator_fr.qm</file>
+        <file>lang/fzNavigator_fr.ts</file>
     </qresource>
 </RCC>
