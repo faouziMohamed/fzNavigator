@@ -1,7 +1,6 @@
 #ifndef PRINCIPALWIND_H
 #define PRINCIPALWIND_H
 
-
 #include <QMainWindow>
 #include <QtWidgets>
 #include <QWebEngineView>
@@ -39,8 +38,6 @@ private:
     void createConnectionInMenuFile();
     void creatingTheMenuFileItems();
     void createMenu();
-    void addMultipleActionsToTheMenu(QString name, QMenu *menuHeader, QList<QAction *> menuActions);
-    void addMultipleActionsToTheMenu(QMenu *menuHeader, QList<QAction *> menuActions);
     void addMultipleActionsToTheMenu(QMenu *menuHeader,...);
     void createTheMenuFile();
     void createTheMenuNavigation();

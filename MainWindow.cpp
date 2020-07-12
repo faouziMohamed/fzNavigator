@@ -1,5 +1,4 @@
 #include "MainWindow.h"
-#include <qdebug.h>
 
 MainWindow::MainWindow(QWidget* parent)
     :QMainWindow(parent)
@@ -69,9 +68,6 @@ void MainWindow::creatingTheMenuFileItems(){
                                  exitAction, newTabAction,
                                  closeTabAction,nullptr);
 }
-/**
- * This function get variable number of arguments using the C syntax
-**/
 void MainWindow::addMultipleActionsToTheMenu(QMenu* menuOfActions,...)
 {
     va_list listOfvariableArguments;
@@ -122,24 +118,21 @@ void MainWindow::removeTab(int currentTab)
         closeThisWindow();
     else
     {
-        if(currentTab==-1){
+        if(currentTab ==-1){
             currentTab = tabContainer->currentIndex();
         }
         tabContainer->removeTab(currentTab);
     }
 }
-
 void MainWindow::openNewWindow()
 {
     //nullptr mean that this new window has no parent
     MainWindow *window = new MainWindow(nullptr);
     window->show();
 }
-
 void MainWindow::closeThisWindow(){
     this->close();
 }
-
 WebEngineTools *MainWindow::currentWindow()
 {
     return (WebEngineTools*)(tabContainer->currentWidget());
@@ -148,7 +141,6 @@ QWebEngineView *MainWindow::currentPage()
 {
     return currentWindow()->centralWidget()->findChild<QWebEngineView *>();
 }
-
 int MainWindow::numberOfTab(){
     return tabContainer->count();
 }
@@ -162,43 +154,22 @@ void MainWindow::switchToAnOtherTab(int)
 }
 void MainWindow::changeTheWindowTitle(QString title)
 {
-    //truncate the title if it too long
-    QString newTitle = title;
-    if(title.size() > 25)
-    {
-        newTitle = title.left(25) + "...";
-    }
+    QString newTitle = title.left(25);
+    if(title.size() > 25) {newTitle += "...";}
     int index = tabContainer->currentIndex();
-
     tabContainer->setTabText(index,newTitle);
     this->setWindowTitle(newTitle);
 }
 
-
-
-
-
-/*Automated function to add Actions to the main Menu*/
-void MainWindow::addMultipleActionsToTheMenu(QString name, QMenu* menuOfActions,
-                                             QList<QAction *> menuActions)
-{
-    menuOfActions = menuBar()->addMenu(tr(name.toStdString().data()));
-    for (int i=0;i<menuActions.size();++i) {
-        menuOfActions->addAction(menuActions.at(i));
-    }
-}
-
 MainWindow::~MainWindow()
 {
-      delete newWindowsAction;
-      delete closeTabAction;
-      delete exitAction;
-      delete newTabAction;
+    delete newWindowsAction;
+    delete closeTabAction;
+    delete exitAction;
+    delete newTabAction;
     delete fileMenu;
-
     delete  helpMenu;
-
-    if(m_previousAction!=nullptr)
+    if(m_previousAction != nullptr)
     {
         delete m_previousAction;
         delete m_nextPageAction;
@@ -206,8 +177,7 @@ MainWindow::~MainWindow()
         delete m_stopAction;
         delete m_goAction;
     }
-
-    if(tabContainer!=nullptr)
+    if(tabContainer != nullptr)
     {
         delete tabContainer;
     }
