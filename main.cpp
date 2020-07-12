@@ -1,7 +1,6 @@
 #include <QApplication>
 #include "src/header/MainWindow.h"
 #include <QTranslator>
-//#include "webEngineTools.h"
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);

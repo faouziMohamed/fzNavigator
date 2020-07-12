@@ -16,10 +16,8 @@ HEADERS += \
     src/header/MainWindow.h\
     src/header/webEngineTools.h
 
-TRANSLATIONS = \
-    assets/lang/fzNavigator_fr.ts
+TRANSLATIONS = assets/lang/fzNavigator_fr.ts
 
-RESOURCES += \
-    assets/Pictures.qrc
+RESOURCES += assets/Pictures.qrc
 RC_ICONS = assets/web.ico
 
