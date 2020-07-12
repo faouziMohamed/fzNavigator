@@ -32,5 +32,5 @@ before_script:
 - source /opt/qt514/bin/qt514-env.sh
 
 script:
-- qmake
+#- qmake
 - make
