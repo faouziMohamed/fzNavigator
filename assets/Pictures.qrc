@@ -10,5 +10,6 @@
         <file>fznavigator_icones/web.png</file>
         <file>lang/fzNavigator_fr.qm</file>
         <file>lang/fzNavigator_fr.ts</file>
+        <file>web.ico</file>
     </qresource>
 </RCC>

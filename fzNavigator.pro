@@ -15,6 +15,7 @@ SOURCES += main.cpp \
 HEADERS += \
     src/header/MainWindow.h\
     src/header/webEngineTools.h
+
 TRANSLATIONS = \
     assets/lang/fzNavigator_fr.ts
 
