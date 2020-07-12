@@ -14,8 +14,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
   public slots:
     void addNewTab();
-    void removeTab();
-    void removeTab(int);
+    void removeTab(int currentTab = -1);
     void openNewWindow();
     void switchToAnOtherTab(int);
     void changeTheWindowTitle(QString);
@@ -25,6 +24,7 @@ class MainWindow : public QMainWindow
     MainWindow(QWidget* parent);
     int numberOfTab();
     QWebEngineView* newTab();
+    void switchToTheTabNumber(int indexOfTab);
     void closeThisWindow();
     ~MainWindow();
 
@@ -35,7 +35,8 @@ private:
     void applyAndFinalizeTabsConfigurationsToTheCentralView();
     bool currentActionIsNotNull(QAction *action);
 
-    void creatingTheMenuFileShortcutAndConnection();
+    void addShortcutInMenuFile();
+    void createConnectionInMenuFile();
     void creatingTheMenuFileItems();
     void createMenu();
     void addMultipleActionsToTheMenu(QString name, QMenu *menuHeader, QList<QAction *> menuActions);
@@ -44,7 +45,6 @@ private:
     void createTheMenuFile();
     void createTheMenuNavigation();
     void createTheMenuHelp();
-    WebEngineTools *newWebEngine(WebEngineTools *webEngineContainer);
     WebEngineTools *currentWindow();
     QWebEngineView *currentPage();
 

@@ -9,7 +9,6 @@ MainWindow::MainWindow(QWidget* parent)
     createInitialTab();
     applyAndFinalizeTabsConfigurationsToTheCentralView();
 }
-
 void MainWindow::createMenu()
 {
     createTheMenuFile();
@@ -17,7 +16,6 @@ void MainWindow::createMenu()
     createTheMenuHelp();
     menuBar()->setVisible(true);
 }
-
 void MainWindow::setBehaviorForTabs()
 {
     tabContainer = new QTabWidget();
@@ -25,12 +23,12 @@ void MainWindow::setBehaviorForTabs()
     tabContainer->setTabsClosable(true);
     tabContainer->setMovable(true);
     connect(tabContainer,
-            SIGNAL(tabCloseRequested(int)),
-            this, SLOT(removeTab(int)));
+            SIGNAL(tabCloseRequested(int)),this,
+            SLOT(removeTab(int)));
 
     connect(tabContainer,
-            SIGNAL(currentChanged(int)),
-            this, SLOT(switchToAnOtherTab(int)));
+            SIGNAL(currentChanged(int)), this,
+            SLOT(switchToAnOtherTab(int)));
 }
 void MainWindow::createInitialTab(){
     addNewTab();
@@ -40,11 +38,10 @@ void MainWindow::applyAndFinalizeTabsConfigurationsToTheCentralView(){
     setWindowIcon(QIcon(":/fznavigator_icones/web.png"));
     this->resize(1024,650);
 }
-
-/*Function located on createMenu() Function*/
 void MainWindow::createTheMenuFile(){
     creatingTheMenuFileItems();
-    creatingTheMenuFileShortcutAndConnection();
+    addShortcutInMenuFile();
+    createConnectionInMenuFile();
 }
 void MainWindow::createTheMenuNavigation(){
     navigationMenu = menuBar()->addMenu(tr("Navigation"));
@@ -61,7 +58,6 @@ void MainWindow::createTheMenuNavigation(){
 void MainWindow::createTheMenuHelp(){
     helpMenu = menuBar()->addMenu(tr("Help"));
 }
-
 void MainWindow::creatingTheMenuFileItems(){
     fileMenu = menuBar()->addMenu(tr("File"));
     newWindowsAction   = new QAction(tr("New window"), menuBar());
@@ -69,12 +65,10 @@ void MainWindow::creatingTheMenuFileItems(){
     newTabAction       = new QAction(tr("New tab"),    menuBar());
     closeTabAction     = new QAction(tr("Close tab"),  menuBar());
 
-    addMultipleActionsToTheMenu (fileMenu,
-                        newWindowsAction,
-                        exitAction,
-                        newTabAction,closeTabAction,nullptr);
+    addMultipleActionsToTheMenu (fileMenu, newWindowsAction,
+                                 exitAction, newTabAction,
+                                 closeTabAction,nullptr);
 }
-
 /**
  * This function get variable number of arguments using the C syntax
 **/
@@ -90,60 +84,48 @@ void MainWindow::addMultipleActionsToTheMenu(QMenu* menuOfActions,...)
     }
     va_end(listOfvariableArguments);
 }
-
 bool MainWindow::currentActionIsNotNull(QAction *action){
     return action != nullptr;
 }
-
-void MainWindow::creatingTheMenuFileShortcutAndConnection()
+void MainWindow::createConnectionInMenuFile()
 {
-    newWindowsAction->setShortcut(QKeySequence(QKeySequence::New));
-    closeTabAction->setShortcut(QKeySequence("CTRL+W"));
-    newTabAction->setShortcut(QKeySequence(QKeySequence::AddTab));
-    exitAction->setShortcut(QKeySequence("CTRL+Q"));
-
     connect(newWindowsAction,SIGNAL(triggered()),this,SLOT(openNewWindow()));
     connect(closeTabAction,SIGNAL(triggered()),this,SLOT(removeTab()));
     connect(newTabAction,SIGNAL(triggered()),this,SLOT(addNewTab()));
     connect(exitAction,SIGNAL(triggered()),this,SLOT(close()));
 }
-
+void MainWindow::addShortcutInMenuFile(){
+    newWindowsAction->setShortcut(QKeySequence(QKeySequence::New));
+    closeTabAction->setShortcut(QKeySequence("CTRL+W"));
+    newTabAction->setShortcut(QKeySequence(QKeySequence::AddTab));
+    exitAction->setShortcut(QKeySequence("CTRL+Q"));
+}
 void MainWindow::addNewTab()
 {
     QWebEngineView *webPage = newTab();
-   connect( webPage,SIGNAL(titleChanged(QString)),
-            this,SLOT(changeTheWindowTitle(QString)));
+   connect( webPage,SIGNAL(titleChanged(QString)), this,
+                    SLOT(changeTheWindowTitle(QString)));
 }
-
 QWebEngineView *MainWindow::newTab()
 {
     WebEngineTools *engineContainer = new WebEngineTools(this);
     int indexOfNewTab = tabContainer->addTab(engineContainer,tr("About:blank"));
-    tabContainer->setCurrentIndex(indexOfNewTab);
+    switchToTheTabNumber(indexOfNewTab);
     return engineContainer->getWebEngine ();
 }
-
-WebEngineTools* MainWindow::newWebEngine(WebEngineTools *engine){
-    return engine->newPage("duckduckgo.com");
+void MainWindow::switchToTheTabNumber(int indexOfTab){
+    tabContainer->setCurrentIndex(indexOfTab);
 }
-
-
-
-void MainWindow::removeTab()
-{
-    if(numberOfTab()<=1)
-        closeThisWindow();
-    else
-        tabContainer->removeTab(tabContainer->currentIndex());
-}
-void MainWindow::removeTab(int index)
+void MainWindow::removeTab(int currentTab)
 {
     if(numberOfTab()<=1)
         closeThisWindow();
     else
     {
-        qDebug() <<"CLosing Windows or tab"<<endl;
-        tabContainer->removeTab(index);
+        if(currentTab==-1){
+            currentTab = tabContainer->currentIndex();
+        }
+        tabContainer->removeTab(currentTab);
     }
 }
 
@@ -157,7 +139,6 @@ void MainWindow::openNewWindow()
 void MainWindow::closeThisWindow(){
     this->close();
 }
-
 
 WebEngineTools *MainWindow::currentWindow()
 {
@@ -198,7 +179,8 @@ void MainWindow::changeTheWindowTitle(QString title)
 
 
 /*Automated function to add Actions to the main Menu*/
-void MainWindow::addMultipleActionsToTheMenu(QString name, QMenu* menuOfActions,QList<QAction *> menuActions)
+void MainWindow::addMultipleActionsToTheMenu(QString name, QMenu* menuOfActions,
+                                             QList<QAction *> menuActions)
 {
     menuOfActions = menuBar()->addMenu(tr(name.toStdString().data()));
     for (int i=0;i<menuActions.size();++i) {
