@@ -32,7 +32,6 @@ private:
     void setBehaviorForTabs();
     void createInitialTab();
     void applyAndFinalizeTabsConfigurationsToTheCentralView();
-    bool currentActionIsNotNull(QAction *action);
 
     void addShortcutInMenuFile();
     void createConnectionInMenuFile();

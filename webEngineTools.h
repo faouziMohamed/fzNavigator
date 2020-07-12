@@ -50,13 +50,21 @@ private:
     QAction        *m_refreshAction;
     QAction        *m_stopAction;
     QProgressBar   *m_progress;
-   // QVector<QAction*> liste;
+
+    void addActionsToTheToolbar(QToolBar *menuOfActions...);
+    void insertActionInToTheToolbar();
+    void initialiseMainToolbarAction();
+    void insertURLFIeldInToTheToolbar();
+    void linkToolbarActionsWithTheirIcons();
 
     void addToolbar();
     void addStatusBar();
     void addShortcut();
-
-
+    QWidget *createWebPageLayout();
+    QString preconfigureUrl(QString url);
+    void configureEngineConnection();
+    void configureURLField();
 };
+bool currentActionIsNotNull(QAction *action);
 
 #endif // WEBENGINETOOLS_H

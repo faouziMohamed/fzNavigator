@@ -14,52 +14,57 @@ WebEngineTools::WebEngineTools(QWidget* parent, QString url)
     this->resize(1024,650);
 }
 
-WebEngineTools *WebEngineTools::newPage(QString url)
+QWidget* WebEngineTools::createWebPageLayout()
 {
-     QWidget *tab = new QWidget(this);
-     m_webPage = new QWebEngineView;
-
-     QVBoxLayout *layout = new QVBoxLayout(tab);
-       layout->setContentsMargins(0,0,0,0);
-       layout->addWidget(m_webPage);
-     tab->setLayout(layout);
-    this->setCentralWidget(tab);
-
-    bool space = false, dot = false;
-    /*Verify if a url was typed or a keyword to search in the adress bar*/
-    for(int i=0;i<url.size();i++)
-    {
-         if(url[i]==' ')
-         {
-             url[i]='+';
-             space = true;
-         }
-         else if(url[i]=='.')
-             dot = true;
-     }
-
+    QWidget *centralViewWidget = new QWidget(this);
+    m_webPage = new QWebEngineView;
+    QVBoxLayout *layout = new QVBoxLayout(centralViewWidget);
+    layout->setContentsMargins(0,0,0,0);
+    layout->addWidget(m_webPage);
+    centralViewWidget->setLayout(layout);
+    this->setCentralWidget(centralViewWidget);
+    return centralViewWidget;
+}
+bool isNotAnUrlSyntaxe(QString url)
+{
+    QChar dot = '.', space = ' ';
+    return  url.contains(space)||
+            (!url.contains(dot));
+}
+QString WebEngineTools::preconfigureUrl(QString url)
+{
+    url = url.replace('%',"%25");
     if(url.isEmpty())
     {
         url = "https:// ";
+        return url;
     }
-    else
-    {
-        if( (url.left(7) != "http://") && (url.left(8) != "https://" ) )
-        {
-            if(space || (!dot)) //Submitting the research
-               url = "http://duckduckgo.com/?q="+url+"&t=h_&ia=web";
-            else
-               url = "http://"+url;
-        }
-    }
-    m_webPage->load(QUrl(url));
 
+    if( (url.left(7) != "http://") && (url.left(8) != "https://" ) )
+    {
+        if(isNotAnUrlSyntaxe(url))
+           url = "http://duckduckgo.com/?q="+url.replace(' ','+');
+        else
+           url = "http://"+url;
+    }
+    return url;
+}
+void WebEngineTools::configureEngineConnection()
+{
     connect(m_webPage,SIGNAL(urlChanged(QUrl)),this,SLOT(changeUrl(QUrl)));
     connect(m_webPage,SIGNAL(titleChanged(QString)),this,SLOT(changeTitle(QString)));
     connect(m_webPage,SIGNAL(loadStarted()),this,SLOT(initLoading()));
     connect(m_webPage,SIGNAL(loadProgress(int)),this,SLOT(loading(int)));
     connect(m_webPage,SIGNAL(loadFinished(bool)),this,SLOT(endOfLoad(bool)));
     connect(m_webPage,SIGNAL(iconChanged(const QIcon&)),this,SLOT(changeIcon(const QIcon&)));
+}
+WebEngineTools *WebEngineTools::newPage(QString url)
+{
+    createWebPageLayout();
+    /*Verify if a url was typed or a keyword to search in the adress bar*/
+    url = preconfigureUrl(url);
+    m_webPage->load(QUrl(url));
+    configureEngineConnection();
     return this;
 }
 void WebEngineTools::changeUrl(QUrl url)
@@ -97,31 +102,45 @@ void WebEngineTools::changeIcon(const QIcon &icon)
     this->m_icon = icon;
     this->setWindowIcon(m_icon);
 }
-
+bool currentActionIsNotNull(QAction *action){
+    return action != nullptr;
+}
 void WebEngineTools::addToolbar()
 {
-    m_toolbar = new QToolBar;
-      m_previousPageAction = new QAction(tr("Previous page"));
-      m_nextPageAction     = new QAction(tr("Next Page"));
-      m_refreshAction      = new QAction(tr("Refresh"));
-      m_stopAction         = new QAction(tr("Stop"));
-      m_homeAction         = new QAction(tr("Home"));
-
-    m_toolbar = this->addToolBar(tr("Navigation"));
-    m_toolbar->addAction(m_previousPageAction);
-    m_toolbar->addAction(m_nextPageAction);
-    m_toolbar->addAction(m_refreshAction);
-    m_toolbar->addAction(m_stopAction);
-    m_toolbar->addSeparator();
-    m_toolbar->addAction(m_homeAction);
-
+    initialiseMainToolbarAction();
+    configureURLField();
+    insertActionInToTheToolbar();
+    insertURLFIeldInToTheToolbar();
+    linkToolbarActionsWithTheirIcons();
+}
+void WebEngineTools::initialiseMainToolbarAction()
+{
+    m_toolbar =  this->addToolBar(tr("Navigation"));
+    m_previousPageAction = new QAction(tr("Previous page"));
+    m_nextPageAction     = new QAction(tr("Next Page"));
+    m_refreshAction      = new QAction(tr("Refresh"));
+    m_stopAction         = new QAction(tr("Stop"));
+    m_homeAction         = new QAction(tr("Home"));
+    m_submit             = new QAction(tr("Go"));
+}
+void WebEngineTools::configureURLField()
+{
     m_urlField = new QLineEdit(defaultHomePage);
     m_urlField->setFocus(Qt::OtherFocusReason);
-    m_urlField->selectAll();
+}
+void WebEngineTools::insertActionInToTheToolbar()
+{
+    addActionsToTheToolbar(m_toolbar, m_previousPageAction, m_nextPageAction,
+                           m_refreshAction, m_stopAction, m_homeAction,nullptr);
+    m_toolbar->insertSeparator(m_homeAction);
+}
+void WebEngineTools::insertURLFIeldInToTheToolbar()
+{
     m_toolbar->addWidget(m_urlField);
-    m_submit = new QAction(tr("Go"));
     m_toolbar->addAction(m_submit);
-
+}
+void WebEngineTools::linkToolbarActionsWithTheirIcons()
+{
     m_previousPageAction->setIcon(QIcon(":/fznavigator_icones/prev.png"));
         m_nextPageAction->setIcon(QIcon(":/fznavigator_icones/next.png"));
          m_refreshAction->setIcon(QIcon(":/fznavigator_icones/refresh.png"));
@@ -129,36 +148,23 @@ void WebEngineTools::addToolbar()
             m_stopAction->setIcon(QIcon(":/fznavigator_icones/stop.png"));
                 m_submit->setIcon(QIcon(":/fznavigator_icones/go.png"));
 }
+void WebEngineTools::addActionsToTheToolbar(QToolBar* aToolbar,...)
+{
+    va_list listOfvariableArguments;
+    va_start(listOfvariableArguments, aToolbar);
+    QAction *currentAction = va_arg(listOfvariableArguments, QAction *);
+    while(currentActionIsNotNull(currentAction))
+    {
+        aToolbar->addAction(currentAction);
+        currentAction = va_arg(listOfvariableArguments, QAction *);
+    }
+    va_end(listOfvariableArguments);
+}
+
 void WebEngineTools::loadUrl()
 {
     QString url = this->m_urlField->text();
-    bool space = false, dot = false;
-    /*Verify if a url was typed or a keyword to search in the adress bar*/
-    for(int i=0;i<url.size();i++)
-    {
-         if(url[i]==' ')
-         {
-             url[i]='+';
-             space = true;
-         }
-         else if(url[i]=='.')
-             dot = true;
-     }
-
-    if(url.isEmpty())
-    {
-        url = "https:// ";
-    }
-    else
-    {
-        if( (url.left(7) != "http://") && (url.left(8) != "https://" ) )
-        {
-            if(space || (!dot)) //Submitting the research
-               url = "http://duckduckgo.com/?q="+url+"&t=h_&ia=web";
-            else
-               url = "http://"+url;
-        }
-    }
+    url = preconfigureUrl(url);
     this->m_webPage->load(QUrl(url));
     this->m_icon = QIcon();
 }

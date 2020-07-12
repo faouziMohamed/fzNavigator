@@ -80,9 +80,7 @@ void MainWindow::addMultipleActionsToTheMenu(QMenu* menuOfActions,...)
     }
     va_end(listOfvariableArguments);
 }
-bool MainWindow::currentActionIsNotNull(QAction *action){
-    return action != nullptr;
-}
+
 void MainWindow::createConnectionInMenuFile()
 {
     connect(newWindowsAction,SIGNAL(triggered()),this,SLOT(openNewWindow()));
