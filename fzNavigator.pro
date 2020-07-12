@@ -9,14 +9,16 @@ QT += core webenginewidgets gui
 
 # Input
 SOURCES += main.cpp \
-    MainWindow.cpp \
-    webEngineTools.cpp
+    src/MainWindow.cpp \
+    src/webEngineTools.cpp
 
 HEADERS += \
-    MainWindow.h \
-    webEngineTools.h
-TRANSLATIONS = fzNavigator_fr.ts
+    src/header/MainWindow.h\
+    src/header/webEngineTools.h
+TRANSLATIONS = \
+    assets/lang/fzNavigator_fr.ts
 
 RESOURCES += \
-    Pictures.qrc
-RC_ICONS = web.ico
+    assets/Pictures.qrc
+RC_ICONS = assets/web.ico
+
