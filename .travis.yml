@@ -1,5 +1,5 @@
 langage: cpp
-dist: bionic
+dist: focal
 compiler: g++
 
 os:
@@ -16,12 +16,11 @@ env:
   - CONFIG=release
 
 before_install:
-- sudo add-apt-repository ppa:beineri/opt-qt-5.14.1-bionic -y
+- sudo add-apt-repository ppa:beineri/opt-qt-5.14.2-focal -y
 - sudo apt-get update
 
 install:
 - sudo apt-get --yes install qt514-meta-full
-- sudo apt-get --yes install 
 - sudo apt-get --yes install libfontconfig1
 - sudo apt-get --yes install mesa-common-dev
 - sudo apt-get --yes install libglu1-mesa-dev
@@ -32,5 +31,5 @@ before_script:
 - source /opt/qt514/bin/qt514-env.sh
 
 script:
-#- qmake
+- qmake
 - make
