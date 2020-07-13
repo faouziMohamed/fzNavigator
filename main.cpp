@@ -1,5 +1,6 @@
 #include <QApplication>
 #include "src/header/MainWindow.h"
+#include "src/header/engineview.h"
 #include <QTranslator>
 int main(int argc, char *argv[])
 {
@@ -11,7 +12,10 @@ int main(int argc, char *argv[])
     app.installTranslator(&translator);
 
     MainWindow p(nullptr);
-
-    p.showMaximized();
+    WebEngineTools w(0);
+    EngineView e(0);
+    e.show();
+    //w.show();
+    //p.showMaximized();
     return app.exec();
 }

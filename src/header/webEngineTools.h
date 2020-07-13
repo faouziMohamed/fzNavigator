@@ -60,7 +60,7 @@ private:
 
     void addActionsToTheToolbar(QToolBar *menuOfActions...);
     void insertActionInToTheToolbar();
-    void initialiseMainToolbarAction();
+    void initializeMainToolbarAction();
     void insertURLFIeldInToTheToolbar();
     void linkToolbarActionsWithTheirIcons();
 
