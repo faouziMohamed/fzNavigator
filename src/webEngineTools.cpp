@@ -12,7 +12,7 @@ WebEngineTools::WebEngineTools(QWidget* parent, QString url)
 }
 void WebEngineTools::addToolbar()
 {
-    initialiseMainToolbarAction();
+    initializeMainToolbarAction();
     configureURLField();
     insertActionInToTheToolbar();
     insertURLFIeldInToTheToolbar();
@@ -27,22 +27,22 @@ void WebEngineTools::addStatusBar()
 }
 void WebEngineTools::configureToolbarActionsShortcuts()
 {
-    this->m_previousPageAction->setShortcut(QKeySequence(QKeySequence::Back));
-    this->m_nextPageAction->setShortcut(QKeySequence(QKeySequence::Forward));
-    this->m_refreshAction->setShortcut(QKeySequence(QKeySequence::Refresh));
-    this->m_stopAction->setShortcut(QKeySequence(QKeySequence::Cancel));
+    m_previousPageAction->setShortcut(QKeySequence(QKeySequence::Back));
+    m_nextPageAction->setShortcut(QKeySequence(QKeySequence::Forward));
+    m_refreshAction->setShortcut(QKeySequence(QKeySequence::Refresh));
+    m_stopAction->setShortcut(QKeySequence(QKeySequence::Cancel));
 }
 void WebEngineTools::configureToolbarActionsConnections()
 {
     connect(new QShortcut(QKeySequence("CTRL+R"),this),
             SIGNAL(activated()),this,SLOT(refreshPage()));
-    connect(m_previousPageAction,SIGNAL(triggered())    ,this,SLOT(previousPage()));
-    connect(m_nextPageAction    ,SIGNAL(triggered())    ,this,SLOT(nextPage()));
-    connect(m_refreshAction     ,SIGNAL(triggered())    ,this,SLOT(refreshPage()));
-    connect(m_stopAction        ,SIGNAL(triggered())    ,this,SLOT(stopPageLoading()));
-    connect(m_homeAction        ,SIGNAL(triggered())    ,this,SLOT(goToHomePage()));
-    connect(m_submit            ,SIGNAL(triggered())    ,this,SLOT(loadUrl()));
-    connect(m_urlField          ,SIGNAL(returnPressed()),this,SLOT(loadUrl()));
+    connect(m_previousPageAction,SIGNAL(triggered()),this,SLOT(previousPage()));
+    connect(m_nextPageAction, SIGNAL(triggered()), this,SLOT(nextPage()));
+    connect(m_refreshAction, SIGNAL(triggered()), this,SLOT(refreshPage()));
+    connect(m_stopAction,  SIGNAL(triggered()), this,SLOT(stopPageLoading()));
+    connect(m_homeAction, SIGNAL(triggered()), this,SLOT(goToHomePage()));
+    connect(m_submit   , SIGNAL(triggered()), this,SLOT(loadUrl()));
+    connect(m_urlField, SIGNAL(returnPressed()),this,SLOT(loadUrl()));
 }
 void WebEngineTools::configureOppeningWindowSize()
 {
@@ -56,7 +56,7 @@ void WebEngineTools::initialURLLoad(QString url)
     newPage(url);
 }
 
-void WebEngineTools::initialiseMainToolbarAction()
+void WebEngineTools::initializeMainToolbarAction()
 {
     m_toolbar =  this->addToolBar(tr("Navigation"));
     m_previousPageAction = new QAction(tr("Previous page"));

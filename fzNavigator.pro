@@ -5,7 +5,8 @@
 TEMPLATE = app
 TARGET = fzNavigator
 INCLUDEPATH += .
-QT += core webenginewidgets gui
+QT += core webenginewidgets gui \
+    widgets
 
 # The following define makes your compiler warn you if you use any
 # feature of Qt which has been marked as deprecated (the exact warnings
@@ -20,12 +21,16 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 # Input
 HEADERS += \
+    src/header/engineview.h \
 	src/header/MainWindow.h\
-	src/header/webEngineTools.h
+	src/header/webEngineTools.h \
+    ssrc/header/tabwidgets.h
 
 SOURCES += \
 	main.cpp \
 	src/MainWindow.cpp \
+	src/engineview.cpp \
+	src/tabwidgets.cpp \
 	src/webEngineTools.cpp
 
 RESOURCES += assets/Pictures.qrc
