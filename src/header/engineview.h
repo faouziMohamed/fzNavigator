@@ -29,15 +29,21 @@ signals:
     void titleChanged(const QString &title);
     void devToolRequested(QWebEnginePage* page);
     void webActionChanged(WebPage::WebAction webAction,bool enabled);
+    void findTextRequested(QAction* findText);
+    void findSelectedTextRequested(QAction* findSelectedText);
+    void textSelected(const QString &text);
 protected:
     //QWebEngineView *createWindow(WebPage::WebWindowType type);
     void contextMenuEvent(QContextMenuEvent *event) override;
     constIterator findAnAction(QAction *anAction, QList<QAction *> actions);
     constIterator findAnAction(WebPage::WebAction anAction, QList<QAction *> actions);
+protected slots:
+    void findAText(QMenu *menu);
 private:
     int m_progress;
     QWebEngineProfile *profile;
     QMenu* m_contexteMenu;
+    QAction *findSelectedText;
 private:
     QMenu* newContexteMenu() const;
     void triggerWebActions();
@@ -52,6 +58,7 @@ private:
     void setUpPageActionConnections(WebPage *page);
     void setUpPageActionShortcuts(WebPage *page);
     void setUpShortcut(QKeySequence seq, WebPage *page, WebPage::WebAction webAction);
+    void emitSignalIfTriggered(QAction *findText, QAction *findSelectedText);
 };
 
 #endif // ENGINEVIEW_H

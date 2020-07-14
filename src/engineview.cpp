@@ -4,6 +4,8 @@ EngineView::EngineView(QWidget *parent)
     : QWebEngineView(parent)
     , m_progress(100)
 {
+    findSelectedText = new QAction(tr("Find selected text"),this);
+    findSelectedText->setEnabled(false);
     this->load(QUrl("http://duckduckgo.com/"));
     setUpDefaultInnerConnection();
 }
@@ -23,6 +25,13 @@ void EngineView::handlePageProperties()
 {
     connect(this,&QWebEngineView::iconChanged, [this](){emit favIconChanged(icon());});
     connect(this,&QWebEngineView::iconChanged, [this](){emit titleChanged(title());});
+    connect(this,&QWebEngineView::selectionChanged,[this]{
+            if(selectedText().isEmpty())
+                {   findSelectedText->setEnabled(false);}
+            else{   findSelectedText->setEnabled(true);
+                    emit textSelected(selectedText());
+                }
+    });
 }
 
 void EngineView::initProgressBar()
@@ -45,6 +54,7 @@ void EngineView::contextMenuEvent(QContextMenuEvent *event)
     QMenu *menu = newContexteMenu();
     const QList<QAction *> actions = menu->actions();
     insertInspectElementAction(menu,actions);
+    findAText(menu);
     menu->popup(event->globalPos());
 }
 QMenu* EngineView::newContexteMenu() const
@@ -63,7 +73,24 @@ void EngineView::insertInspectElementAction(QMenu* menu, QList<QAction*> actions
         connect(action,&QAction::triggered,[this](){emit devToolRequested(page());});
     }
 }
+void EngineView::findAText(QMenu* menu)
+{
+    QMenu* findGroupe = new QMenu("Find",this);
+    menu->addSeparator();
+    QAction* findText = new QAction(tr("Find text"),this);
+    findGroupe->addAction(findText);
+    findGroupe->addAction(findSelectedText);
+    emitSignalIfTriggered(findText,findSelectedText);
+    menu->addMenu(findGroupe);
+}
 
+void EngineView::emitSignalIfTriggered(QAction* findText,QAction* findSelectedText)
+{
+    connect(findText,&QAction::triggered,[this,findText]{
+        emit findTextRequested(findText);});
+    connect(findSelectedText,&QAction::triggered,[this,findSelectedText]{
+        emit findSelectedTextRequested(findSelectedText);});
+}
 constIterator EngineView::findAnAction(QAction* anAction,QList<QAction*> actions)
 {
     return  std::find(actions.cbegin(), actions.cend(),anAction);
