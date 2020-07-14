@@ -31,14 +31,18 @@ signals:
     void webActionChanged(WebPage::WebAction webAction,bool enabled);
     void findTextRequested(QAction* findText);
     void findSelectedTextRequested(QAction* findSelectedText);
+    void linkTextRequested(const QString& text);
     void textSelected(const QString &text);
+
+protected:
+   //static QMenu *contexteMenu;
 protected:
     //QWebEngineView *createWindow(WebPage::WebWindowType type);
     void contextMenuEvent(QContextMenuEvent *event) override;
     constIterator findAnAction(QAction *anAction, QList<QAction *> actions);
     constIterator findAnAction(WebPage::WebAction anAction, QList<QAction *> actions);
 protected slots:
-    void findAText(QMenu *menu);
+    void insertFindATextGroup(QMenu *menu);
 private:
     int m_progress;
     QWebEngineProfile *profile;
@@ -59,6 +63,7 @@ private:
     void setUpPageActionShortcuts(WebPage *page);
     void setUpShortcut(QKeySequence seq, WebPage *page, WebPage::WebAction webAction);
     void emitSignalIfTriggered(QAction *findText, QAction *findSelectedText);
+    void insertCopyTextLink(QMenu *menu);
 };
 
 #endif // ENGINEVIEW_H

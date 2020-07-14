@@ -54,7 +54,8 @@ void EngineView::contextMenuEvent(QContextMenuEvent *event)
     QMenu *menu = newContexteMenu();
     const QList<QAction *> actions = menu->actions();
     insertInspectElementAction(menu,actions);
-    findAText(menu);
+    insertFindATextGroup(menu);
+    insertCopyTextLink(menu);
     menu->popup(event->globalPos());
 }
 QMenu* EngineView::newContexteMenu() const
@@ -65,6 +66,7 @@ void EngineView::insertInspectElementAction(QMenu* menu, QList<QAction*> actions
 {
     auto inspectElement = findAnAction(WebPage::InspectElement,actions);
     auto viewSource = findAnAction(WebPage::ViewSource, actions);
+
     if (isActionInTheEnd(inspectElement,actions))
     {
         if (isActionInTheEnd(viewSource,actions)){menu->addSeparator();}
@@ -73,9 +75,9 @@ void EngineView::insertInspectElementAction(QMenu* menu, QList<QAction*> actions
         connect(action,&QAction::triggered,[this](){emit devToolRequested(page());});
     }
 }
-void EngineView::findAText(QMenu* menu)
+void EngineView::insertFindATextGroup(QMenu* menu)
 {
-    QMenu* findGroupe = new QMenu("Find",this);
+    QMenu* findGroupe = new QMenu(tr("Find"),this);
     menu->addSeparator();
     QAction* findText = new QAction(tr("Find text"),this);
     findGroupe->addAction(findText);
@@ -83,7 +85,20 @@ void EngineView::findAText(QMenu* menu)
     emitSignalIfTriggered(findText,findSelectedText);
     menu->addMenu(findGroupe);
 }
-
+void EngineView::insertCopyTextLink(QMenu* menu)
+{
+    auto before = findAnAction(QWebEnginePage::CopyLinkToClipboard,
+                               menu->actions());
+    if(!isActionInTheEnd(before,menu->actions()))
+    {
+        QAction* copyLinkText = new QAction(tr("Copy link text"));
+        insertActionBefore(before,copyLinkText,menu);
+        connect(copyLinkText,&QAction::triggered,[this]{
+            QString lintText = page()->contextMenuData().linkText();
+            emit linkTextRequested(lintText);
+        });
+    }
+}
 void EngineView::emitSignalIfTriggered(QAction* findText,QAction* findSelectedText)
 {
     connect(findText,&QAction::triggered,[this,findText]{
@@ -110,6 +125,7 @@ void EngineView::insertActionBefore(constIterator before, QAction* action,
     QAction *beforeAction(*before);
     menu->insertAction(beforeAction, action);
 }
+
 int  EngineView::loadProgress() const
 {return m_progress;}
 void EngineView::setPage(WebPage *page)
@@ -146,5 +162,4 @@ void EngineView::setUpShortcut(QKeySequence seq,WebPage *page,
     connect(new QShortcut(seq,this),&QShortcut::activated,[this,action]{
         emit webActionChanged(WebPage::Reload, action->isEnabled());});
 }
-
 
