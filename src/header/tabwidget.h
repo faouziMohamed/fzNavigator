@@ -1,13 +1,15 @@
 #ifndef TABWIDGETS_H
 #define TABWIDGETS_H
 
-#include <QWidget>
+#include <QtWidgets>
 
-class TabWidgets
+class TabWidget : public QTabWidget
 {
     Q_OBJECT
 public:
-    TabWidgets();
+    TabWidget(QWidget *parent=nullptr);
+public slots:
+    void handleContextMenuRequested(const QPoint &pos);
 };
 
-#endif // TABWIDGETS_H
+#endif // TABWIDGETS_H 
