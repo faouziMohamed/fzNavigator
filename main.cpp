@@ -1,7 +1,8 @@
 #include <QApplication>
 #include "src/header/MainWindow.h"
-#include "src/header/engineview.h"
+#include "src/header/tabwidget.h"
 #include <QTranslator>
+#include <QTabWidget>
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
@@ -10,12 +11,14 @@ int main(int argc, char *argv[])
     QTranslator translator;
     translator.load(QString(":/lang/fzNavigator_"+locale));
     app.installTranslator(&translator);
-
     MainWindow p(nullptr);
     WebEngineTools w(0);
-    EngineView e(0);
-    e.show();
     //w.show();
     //p.showMaximized();
+    TabWidget* tab = new TabWidget;
+
+    tab->show();
+
+
     return app.exec();
 }
