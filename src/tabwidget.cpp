@@ -5,14 +5,6 @@
 TabWidget::TabWidget(QWidget * parent)
     : QTabWidget(parent)
 {
-    QTabBar *tabBar = this->tabBar();
-    tabBar->setTabsClosable(true);
-    tabBar->setSelectionBehaviorOnRemove(QTabBar::SelectPreviousTab);
-    tabBar->setMovable(true);
-    tabBar->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(tabBar, SIGNAL(customContextMenuRequested(int)), this,
-                    SLOT(handleContextMenuRequested(int)));
-
     EngineView *view = new EngineView(0);
     QWebEngineProfile *profile = new QWebEngineProfile;
     WebPage *web = new WebPage(view, profile);
@@ -25,7 +17,7 @@ TabWidget::TabWidget(QWidget * parent)
     this->resize(1024,768);
 }
 
-void TabWidget::handleContextMenuRequested(const QPoint &pos)
+void TabWidget::handleContextMenuRequested()
 {
     QMenu menu;
     QAction *action = menu.addAction(tr("Clone Tab"));

@@ -4,6 +4,11 @@
 #include <QWidget>
 #include <QAction>
 #include <QWebEngineView>
+#include <QMessageBox>
+#include <QMenu>
+#include <QContextMenuEvent>
+#include "src/header/webpage.h"
+
 typedef QList<QAction*>::const_iterator constIterator;
 class EngineView : public QWebEngineView
 {
@@ -13,7 +18,7 @@ public:
 
 public:
     int loadProgress() const;
-    void setPage(QWebEnginePage *page);
+    void setPage(WebPage *page);
 public slots:
     void initProgressBar();
     void pageOnLoad(int progress);
@@ -22,27 +27,31 @@ public slots:
 signals:
     void favIconChanged(const QIcon &icon);
     void titleChanged(const QString &title);
-    void webActionEnabledChanged(QWebEnginePage::WebAction webAction,
-                                 bool enabled);
+    void devToolRequested(QWebEnginePage* page);
+    void webActionChanged(WebPage::WebAction webAction,bool enabled);
 protected:
-    //QWebEngineView *createWindow(QWebEnginePage::WebWindowType type);
+    //QWebEngineView *createWindow(WebPage::WebWindowType type);
     void contextMenuEvent(QContextMenuEvent *event) override;
     constIterator findAnAction(QAction *anAction, QList<QAction *> actions);
-    constIterator findAnAction(QWebEnginePage::WebAction anAction, QList<QAction *> actions);
+    constIterator findAnAction(WebPage::WebAction anAction, QList<QAction *> actions);
 private:
     int m_progress;
-    QWebEngineView *profile;
+    QWebEngineProfile *profile;
     QMenu* m_contexteMenu;
 private:
     QMenu* newContexteMenu() const;
     void triggerWebActions();
-    void configureEngineConnection();
-    void createWebActionTrigger(QWebEnginePage *page, QWebEnginePage::WebAction webAction);
+    void setUpDefaultInnerConnection();
+    void createWebActionTrigger(WebPage *page, WebPage::WebAction webAction);
     void handleLoadProgress();
     void handlePageProperties();
     bool isActionInTheEnd(constIterator anAction, QList<QAction *> actions);
     void insertActionBefore(constIterator before, QAction *action, QMenu *menu);
     void insertInspectElementAction(QMenu *menu, QList<QAction *> actions);
+    void setupConnexion(WebPage *page, WebPage::WebAction webAction);
+    void setUpPageActionConnections(WebPage *page);
+    void setUpPageActionShortcuts(WebPage *page);
+    void setUpShortcut(QKeySequence seq, WebPage *page, WebPage::WebAction webAction);
 };
 
 #endif // ENGINEVIEW_H

@@ -9,7 +9,7 @@ class TabWidget : public QTabWidget
 public:
     TabWidget(QWidget *parent=nullptr);
 public slots:
-    void handleContextMenuRequested(const QPoint &pos);
+    void handleContextMenuRequested();
 };
 
 #endif // TABWIDGETS_H 
