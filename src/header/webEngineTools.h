@@ -7,6 +7,7 @@
 #include <QTranslator>
 #include <QMainWindow>
 #include <QWebEngineView>
+#include "FzGlobal.h"
 
 class WebEngineTools: public QMainWindow
 {
@@ -69,6 +70,4 @@ private:
     void configureEngineConnection();
     void configureURLField();
 };
-bool currentActionIsNotNull(QAction *action);
-bool isNotAnUrlSyntaxe(QString url);
 #endif // WEBENGINETOOLS_H

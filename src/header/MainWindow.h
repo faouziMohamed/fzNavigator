@@ -7,6 +7,7 @@
 #include <QTranslator>
 #include <cstdarg>
 #include "webEngineTools.h"
+#include "FzGlobal.h"
 
 class MainWindow : public QMainWindow
 {

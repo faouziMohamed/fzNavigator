@@ -1,6 +1,6 @@
-#include "header/engineview.h"
+#include "header/webPageView.h"
 
-EngineView::EngineView(QWidget *parent)
+WebPageView::WebPageView(QWidget *parent)
     : QWebEngineView(parent)
     , m_progress(100)
 {
@@ -10,18 +10,18 @@ EngineView::EngineView(QWidget *parent)
     setUpDefaultInnerConnection();
 }
 
-void EngineView::setUpDefaultInnerConnection()
+void WebPageView::setUpDefaultInnerConnection()
 {
     handleLoadProgress();
     handlePageProperties();
 }
-void EngineView::handleLoadProgress()
+void WebPageView::handleLoadProgress()
 {
     connect(this,SIGNAL(loadStarted()),this,SLOT(initProgressBar()));
     connect(this,SIGNAL(loadProgress(int)),this, SLOT(pageOnLoad(int)));
     connect(this,SIGNAL(loadFinished(bool)),this,SLOT(pageLodingIsFinished(bool)));
 }
-void EngineView::handlePageProperties()
+void WebPageView::handlePageProperties()
 {
     connect(this,&QWebEngineView::iconChanged, [this](){emit favIconChanged(icon());});
     connect(this,&QWebEngineView::iconChanged, [this](){emit titleChanged(title());});
@@ -34,35 +34,37 @@ void EngineView::handlePageProperties()
     });
 }
 
-void EngineView::initProgressBar()
+void WebPageView::initProgressBar()
 {
     m_progress = 0;
 }
-void EngineView::pageOnLoad(int progress)
+void WebPageView::pageOnLoad(int progress)
 {
     m_progress = progress;
 }
-void EngineView::pageLodingIsFinished(bool succes)
+void WebPageView::pageLodingIsFinished(bool succes)
 {
     m_progress = succes ? 100:-1;
 }
 /**
  * Override of the inherit function to diplay the contexte menu
 */
-void EngineView::contextMenuEvent(QContextMenuEvent *event)
+void WebPageView::contextMenuEvent(QContextMenuEvent *event)
 {
     QMenu *menu = newContexteMenu();
     const QList<QAction *> actions = menu->actions();
     insertInspectElementAction(menu,actions);
     insertFindATextGroup(menu);
     insertCopyTextLink(menu);
+    makeDefaultContexteMenuTranslatable();
     menu->popup(event->globalPos());
+
 }
-QMenu* EngineView::newContexteMenu() const
+QMenu* WebPageView::newContexteMenu() const
 {
     return page()->createStandardContextMenu();
 }
-void EngineView::insertInspectElementAction(QMenu* menu, QList<QAction*> actions)
+void WebPageView::insertInspectElementAction(QMenu* menu, QList<QAction*> actions)
 {
     auto inspectElement = findAnAction(WebPage::InspectElement,actions);
     auto viewSource = findAnAction(WebPage::ViewSource, actions);
@@ -75,7 +77,7 @@ void EngineView::insertInspectElementAction(QMenu* menu, QList<QAction*> actions
         connect(action,&QAction::triggered,[this](){emit devToolRequested(page());});
     }
 }
-void EngineView::insertFindATextGroup(QMenu* menu)
+void WebPageView::insertFindATextGroup(QMenu* menu)
 {
     QMenu* findGroupe = new QMenu(tr("Find"),this);
     menu->addSeparator();
@@ -85,7 +87,7 @@ void EngineView::insertFindATextGroup(QMenu* menu)
     emitSignalIfTriggered(findText,findSelectedText);
     menu->addMenu(findGroupe);
 }
-void EngineView::insertCopyTextLink(QMenu* menu)
+void WebPageView::insertCopyTextLink(QMenu* menu)
 {
     auto before = findAnAction(QWebEnginePage::CopyLinkToClipboard,
                                menu->actions());
@@ -99,67 +101,107 @@ void EngineView::insertCopyTextLink(QMenu* menu)
         });
     }
 }
-void EngineView::emitSignalIfTriggered(QAction* findText,QAction* findSelectedText)
+void WebPageView::emitSignalIfTriggered(QAction* findText,QAction* findSelectedText)
 {
     connect(findText,&QAction::triggered,[this,findText]{
         emit findTextRequested(findText);});
     connect(findSelectedText,&QAction::triggered,[this,findSelectedText]{
         emit findSelectedTextRequested(findSelectedText);});
 }
-constIterator EngineView::findAnAction(QAction* anAction,QList<QAction*> actions)
+constIterator WebPageView::findAnAction(QAction* anAction,QList<QAction*> actions)
 {
     return  std::find(actions.cbegin(), actions.cend(),anAction);
 }
-constIterator EngineView::findAnAction(WebPage::WebAction anAction,
+constIterator WebPageView::findAnAction(WebPage::WebAction anAction,
                               QList<QAction*> actions)
 {
-    return EngineView::findAnAction(page()->action(anAction),actions);
+    return WebPageView::findAnAction(page()->action(anAction),actions);
 }
-bool EngineView::isActionInTheEnd(constIterator anAction, QList<QAction*> actions)
+bool WebPageView::isActionInTheEnd(constIterator anAction, QList<QAction*> actions)
 {
     return anAction == actions.cend();
 }
-void EngineView::insertActionBefore(constIterator before, QAction* action,
+void WebPageView::insertActionBefore(constIterator before, QAction* action,
                                                    QMenu* menu)
 {
     QAction *beforeAction(*before);
     menu->insertAction(beforeAction, action);
 }
+void WebPageView::makeDefaultContexteMenuTranslatable()
+{
+    findAndTranslate(WebPage::Back);
+    findAndTranslate(WebPage::Forward);
+    findAndTranslate(WebPage::Reload);
+    findAndTranslate(WebPage::Cut);
+    findAndTranslate(WebPage::Paste);
+    findAndTranslate(WebPage::Undo);
+    findAndTranslate(WebPage::Redo);
+    findAndTranslate(WebPage::SelectAll);
+    findAndTranslate(WebPage::OpenLinkInThisWindow);
+    findAndTranslate(WebPage::OpenLinkInNewWindow);
+    findAndTranslate(WebPage::OpenLinkInNewTab);
+    findAndTranslate(WebPage::OpenLinkInNewBackgroundTab);
+    findAndTranslate(WebPage::CopyLinkToClipboard);
+    findAndTranslate(WebPage::CopyImageToClipboard);
+    findAndTranslate(WebPage::CopyImageUrlToClipboard);
+    findAndTranslate(WebPage::CopyMediaUrlToClipboard);
+    findAndTranslate(WebPage::DownloadLinkToDisk);
+    findAndTranslate(WebPage::DownloadImageToDisk);
+    findAndTranslate(WebPage::DownloadMediaToDisk);
+    findAndTranslate(WebPage::InspectElement);
+    findAndTranslate(WebPage::SavePage);
+    findAndTranslate(WebPage::ViewSource);
+    findAndTranslate(WebPage::ExitFullScreen);
+    findAndTranslate(WebPage::ExitFullScreen);
+    findAndTranslate(WebPage::ExitFullScreen);
+    findAndTranslate(WebPage::ExitFullScreen);
+    findAndTranslate(WebPage::ExitFullScreen);
+}
+void WebPageView::findAndTranslate(WebPage::WebAction webAction)
+{
+    QAction* act = pageAction(webAction);
+    if(act!=nullptr)
+    {
+        auto text = Fz::tr(act);
+        act->setText(text);
+    }
+}
 
-int  EngineView::loadProgress() const
+int  WebPageView::progress() const
 {return m_progress;}
-void EngineView::setPage(WebPage *page)
+void WebPageView::setPage(WebPage *page)
 {
     setUpPageActionConnections(page);
     setUpPageActionShortcuts(page);
     QWebEngineView::setPage(page);
 }
-void EngineView::setUpPageActionConnections(WebPage* page)
+void WebPageView::setUpPageActionConnections(WebPage* page)
 {
     setupConnexion(page,WebPage::Forward);
     setupConnexion(page,WebPage::Back);
     setupConnexion(page,WebPage::Reload);
     setupConnexion(page,WebPage::Stop);
 }
-void EngineView::setUpPageActionShortcuts(WebPage* page)
+void WebPageView::setUpPageActionShortcuts(WebPage* page)
 {
     setUpShortcut(QKeySequence::Back,page,WebPage::Forward);
     setUpShortcut(QKeySequence::Forward,page,WebPage::Back);
     setUpShortcut(QKeySequence("CTRL+R"),page,WebPage::Reload);
     setUpShortcut(QKeySequence::Cancel,page,WebPage::Stop);
 }
-void EngineView::setupConnexion(WebPage *page, WebPage::WebAction webAction)
+void WebPageView::setupConnexion(WebPage *page, WebPage::WebAction webAction)
 {
     QAction *action = page->action(webAction);
     connect(action, &QAction::changed, [this, action, webAction]{
-        emit webActionChanged(webAction, action->isEnabled());});
+        emit webActionChanged(webAction, action->isEnabled());
+    });
 }
-void EngineView::setUpShortcut(QKeySequence seq,WebPage *page,
+void WebPageView::setUpShortcut(QKeySequence seq,WebPage *page,
                                WebPage::WebAction webAction )
 {
     QAction *action = page->action(webAction);
     action->setShortcut(seq);
-    connect(new QShortcut(seq,this),&QShortcut::activated,[this,action]{
-        emit webActionChanged(WebPage::Reload, action->isEnabled());});
+    connect(new QShortcut(seq,this),&QShortcut::activated,[seq,this,action]{
+        emit shortcutEnabled(WebPage::Reload, action->isEnabled());});
 }
 

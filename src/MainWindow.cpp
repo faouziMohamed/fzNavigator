@@ -73,7 +73,7 @@ void MainWindow::addMultipleActionsToTheMenu(QMenu* menuOfActions,...)
     va_list listOfvariableArguments;
     va_start(listOfvariableArguments, menuOfActions);
     QAction *currentAction = va_arg(listOfvariableArguments, QAction *);
-    while(currentActionIsNotNull(currentAction))
+    while(Fz::currentActionIsNotNull(currentAction))
     {
         menuOfActions->addAction(currentAction);
         currentAction = va_arg(listOfvariableArguments, QAction *);

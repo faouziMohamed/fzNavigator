@@ -48,10 +48,11 @@ void WebEngineTools::configureOppeningWindowSize()
 {
     this->resize(1024,650);
 }
+
 void WebEngineTools::initialURLLoad(QString url)
 {
     if(url.isEmpty ()){
-        url = "http://www.duckduckgo.com/";
+        url = defaultHomePage;
     }
     newPage(url);
 }
@@ -65,6 +66,8 @@ void WebEngineTools::initializeMainToolbarAction()
     m_stopAction         = new QAction(tr("Stop"));
     m_homeAction         = new QAction(tr("Home"));
     m_submit             = new QAction(tr("Go"));
+    m_toolbar->setMovable(false);
+    m_toolbar->setFloatable(false);
 }
 void WebEngineTools::configureURLField()
 {
@@ -106,7 +109,7 @@ void WebEngineTools::addActionsToTheToolbar(QToolBar* aToolbar,...)
     va_list listOfvariableArguments;
     va_start(listOfvariableArguments, aToolbar);
     QAction *currentAction = va_arg(listOfvariableArguments, QAction *);
-    while(currentActionIsNotNull(currentAction))
+    while(Fz::currentActionIsNotNull(currentAction))
     {
         aToolbar->addAction(currentAction);
         currentAction = va_arg(listOfvariableArguments, QAction *);
@@ -135,7 +138,7 @@ QString WebEngineTools::preconfigureUrl(QString url)
 
     if( (url.left(7) != "http://") && (url.left(8) != "https://" ) )
     {
-        if(isNotAnUrlSyntaxe(url))
+        if(Fz::isNotAnUrlSyntaxe(url))
            url = "http://duckduckgo.com/?q="+url.replace(' ','+');
         else
            url = "http://"+url;
@@ -155,16 +158,6 @@ void WebEngineTools::configureEngineConnection()
             SLOT(atTheEndOfPageLoading(bool)));
     connect(m_webPage,SIGNAL(iconChanged(const QIcon&)),this,
             SLOT(changeWindowFavcon(const QIcon&)));
-}
-
-bool currentActionIsNotNull(QAction *action){
-    return action != nullptr;
-}
-bool isNotAnUrlSyntaxe(QString url)
-{
-    QChar dot = '.', space = ' ';
-    return  url.contains(space)||
-            (!url.contains(dot));
 }
 
 void WebEngineTools::changeUrl(QUrl url)

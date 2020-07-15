@@ -1,5 +1,5 @@
-#ifndef ENGINEVIEW_H
-#define ENGINEVIEW_H
+#ifndef WebPageView_H
+#define WebPageView_H
 
 #include <QWidget>
 #include <QAction>
@@ -8,16 +8,17 @@
 #include <QMenu>
 #include <QContextMenuEvent>
 #include "src/header/webpage.h"
+#include "src/header/FzGlobal.h"
 
 typedef QList<QAction*>::const_iterator constIterator;
-class EngineView : public QWebEngineView
+class WebPageView : public QWebEngineView
 {
     Q_OBJECT
 public:
-    EngineView(QWidget *parent);
+    WebPageView(QWidget *parent);
 
 public:
-    int loadProgress() const;
+    int progress() const;
     void setPage(WebPage *page);
 public slots:
     void initProgressBar();
@@ -29,6 +30,7 @@ signals:
     void titleChanged(const QString &title);
     void devToolRequested(QWebEnginePage* page);
     void webActionChanged(WebPage::WebAction webAction,bool enabled);
+    void shortcutEnabled(WebPage::WebAction webAction,bool enabled);
     void findTextRequested(QAction* findText);
     void findSelectedTextRequested(QAction* findSelectedText);
     void linkTextRequested(const QString& text);
@@ -50,7 +52,6 @@ private:
     QAction *findSelectedText;
 private:
     QMenu* newContexteMenu() const;
-    void triggerWebActions();
     void setUpDefaultInnerConnection();
     void createWebActionTrigger(WebPage *page, WebPage::WebAction webAction);
     void handleLoadProgress();
@@ -64,6 +65,8 @@ private:
     void setUpShortcut(QKeySequence seq, WebPage *page, WebPage::WebAction webAction);
     void emitSignalIfTriggered(QAction *findText, QAction *findSelectedText);
     void insertCopyTextLink(QMenu *menu);
+    void makeDefaultContexteMenuTranslatable();
+    void findAndTranslate(WebPage::WebAction webAction);
 };
 
-#endif // ENGINEVIEW_H
+#endif // WebPageView_H
