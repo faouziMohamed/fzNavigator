@@ -23,7 +23,7 @@ void WebPageView::handleLoadProgress()
 }
 void WebPageView::handlePageProperties()
 {
-    connect(this,&QWebEngineView::iconChanged, [this](){emit favIconChanged(icon());});
+    connect(this,&QWebEngineView::iconChanged,[this](){emit favIconChanged(icon());});
     connect(this,&QWebEngineView::iconChanged, [this](){emit titleChanged(title());});
     connect(this,&QWebEngineView::selectionChanged,[this]{
             if(selectedText().isEmpty())

@@ -72,6 +72,9 @@ void BrowserTab::configureURLField()
     m_urlField = new QLineEdit(defaultHomePage);
     m_urlField->setFocus(Qt::OtherFocusReason);
     m_urlField->setClearButtonEnabled(true);
+    m_urlIconAct = new QAction(m_urlField);
+    m_urlIconAct->setIcon(QIcon(":/fznavigator_icones/loader.gif"));
+    m_urlField->addAction(m_urlIconAct,QLineEdit::LeadingPosition);
 }
 void BrowserTab::insertActionInToTheToolbar()
 {
@@ -87,10 +90,10 @@ void BrowserTab::insertURLFIeldInToTheToolbar()
 }
 void BrowserTab::linkToolbarActionsWithTheirIcons()
 {
-    m_backHistoryAction->setIcon(QIcon(":/fznavigator_icones/prev.png"));
-    m_nextHistoryAction->setIcon(QIcon(":/fznavigator_icones/next.png"));
-    m_stopReloadAction->setIcon(QIcon(":/fznavigator_icones/refresh.png"));
-    m_homeAction->setIcon(QIcon(":/fznavigator_icones/home.png"));
+    m_backHistoryAction->setIcon(QIcon(":/fznavigator_icones/left_full.svg"));
+    m_nextHistoryAction->setIcon(QIcon(":/fznavigator_icones/right_empty.svg"));
+    m_stopReloadAction->setIcon(QIcon(":/fznavigator_icones/Reload.svg"));
+    m_homeAction->setIcon(QIcon(":/fznavigator_icones/home_43.svg"));
     m_submit->setIcon(QIcon(":/fznavigator_icones/go.png"));
 }
 
@@ -180,14 +183,18 @@ void BrowserTab::makeActionConnected(QAction* act, WebPage::WebAction webAction)
 }
 void BrowserTab::webViewConnections()
 {
-    connect(webView,&WebPageView::webActionChanged,this,
-            &BrowserTab::handleCurrentChanged);
+    connect(webView,&WebPageView::webActionChanged,this,&BrowserTab::emitProgress);
     connect(webView,&WebPageView::shortcutActivated,
             webView,&WebPageView::triggerPageAction);
     connect(webView,&QWebEngineView::loadProgress,[this](int progress){
             emit loadProgress(progress);});
     connect(webView,&WebPageView::webActionChanged,this,
             &BrowserTab::handleWebActionChanged);
+
+    connect(webView,&WebPageView::favIconChanged,
+            webView,[this](const QIcon &icon){
+            m_urlIconAct->setIcon(icon);
+    });
 }
 void BrowserTab::actionsConnections()
 {
@@ -195,10 +202,11 @@ void BrowserTab::actionsConnections()
     connect(this,&BrowserTab::loadProgress,this,&BrowserTab::handleLoadProgress);
     connect(m_submit,&QAction::triggered,this,&BrowserTab::loadUrl);
     connect(m_urlField,&QLineEdit::returnPressed,this,&BrowserTab::loadUrl);
-    connect(reloadShortcut,&QShortcut::activated, [this]{m_urlField->selectAll();
+    connect(reloadShortcut,&QShortcut::activated,[this]{m_urlField->selectAll();
             m_urlField->setFocus(Qt::OtherFocusReason);});
+    connect(m_homeAction,&QAction::triggered,this,&BrowserTab::goToHomePage);
 }
-void BrowserTab::handleCurrentChanged()
+void BrowserTab::emitProgress()
 {
     emit loadProgress(webView->progress());
 }
@@ -212,30 +220,31 @@ void BrowserTab::handleLoadProgress(int progress)
     if(0<progress && progress<100){
         m_stopReloadAction->setData(WebPage::Stop);
         m_stopReloadAction->setToolTip(tr("Stop loading the current page"));
-        m_stopReloadAction->setIcon(QIcon(":/fznavigator_icones/stop.png"));
+        m_stopReloadAction->setIcon(QIcon(":/fznavigator_icones/cancel.svg"));
         m_progress->setValue(progress);
     }else{
         m_stopReloadAction->setData(WebPage::Reload);
-        m_stopReloadAction->setIcon(QIcon(":/fznavigator_icones/refresh.png"));
+        m_stopReloadAction->setIcon(QIcon(":/fznavigator_icones/Reload.svg"));
         m_stopReloadAction->setToolTip(tr("Reload the current page"));
         m_progress->setValue(0);
     }
+    m_urlIconAct->setIcon(QIcon(":/fznavigator_icones/loader.gif"));
     int stopReloadWebAct = m_stopReloadAction->data().toInt();
     makeActionConnected(m_stopReloadAction,WebPage::WebAction(stopReloadWebAct));
 }
+void BrowserTab::loadUrl()
+{
+    QString url = this->m_urlField->text();
+    url = preconfigureUrl(url);
+    webView->load(QUrl(url));
+}
+void BrowserTab::goToHomePage()
+{
+   webView->load(QUrl(defaultHomePage));
+}
 
 
-
-
-
-
-
-
-
-
-
-
-
+/*Public getters*/
 WebPageView* BrowserTab::view()
 {
     return webView;
@@ -244,31 +253,4 @@ WebPage *BrowserTab::page()
 {
     return webPage;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-void BrowserTab::loadUrl()
-{
-    QString url = this->m_urlField->text();
-    url = preconfigureUrl(url);
-    webView->load(QUrl(url));
-    //this->m_icon = QIcon();
-}
-void BrowserTab::goToHomePage()
-{
-   webView->load(QUrl(defaultHomePage));
-}
-
+/*Public setters*/

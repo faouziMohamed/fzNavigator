@@ -30,7 +30,7 @@ public slots:
     void ShowContextMenu(const QPoint &pos);
     void loadUrl();
     void goToHomePage();
-    void handleCurrentChanged();
+    void emitProgress();
     void handleLoadProgress(int progress);
     void handleWebActionChanged(WebPage::WebAction webAct, bool state);
 
@@ -58,6 +58,7 @@ protected:
     QWebEngineProfile* m_Profile;
     WebPageView * webView;
     WebPage * webPage;
+    QAction *m_urlIconAct;
     QMap<WebPage::WebAction, QAction*> toolbarAction;
 
 private:
