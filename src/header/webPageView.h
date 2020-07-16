@@ -20,6 +20,8 @@ public:
 public:
     int progress() const;
     void setPage(WebPage *page);
+    QIcon favIcon() const;
+
 public slots:
     void initProgressBar();
     void pageOnLoad(int progress);

@@ -8,6 +8,7 @@
 #include "FzGlobal.h"
 #include "webPageView.h"
 #include "webpage.h"
+class TabWidget;
 
 class BrowserTab : public QMainWindow
 {
@@ -21,11 +22,13 @@ public:
 
 signals:
     void loadProgress(int progress);
+    void favIconSent(const QIcon& icon);
 protected:
     QString preconfigureUrl(QString url);
     void insertWebPageView(QString url);
     BrowserTab *createNewWebPageView(QString url);
     void makeActionConnected(QAction *act, WebPage::WebAction webAction);
+
 public slots:
     void ShowContextMenu(const QPoint &pos);
     void loadUrl();

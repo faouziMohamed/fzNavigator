@@ -2,10 +2,67 @@
 
 TabWidget::TabWidget(QWebEngineProfile *profile, QWidget * parent)
     : QTabWidget(parent)
+    , fznavName("Fz Navigator")
+    , newTabTitle("About:Blank - Fz Navigo")
+    , m_profile(profile)
 {
-    tab = new BrowserTab(this,profile);
+    tab = addNewTab();
     setupTabsBehavior();
-    themeDarkAurore();
+    QShortcut *newtabShortcut = new QShortcut(QKeySequence::AddTab,this);
+    connect(newtabShortcut,SIGNAL(activated()),this,SLOT(addNewTab()));
+    connect(this,&QTabWidget::currentChanged,[this](int index){
+        if(index!=-1){
+            QString winTitle = tabText(index) + " - " + fznavName;
+            emit customWindowTitleChanged(winTitle);
+        }
+    });
+
+    connect(this,&TabWidget::customWindowTitleChanged,
+            [this](const QString &title){
+            setWindowTitle(title);
+    });
+
+
+
+    this->setWindowIcon(QIcon(":/fznavigator_icones/web.png"));
+}
+
+BrowserTab* TabWidget::addNewTab()
+{
+   BrowserTab *newTab = new BrowserTab(this,m_profile);
+   WebPageView* view = newTab->view();
+   int index = addTab(newTab,newTabTitle);
+   setCurrentIndex(index);
+   setTabIcon(index,view->favIcon());
+
+   setUpTabConnexions(newTab,index);
+   themeDarkAurore(newTab);
+   return newTab;
+}
+
+void TabWidget::setUpTabConnexions(BrowserTab* newTab,int tabIndex)
+{
+    WebPageView *view = newTab->view();
+
+    connect(newTab,&BrowserTab::favIconSent,[this,tabIndex](const QIcon& icon){
+        setTabIcon(tabIndex,icon);});
+    connect(view,&WebPageView::titleChanged,[this,tabIndex](const QString &title){
+        setTabText(tabIndex,title.left(25));
+    });
+    connect(view,&WebPageView::titleChanged,[this,tabIndex](const QString &title){
+        if(currentIndex()==tabIndex)
+        {
+            QString winTitle = title + " - " + fznavName;
+            emit customWindowTitleChanged(winTitle);
+        }
+    });
+
+}
+
+
+BrowserTab* TabWidget::currentTab()
+{
+    return  (BrowserTab*) currentWidget();
 }
 
 void TabWidget::setupTabsBehavior()
@@ -16,15 +73,15 @@ void TabWidget::setupTabsBehavior()
     resize(700,300);
 }
 
-QString TabWidget::themeDarkAurore()
+QString TabWidget::themeDarkAurore(BrowserTab* btab)
 {
-    this->addTab(tab,"About:Blank");
     setStyleSheet("background-color:#253545;"
                   "color:#bea;");
-    tab->m_urlField->setStyleSheet("padding-left:10px;"
+    btab->setStyleSheet("QAction{border:1px red solid;}");
+    btab->setStyleSheet("QLineEdit{padding-left:10px;"
                                    "border-radius:12%;"
                                    "height:25px;"
-                                   "border:1px solid #555");
+                                   "border:1px solid #06a58a}");
     return styleSheet();
 }
 

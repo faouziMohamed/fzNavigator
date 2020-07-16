@@ -1,8 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>fznavigator_icones/go.png</file>
-        <file>fznavigator_icones/next.png</file>
-        <file>fznavigator_icones/refresh.png</file>
         <file>fznavigator_icones/web.png</file>
         <file>lang/fzNavigator_fr.qm</file>
         <file>web.ico</file>
@@ -11,17 +8,8 @@
         <file>fznavigator_icones/cancel.svg</file>
         <file>fznavigator_icones/left_full.svg</file>
         <file>fznavigator_icones/Reload.svg</file>
-        <file>fznavigator_icones/alarm-cancel_bell.svg</file>
         <file>fznavigator_icones/search_62.svg</file>
-        <file>fznavigator_icones/ninja.svg</file>
-        <file>fznavigator_icones/private_house.svg</file>
-        <file>fznavigator_icones/search.svg</file>
-        <file>fznavigator_icones/setting.svg</file>
-        <file>fznavigator_icones/setting_6.svg</file>
-        <file>fznavigator_icones/shield.svg</file>
-        <file>fznavigator_icones/star.svg</file>
-        <file>fznavigator_icones/star_36.svg</file>
-        <file>fznavigator_icones/user_64.svg</file>
         <file>fznavigator_icones/right_empty.svg</file>
+        <file>fznavigator_icones/danger.svg</file>
     </qresource>
 </RCC>

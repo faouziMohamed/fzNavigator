@@ -23,8 +23,9 @@ void WebPageView::handleLoadProgress()
 }
 void WebPageView::handlePageProperties()
 {
-    connect(this,&QWebEngineView::iconChanged,[this](){emit favIconChanged(icon());});
-    connect(this,&QWebEngineView::iconChanged, [this](){emit titleChanged(title());});
+    connect(this,&QWebEngineView::iconChanged,[this](){emit favIconChanged(favIcon());});
+    connect(this,&QWebEngineView::titleChanged, [this](){
+        emit titleChanged(title());});
     connect(this,&QWebEngineView::selectionChanged,[this]{
             if(selectedText().isEmpty())
                 {   findSelectedText->setEnabled(false);}
@@ -37,6 +38,7 @@ void WebPageView::handlePageProperties()
 void WebPageView::initProgressBar()
 {
     m_progress = 0;
+    emit favIconChanged(favIcon());
 }
 void WebPageView::pageOnLoad(int progress)
 {
@@ -45,6 +47,7 @@ void WebPageView::pageOnLoad(int progress)
 void WebPageView::pageLodingIsFinished(bool succes)
 {
     m_progress = succes ? 100:-1;
+    emit favIconChanged(favIcon());
 }
 /**
  * Override of the inherit function to diplay the contexte menu
@@ -174,6 +177,23 @@ void WebPageView::setPage(WebPage *page)
     setUpPageActionConnections(page);
     setUpPageActionShortcuts(page);
     QWebEngineView::setPage(page);
+}
+
+QIcon WebPageView::favIcon() const
+{
+    QIcon favIcon = icon();
+    if (!favIcon.isNull())
+        return favIcon;
+    if (m_progress < 0) {
+        static QIcon errorIcon(QIcon(":/fznavigator_icones/danger.svg"));
+        return errorIcon;
+    } else if (m_progress < 100) {
+        static QIcon loadingIcon(QIcon(":/fznavigator_icones/loader.gif"));
+        return loadingIcon;
+    } else {
+        static QIcon defaultIcon(QIcon(":/fznavigator_icones/web.png"));
+        return defaultIcon;
+    }
 }
 void WebPageView::setUpPageActionConnections(WebPage* page)
 {

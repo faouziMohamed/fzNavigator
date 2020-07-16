@@ -1,4 +1,5 @@
 #include "header/browsertab.h"
+#include "header/tabwidget.h"
 
 BrowserTab::BrowserTab(QWidget *parent, QWebEngineProfile *profile, QString url)
     : QMainWindow(parent)
@@ -70,11 +71,14 @@ void BrowserTab::initializeMainToolbarAction()
 void BrowserTab::configureURLField()
 {
     m_urlField = new QLineEdit(defaultHomePage);
+    m_urlIconAct = new QAction(m_urlField);
     m_urlField->setFocus(Qt::OtherFocusReason);
     m_urlField->setClearButtonEnabled(true);
-    m_urlIconAct = new QAction(m_urlField);
-    m_urlIconAct->setIcon(QIcon(":/fznavigator_icones/loader.gif"));
+
+    m_submit->setIcon(QIcon(":/fznavigator_icones/search_62.svg"));
+    m_urlIconAct->setIcon(webView->favIcon());
     m_urlField->addAction(m_urlIconAct,QLineEdit::LeadingPosition);
+    m_urlField->addAction(m_submit,QLineEdit::TrailingPosition);
 }
 void BrowserTab::insertActionInToTheToolbar()
 {
@@ -86,7 +90,7 @@ void BrowserTab::insertActionInToTheToolbar()
 void BrowserTab::insertURLFIeldInToTheToolbar()
 {
     m_toolbar->addWidget(m_urlField);
-    m_toolbar->addAction(m_submit);
+    //m_toolbar->addAction(m_submit);
 }
 void BrowserTab::linkToolbarActionsWithTheirIcons()
 {
@@ -94,7 +98,6 @@ void BrowserTab::linkToolbarActionsWithTheirIcons()
     m_nextHistoryAction->setIcon(QIcon(":/fznavigator_icones/right_empty.svg"));
     m_stopReloadAction->setIcon(QIcon(":/fznavigator_icones/Reload.svg"));
     m_homeAction->setIcon(QIcon(":/fznavigator_icones/home_43.svg"));
-    m_submit->setIcon(QIcon(":/fznavigator_icones/go.png"));
 }
 
 void BrowserTab::configureConnectionsForToolbarActions()
@@ -190,11 +193,13 @@ void BrowserTab::webViewConnections()
             emit loadProgress(progress);});
     connect(webView,&WebPageView::webActionChanged,this,
             &BrowserTab::handleWebActionChanged);
+    connect(webView,&QWebEngineView::urlChanged,[this](const QUrl &url){
+        m_urlField->setText(url.url());});
 
     connect(webView,&WebPageView::favIconChanged,
             webView,[this](const QIcon &icon){
-            m_urlIconAct->setIcon(icon);
-    });
+            emit favIconSent(icon);
+            m_urlIconAct->setIcon(icon);});
 }
 void BrowserTab::actionsConnections()
 {
@@ -228,7 +233,7 @@ void BrowserTab::handleLoadProgress(int progress)
         m_stopReloadAction->setToolTip(tr("Reload the current page"));
         m_progress->setValue(0);
     }
-    m_urlIconAct->setIcon(QIcon(":/fznavigator_icones/loader.gif"));
+    m_urlIconAct->setIcon(webView->favIcon());
     int stopReloadWebAct = m_stopReloadAction->data().toInt();
     makeActionConnected(m_stopReloadAction,WebPage::WebAction(stopReloadWebAct));
 }
