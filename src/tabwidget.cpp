@@ -6,8 +6,13 @@ TabWidget::TabWidget(QWebEngineProfile *profile, QWidget * parent)
     , newTabTitle("About:Blank - Fz Navigo")
     , m_profile(profile)
 {
-    tab = addNewTab();
+    addNewTab();
     setupTabsBehavior();
+    setUpMainConnexions();
+}
+
+void TabWidget::setUpMainConnexions()
+{
     QShortcut *newtabShortcut = new QShortcut(QKeySequence::AddTab,this);
     connect(newtabShortcut,SIGNAL(activated()),this,SLOT(addNewTab()));
     connect(this,&QTabWidget::currentChanged,[this](int index){
@@ -18,14 +23,33 @@ TabWidget::TabWidget(QWebEngineProfile *profile, QWidget * parent)
     });
 
     connect(this,&TabWidget::customWindowTitleChanged,
-            [this](const QString &title){
-            setWindowTitle(title);
+            [this](const QString &title){setWindowTitle(title);});
+    connect(this,&TabWidget::tabCloseRequested,[this](int index){
+        removeTab(index);
+        if(count()>0){
+            currentTab()->setFocus();
+        }
+        else
+        {
+            this->close();
+        }
+
     });
 
+    /*connect(this,&TabWidget::tabBarClicked,
+            [this](int index){
+         WebPageView *view = currentTab()->view();
+         QIcon icon = view->favIcon();
+         emit currentTab()->favIconSent(icon);
 
-
-    this->setWindowIcon(QIcon(":/fznavigator_icones/web.png"));
+        emit currentChanged(-1);
+        setCurrentIndex(index);
+        setCurrentWidget(widget(index));
+        qDebug()<<QString("Currnt %1, index %2").arg(currentIndex()).arg(index);
+    });*/
 }
+
+
 
 BrowserTab* TabWidget::addNewTab()
 {
@@ -35,34 +59,39 @@ BrowserTab* TabWidget::addNewTab()
    setCurrentIndex(index);
    setTabIcon(index,view->favIcon());
 
-   setUpTabConnexions(newTab,index);
+   setUpTabConnexions(newTab);
    themeDarkAurore(newTab);
    return newTab;
 }
 
-void TabWidget::setUpTabConnexions(BrowserTab* newTab,int tabIndex)
+void TabWidget::setUpTabConnexions(BrowserTab* newTab)
 {
     WebPageView *view = newTab->view();
+    //int index = indexOf(newTab);
+    connect(newTab,&BrowserTab::favIconSent,[this,newTab](const QIcon& icon){
+        setTabIcon(indexOf(newTab),icon);});
 
-    connect(newTab,&BrowserTab::favIconSent,[this,tabIndex](const QIcon& icon){
-        setTabIcon(tabIndex,icon);});
-    connect(view,&WebPageView::titleChanged,[this,tabIndex](const QString &title){
-        setTabText(tabIndex,title.left(25));
+    connect(view,&WebPageView::titleChanged,[this,newTab](const QString &title){
+        setTabText(indexOf(newTab),title.left(25));
+        setTabToolTip(indexOf(newTab),title);
     });
-    connect(view,&WebPageView::titleChanged,[this,tabIndex](const QString &title){
-        if(currentIndex()==tabIndex)
-        {
+    connect(view,&WebPageView::titleChanged,[this, newTab](const QString &title){
+        if(currentIndex()==indexOf(newTab)){
             QString winTitle = title + " - " + fznavName;
             emit customWindowTitleChanged(winTitle);
         }
     });
-
 }
 
 
 BrowserTab* TabWidget::currentTab()
 {
-    return  (BrowserTab*) currentWidget();
+    return  qobject_cast<BrowserTab*>(currentWidget());
+}
+
+BrowserTab* TabWidget::widget(int index)
+{
+    return  qobject_cast<BrowserTab*>(QTabWidget::widget(index));
 }
 
 void TabWidget::setupTabsBehavior()
@@ -70,7 +99,8 @@ void TabWidget::setupTabsBehavior()
     setMovable(true);
     setTabsClosable(true);
     setFocus(Qt::MouseFocusReason);
-    resize(700,300);
+    resize(900,530);
+    this->setWindowIcon(QIcon(":/fznavigator_icones/web.png"));
 }
 
 QString TabWidget::themeDarkAurore(BrowserTab* btab)
@@ -86,6 +116,7 @@ QString TabWidget::themeDarkAurore(BrowserTab* btab)
 }
 
 
+/*
 void TabWidget::handleContextMenuRequested()
 {
     QMenu menu;
@@ -96,6 +127,5 @@ void TabWidget::handleContextMenuRequested()
     action = menu.addAction(tr("Close &Other Tabs"));
     menu.addSeparator();
     action = menu.addAction(tr("Reload Tab"));
-    action->setShortcut(QKeySequence::Refresh);
     menu.exec(QCursor::pos());
-}
+}*/

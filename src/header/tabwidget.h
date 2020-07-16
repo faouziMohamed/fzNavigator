@@ -17,15 +17,17 @@ public:
 signals:
     void customWindowTitleChanged(const QString &title);
 public slots:
-    void handleContextMenuRequested();
+    //void handleContextMenuRequested();
     BrowserTab *addNewTab();
 protected:
     BrowserTab* tab;
     QWebEngineProfile* m_profile;
     BrowserTab *currentTab();
+    BrowserTab *widget(int index);
 private:
     void setupTabsBehavior();
-    void setUpTabConnexions(BrowserTab *newTab, int tabIndex);
+    void setUpTabConnexions(BrowserTab *newTab);
+    void setUpMainConnexions();
 };
 
 #endif // TABWIDGETS_H 
