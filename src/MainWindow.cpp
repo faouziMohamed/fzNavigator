@@ -2,7 +2,7 @@
 
 MainWindow::MainWindow(QWidget* parent)
     :QMainWindow(parent)
-{
+{  
     createMenu();
     setBehaviorForTabs();
     createInitialTab();

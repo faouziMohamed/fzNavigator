@@ -1,7 +1,7 @@
 #include "header/webEngineTools.h"
 
 WebEngineTools::WebEngineTools(QWidget* parent, QString url)
-    :QMainWindow(parent)
+    :QMainWindow(parent) 
 {
     addToolbar();
     addStatusBar();
