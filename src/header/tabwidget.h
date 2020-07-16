@@ -2,16 +2,22 @@
 #define TABWIDGETS_H
 
 #include <QtWidgets>
-#include "src/header/webpage.h"
-#include "src/header/webPageView.h"
+#include "webpage.h"
+#include "webPageView.h"
+#include "browsertab.h"
 
 class TabWidget : public QTabWidget
 {
     Q_OBJECT
 public:
-    TabWidget(QWebEngineProfile* profil, QWidget *parent=nullptr);
+    TabWidget(QWebEngineProfile* profile, QWidget *parent=nullptr);
+    QString themeDarkAurore();
 public slots:
     void handleContextMenuRequested();
+protected:
+    BrowserTab* tab;
+private:
+    void setupTabsBehavior();
 };
 
 #endif // TABWIDGETS_H 

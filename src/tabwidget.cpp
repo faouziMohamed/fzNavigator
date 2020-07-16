@@ -1,9 +1,33 @@
 #include "header/tabwidget.h"
 
-TabWidget::TabWidget(QWebEngineProfile *profil, QWidget * parent)
+TabWidget::TabWidget(QWebEngineProfile *profile, QWidget * parent)
     : QTabWidget(parent)
 {
+    tab = new BrowserTab(this,profile);
+    setupTabsBehavior();
+    themeDarkAurore();
 }
+
+void TabWidget::setupTabsBehavior()
+{
+    setMovable(true);
+    setTabsClosable(true);
+    setFocus(Qt::MouseFocusReason);
+    resize(1024,700);
+}
+
+QString TabWidget::themeDarkAurore()
+{
+    this->addTab(tab,"About:Blank");
+    setStyleSheet("background-color:#253545;"
+                  "color:#bea;");
+    tab->m_urlField->setStyleSheet("padding-left:10px;"
+                                   "border-radius:12%;"
+                                   "height:25px;"
+                                   "border:1px solid #555");
+    return styleSheet();
+}
+
 
 void TabWidget::handleContextMenuRequested()
 {

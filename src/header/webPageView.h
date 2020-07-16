@@ -30,7 +30,7 @@ signals:
     void titleChanged(const QString &title);
     void devToolRequested(QWebEnginePage* page);
     void webActionChanged(WebPage::WebAction webAction,bool enabled);
-    void shortcutEnabled(WebPage::WebAction webAction,bool enabled);
+    void shortcutActivated(WebPage::WebAction webAction,bool enabled);
     void findTextRequested(QAction* findText);
     void findSelectedTextRequested(QAction* findSelectedText);
     void linkTextRequested(const QString& text);

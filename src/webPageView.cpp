@@ -202,6 +202,6 @@ void WebPageView::setUpShortcut(QKeySequence seq,WebPage *page,
     QAction *action = page->action(webAction);
     action->setShortcut(seq);
     connect(new QShortcut(seq,this),&QShortcut::activated,[seq,this,action]{
-        emit shortcutEnabled(WebPage::Reload, action->isEnabled());});
+        emit shortcutActivated(WebPage::Reload, action->isEnabled());});
 }
 

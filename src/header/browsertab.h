@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QtWidgets>
 #include <cstdarg>
+#include <QMap>
 #include "FzGlobal.h"
 #include "webPageView.h"
 #include "webpage.h"
@@ -16,7 +17,9 @@ public:
                         , QWebEngineProfile *profile = new QWebEngineProfile
                         , QString url="");
 
-    void test();
+    WebPageView *view();
+    WebPage* page();
+
 
 signals:
         void loadProgress(int progress);
@@ -25,6 +28,7 @@ protected:
     QWebEngineProfile* m_Profile;
     WebPageView * webView;
     WebPage * webPage;
+    QMap<WebPage::WebAction, QAction*> toolbarAction;
 protected:
     QString preconfigureUrl(QString url);
     void insertWebPageView(QString url);
@@ -40,12 +44,12 @@ public slots:
     void startOfLoading();
     void loadProgressing(int value);
     void endOfLoading(bool visible);
-    void handleCurrentChanged(int index);
+    void handleCurrentChanged(QWebEnginePage::WebAction webAct, bool state);
 private:
     QToolBar  *m_toolbar;
-    QAction   *m_previousPageAction;
-    QAction   *m_nextPageAction;
-    QAction   *m_refreshAction;
+    QAction   *m_backHistoryAction;
+    QAction   *m_nextHistoryAction;
+    QAction   *m_reloadAction;
     QAction   *m_stopAction;
     QAction   *m_homeAction;
     QAction   *m_submit;
@@ -61,10 +65,14 @@ private:
     void addActionsToTheToolbar(QToolBar *aToolbar...);
     void insertURLFIeldInToTheToolbar();
     void linkToolbarActionsWithTheirIcons();
+    void setToolBarBehavior();
     void configureToolbarActionsShortcuts();
     void configureToolbarActionsConnections();
     void configureOppeningWindowSize();
     QWidget *createWebPageLayout();
+
+    friend class TabWidget;
+    void setUpCustomContexteMenu();
 };
 
 #endif // BROWSERTAB_H

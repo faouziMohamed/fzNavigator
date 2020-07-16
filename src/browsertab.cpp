@@ -8,8 +8,23 @@ BrowserTab::BrowserTab(QWidget *parent, QWebEngineProfile *profile, QString url)
     addToolbar();
     addStatusBar();
     configureOppeningWindowSize();
+    setUpCustomContexteMenu();
 }
 
+void BrowserTab::setUpCustomContexteMenu()
+{
+    setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(this, SIGNAL(customContextMenuRequested(const QPoint &)),
+            this, SLOT(ShowContextMenu(const QPoint &)));
+}
+WebPageView* BrowserTab::view()
+{
+    return webView;
+}
+WebPage *BrowserTab::page()
+{
+    return webPage;
+}
 void BrowserTab::addToolbar()
 {
     initializeMainToolbarAction();
@@ -18,46 +33,56 @@ void BrowserTab::addToolbar()
     insertURLFIeldInToTheToolbar();
     linkToolbarActionsWithTheirIcons();
     configureToolbarActionsConnections();
+    setToolBarBehavior();
+}
+
+void BrowserTab::setToolBarBehavior()
+{
+    m_toolbar->setMovable(false);
+    m_toolbar->setFloatable(false);
+    m_toolbar->toggleViewAction()->setVisible(false);
 }
 void BrowserTab::addStatusBar()
 {
     m_progress = new QProgressBar;
     m_progress->reset();
-    m_progress->setVisible(true);
-
+    m_progress->setVisible(false);
     statusBar()->addWidget(m_progress,1);
     statusBar()->setVisible(true);
 }
 
 void BrowserTab::configureToolbarActionsConnections()
 {
-    makeActionConnected(m_previousPageAction,WebPage::Back);
-    makeActionConnected(m_nextPageAction,WebPage::Forward);
-    makeActionConnected(m_refreshAction,WebPage::Reload);
+    makeActionConnected(m_backHistoryAction,WebPage::Back);
+    makeActionConnected(m_nextHistoryAction,WebPage::Forward);
+    makeActionConnected(m_reloadAction,WebPage::Reload);
     makeActionConnected(m_stopAction,WebPage::Stop);
-    connect(webView,&WebPageView::shortcutEnabled,
+    connect(webView,&WebPageView::shortcutActivated,
             webView,&WebPageView::triggerPageAction);
     connect(m_submit,&QAction::triggered,[this]{loadUrl();});
     connect(m_urlField,&QLineEdit::returnPressed,[this]{loadUrl();});
     connect(new QShortcut(QKeySequence("CTRL+L"),this),
-            &QShortcut::activated,[this]{m_urlField->selectAll();});
-
-    connect(webView,SIGNAL(loadStarted()),this,SLOT(startOfLoading()));
-    connect(webView,SIGNAL(loadProgress(int)),this,SLOT(loadProgressing(int)));
-    connect(webView,SIGNAL(loadFinished(bool)),this,SLOT(endOfLoading(bool)));
+            &QShortcut::activated,[this]{
+            m_urlField->selectAll();
+            m_urlField->setFocus(Qt::OtherFocusReason);});
+    connect(webView,&WebPageView::webActionChanged,this,
+                    &BrowserTab::handleCurrentChanged);
 }
 
 
-
-void BrowserTab::handleCurrentChanged(int index)
+void BrowserTab::handleCurrentChanged(WebPage::WebAction webAct, bool state)
 {
+
+
+    //emit loadProgress(webView->progress());
+    toolbarAction.value(webAct)->setEnabled(state);
+    /*
     if (index != -1)
     {
         WebPageView *view = webView;
         if (!view->url().isEmpty())
             view->setFocus();
         //emit titleChanged(view->title());
-        emit loadProgress(view->progress());
         //emit urlChanged(view->url());
         //emit favIconChanged(view->favIcon());
         emit view->webActionChanged(WebPage::Back, webPage->action(QWebEnginePage::Back)->isEnabled());
@@ -73,16 +98,9 @@ void BrowserTab::handleCurrentChanged(int index)
         emit webView->webActionChanged(QWebEnginePage::Forward, false);
         emit webView->webActionChanged(QWebEnginePage::Stop, false);
         emit webView->webActionChanged(QWebEnginePage::Reload, true);
-    }
+    }*/
+
 }
-
-
-
-
-
-
-
-
 
 void BrowserTab::startOfLoading()
 {qDebug()<<"Start"<<endl;
@@ -95,7 +113,7 @@ void BrowserTab::loadProgressing(int value)
     if(m_progress->value()<0)
         return;
     m_progress->setValue(value);
-    m_refreshAction->setVisible(false);
+    m_reloadAction->setVisible(false);
     m_stopAction->setVisible(true);
     qDebug()<<"Loading " <<m_progress->value()<<endl;
 }
@@ -108,7 +126,7 @@ void BrowserTab::endOfLoading(bool visible)
         m_progress->setValue(-1);
         statusBar()->showMessage(tr("Ready"),3000);
         m_stopAction->setVisible(false);
-        m_refreshAction->setVisible(true);
+        m_reloadAction->setVisible(true);
     }
 }
 void BrowserTab::makeActionConnected(QAction* act, WebPage::WebAction webAction)
@@ -139,7 +157,7 @@ BrowserTab *BrowserTab::createNewWebPageView(QString url)
 QWidget* BrowserTab::createWebPageLayout()
 {
     QWidget *centralWidget = new QWidget(this);
-    webView = new WebPageView(0);
+    webView = new WebPageView(this);
     webPage = new WebPage(webView);
     webView->setPage(webPage);
     QVBoxLayout *mainLayout = new QVBoxLayout(centralWidget);
@@ -155,19 +173,19 @@ QWidget* BrowserTab::createWebPageLayout()
 void BrowserTab::initializeMainToolbarAction()
 {
     m_toolbar =  this->addToolBar(tr("Navigation"));
-    m_previousPageAction = new QAction(tr("Previous page"));
-    m_nextPageAction     = new QAction(tr("Next Page"));
-    m_refreshAction      = new QAction(tr("Refresh"));
+    m_backHistoryAction = new QAction(tr("Previous page"));
+    m_nextHistoryAction     = new QAction(tr("Next Page"));
+    m_reloadAction      = new QAction(tr("Refresh"));
     m_stopAction         = new QAction(tr("Stop"));
     m_homeAction         = new QAction(tr("Home"));
     m_submit             = new QAction(tr("Go"));
-    m_toolbar->setMovable(false);
-    m_toolbar->setFloatable(false);
-    m_toolbar->toggleViewAction()->setVisible(false);
 
-    this->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(this, SIGNAL(customContextMenuRequested(const QPoint &)),
-            this, SLOT(ShowContextMenu(const QPoint &)));
+    m_backHistoryAction->setEnabled(false);
+    m_nextHistoryAction->setEnabled(false);
+    toolbarAction.insert(WebPage::Back,m_backHistoryAction);
+    toolbarAction.insert(WebPage::Forward,m_nextHistoryAction);
+    toolbarAction.insert(WebPage::Reload,m_reloadAction);
+    toolbarAction.insert(WebPage::Stop,m_stopAction);
 }
 
 void BrowserTab::ShowContextMenu(const QPoint &pos)
@@ -189,8 +207,8 @@ void BrowserTab::configureURLField()
 
 void BrowserTab::insertActionInToTheToolbar()
 {
-    addActionsToTheToolbar(m_toolbar, m_previousPageAction, m_nextPageAction,
-                           m_refreshAction, m_stopAction, m_homeAction,nullptr);
+    addActionsToTheToolbar(m_toolbar, m_backHistoryAction, m_nextHistoryAction,
+                           m_reloadAction, m_stopAction, m_homeAction,nullptr);
     m_toolbar->insertSeparator(m_homeAction);
 }
 void BrowserTab::insertURLFIeldInToTheToolbar()
@@ -200,9 +218,9 @@ void BrowserTab::insertURLFIeldInToTheToolbar()
 }
 void BrowserTab::linkToolbarActionsWithTheirIcons()
 {
-    m_previousPageAction->setIcon(QIcon(":/fznavigator_icones/prev.png"));
-        m_nextPageAction->setIcon(QIcon(":/fznavigator_icones/next.png"));
-         m_refreshAction->setIcon(QIcon(":/fznavigator_icones/refresh.png"));
+    m_backHistoryAction->setIcon(QIcon(":/fznavigator_icones/prev.png"));
+        m_nextHistoryAction->setIcon(QIcon(":/fznavigator_icones/next.png"));
+         m_reloadAction->setIcon(QIcon(":/fznavigator_icones/refresh.png"));
             m_homeAction->setIcon(QIcon(":/fznavigator_icones/home.png"));
             m_stopAction->setIcon(QIcon(":/fznavigator_icones/stop.png"));
                 m_submit->setIcon(QIcon(":/fznavigator_icones/go.png"));
