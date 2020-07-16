@@ -13,20 +13,16 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # Input
 HEADERS += \
     src/header/FzGlobal.h \
-	src/header/MainWindow.h\
     src/header/browsertab.h \
     src/header/tabwidget.h \
-	src/header/webEngineTools.h \
     src/header/webPageView.h \
     src/header/webpage.h
 
 SOURCES += \
 	main.cpp \
 	src/FzGlobal.cpp \
-	src/MainWindow.cpp \
 	src/browsertab.cpp \
 	src/tabwidget.cpp \
-	src/webEngineTools.cpp \
 	src/webPageView.cpp \
 	src/webpage.cpp
 

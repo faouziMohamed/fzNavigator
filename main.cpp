@@ -16,10 +16,10 @@ int main(int argc, char *argv[])
     WebEngineTools w(0);
     BrowserTab tab(nullptr);
     //w.show();
-    //p.showMaximized();
+    p.showMaximized();
     //tab.show();
 
     TabWidget browser(nullptr);
-    browser.show();
+    //browser.show();
     return app.exec();
 }
