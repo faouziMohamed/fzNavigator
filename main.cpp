@@ -1,6 +1,7 @@
 #include <QApplication>
 #include "src/header/MainWindow.h"
 #include "src/header/browsertab.h"
+#include "src/header/tabwidget.h"
 #include <QTranslator>
 #include <QTabWidget>
 int main(int argc, char *argv[])
@@ -13,10 +14,12 @@ int main(int argc, char *argv[])
     app.installTranslator(&translator);
     MainWindow p(nullptr);
     WebEngineTools w(0);
+    BrowserTab tab(nullptr);
     //w.show();
     //p.showMaximized();
-    BrowserTab tab(nullptr);
-    tab.show();
+    //tab.show();
 
+    TabWidget browser(nullptr);
+    browser.show();
     return app.exec();
 }

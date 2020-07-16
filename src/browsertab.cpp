@@ -25,7 +25,7 @@ void BrowserTab::addToolbar()
     insertActionInToTheToolbar();
     insertURLFIeldInToTheToolbar();
     linkToolbarActionsWithTheirIcons();
-    configureToolbarActionsConnections();
+    configureConnectionsForToolbarActions();
     setToolBarBehavior();
 }
 void BrowserTab::addStatusBar()
@@ -94,34 +94,19 @@ void BrowserTab::linkToolbarActionsWithTheirIcons()
     m_submit->setIcon(QIcon(":/fznavigator_icones/go.png"));
 }
 
-void BrowserTab::configureToolbarActionsConnections()
+void BrowserTab::configureConnectionsForToolbarActions()
 {
     makeActionConnected(m_backHistoryAction,WebPage::Back);
     makeActionConnected(m_nextHistoryAction,WebPage::Forward);
-    connect(webView,&WebPageView::shortcutActivated,
-            webView,&WebPageView::triggerPageAction);
-    connect(webView,&QWebEngineView::loadProgress,[this](int progress){
-            emit loadProgress(progress);});
-    connect(m_submit,&QAction::triggered,this,&BrowserTab::loadUrl);
-    connect(m_urlField,&QLineEdit::returnPressed,this,&BrowserTab::loadUrl);
-    connect(new QShortcut(QKeySequence("CTRL+L"),this),&QShortcut::activated,
-            [this]{m_urlField->selectAll();
-            m_urlField->setFocus(Qt::OtherFocusReason);});
-    connect(webView,&WebPageView::webActionChanged,this,
-            &BrowserTab::handleCurrentChanged);
-    connect(this,&BrowserTab::loadProgress,this,&BrowserTab::handleLoadProgress);
-    connect(webView,&WebPageView::webActionChanged,this,
-            &BrowserTab::handleWebActionChanged);
+    webViewConnections();
+    actionsConnections();
 }
-
-
 void BrowserTab::setToolBarBehavior()
 {
     m_toolbar->setMovable(false);
     m_toolbar->setFloatable(false);
     m_toolbar->toggleViewAction()->setVisible(false);
 }
-
 void BrowserTab::setUpCustomContexteMenu()
 {
     setContextMenuPolicy(Qt::CustomContextMenu);
@@ -187,10 +172,40 @@ void BrowserTab::addActionsToTheToolbar(QToolBar* aToolbar,...)
     }
     va_end(listOfvariableArguments);
 }
+/*Called in configureConnectionsForToolbarActions() function*/
 void BrowserTab::makeActionConnected(QAction* act, WebPage::WebAction webAction)
 {
     connect(act,&QAction::triggered,[this,webAction]{
              webView->triggerPageAction(webAction);});
+}
+void BrowserTab::webViewConnections()
+{
+    connect(webView,&WebPageView::webActionChanged,this,
+            &BrowserTab::handleCurrentChanged);
+    connect(webView,&WebPageView::shortcutActivated,
+            webView,&WebPageView::triggerPageAction);
+    connect(webView,&QWebEngineView::loadProgress,[this](int progress){
+            emit loadProgress(progress);});
+    connect(webView,&WebPageView::webActionChanged,this,
+            &BrowserTab::handleWebActionChanged);
+}
+void BrowserTab::actionsConnections()
+{
+    QShortcut *reloadShortcut = new QShortcut(QKeySequence("CTRL+L"),this);
+    connect(this,&BrowserTab::loadProgress,this,&BrowserTab::handleLoadProgress);
+    connect(m_submit,&QAction::triggered,this,&BrowserTab::loadUrl);
+    connect(m_urlField,&QLineEdit::returnPressed,this,&BrowserTab::loadUrl);
+    connect(reloadShortcut,&QShortcut::activated, [this]{m_urlField->selectAll();
+            m_urlField->setFocus(Qt::OtherFocusReason);});
+}
+void BrowserTab::handleCurrentChanged()
+{
+    emit loadProgress(webView->progress());
+}
+void BrowserTab::handleWebActionChanged(WebPage::WebAction webAct, bool state)
+{
+    if(webAct==WebPage::Reload || webAct==WebPage::Stop){return;}
+    toolbarAction.value(webAct)->setEnabled(state);
 }
 void BrowserTab::handleLoadProgress(int progress)
 {
@@ -199,15 +214,14 @@ void BrowserTab::handleLoadProgress(int progress)
         m_stopReloadAction->setToolTip(tr("Stop loading the current page"));
         m_stopReloadAction->setIcon(QIcon(":/fznavigator_icones/stop.png"));
         m_progress->setValue(progress);
-    }
-    else{
+    }else{
         m_stopReloadAction->setData(WebPage::Reload);
         m_stopReloadAction->setIcon(QIcon(":/fznavigator_icones/refresh.png"));
         m_stopReloadAction->setToolTip(tr("Reload the current page"));
         m_progress->setValue(0);
     }
-    makeActionConnected(m_stopReloadAction,
-                        WebPage::WebAction(m_stopReloadAction->data().toInt()));
+    int stopReloadWebAct = m_stopReloadAction->data().toInt();
+    makeActionConnected(m_stopReloadAction,WebPage::WebAction(stopReloadWebAct));
 }
 
 
@@ -216,12 +230,7 @@ void BrowserTab::handleLoadProgress(int progress)
 
 
 
-void BrowserTab::handleWebActionChanged(WebPage::WebAction webAct, bool state)
-{
-    if(webAct==WebPage::Reload || webAct==WebPage::Stop)
-        return;
-    toolbarAction.value(webAct)->setEnabled(state);
-}
+
 
 
 
@@ -240,10 +249,7 @@ WebPage *BrowserTab::page()
 
 
 
-void BrowserTab::handleCurrentChanged(WebPage::WebAction webAct, bool state)
-{
-    emit loadProgress(webView->progress());
-}
+
 
 
 
