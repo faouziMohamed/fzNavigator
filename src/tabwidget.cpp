@@ -13,7 +13,7 @@ void TabWidget::setupTabsBehavior()
     setMovable(true);
     setTabsClosable(true);
     setFocus(Qt::MouseFocusReason);
-    resize(1024,700);
+    resize(700,300);
 }
 
 QString TabWidget::themeDarkAurore()

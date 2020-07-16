@@ -37,24 +37,21 @@ protected:
 public slots:
     void ShowContextMenu(const QPoint &pos);
     void loadUrl();
-    void previousPage();
-    void nextPage();
-    void refreshPage();
     void goToHomePage();
-    void startOfLoading();
-    void loadProgressing(int value);
-    void endOfLoading(bool visible);
     void handleCurrentChanged(QWebEnginePage::WebAction webAct, bool state);
+    void handleLoadProgress(int progress);
+    void handleWebActionChanged(WebPage::WebAction webAct, bool state);
+
 private:
     QToolBar  *m_toolbar;
     QAction   *m_backHistoryAction;
     QAction   *m_nextHistoryAction;
-    QAction   *m_reloadAction;
-    QAction   *m_stopAction;
+    QAction   *m_stopReloadAction;
     QAction   *m_homeAction;
     QAction   *m_submit;
     QLineEdit *m_urlField;
     QProgressBar *m_progress;
+    QList<QAction*> separators;
 
 private:
     void addToolbar();
@@ -68,7 +65,7 @@ private:
     void setToolBarBehavior();
     void configureToolbarActionsShortcuts();
     void configureToolbarActionsConnections();
-    void configureOppeningWindowSize();
+    void setUpOppeningWindow();
     QWidget *createWebPageLayout();
 
     friend class TabWidget;
