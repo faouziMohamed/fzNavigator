@@ -21,8 +21,8 @@ A simple web Navigator based on [Chromium](https://wiki.qt.io/QtWebEngine), writ
  - For [Windows7](https://www.microsoft.com/en-us/download/details.aspx?id=8279)  
  - For [Windows8](https://support.microsoft.com/en-us/help/2780680/an-update-is-available-for-windows-sdk-for-windows-8)  
  - For [Windows10](https://developer.microsoft.com/en-US/windows/downloads/windows-10-sdk/)  
-  
- ### QT
+
+### QT
  - Download [Qt5 Framwork](https://download.qt.io/official_releases/qt/)  
  - Qt [Documentation](https://doc.qt.io/)  
  #### How to Install MSVC (In Qt Creator) ?  
