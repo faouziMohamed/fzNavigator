@@ -61,7 +61,7 @@ protected:
     QWebEngineProfile* m_Profile;
     WebPageView * webView;
     WebPage * webPage;
-    QAction *m_urlIconAct;
+    QAction *m_url_field_favIconAct;
     QMap<WebPage::WebAction, QAction*> toolbarAction;
 
 private:

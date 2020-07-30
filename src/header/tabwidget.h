@@ -11,7 +11,7 @@ class TabWidget : public QTabWidget
     Q_OBJECT
 public:
     TabWidget(QWebEngineProfile* profile, QWidget *parent=nullptr);
-    QString themeDarkAurore(BrowserTab *btab);
+    QString setUserTheme(const QString& cssFile);
         QString fznavName;
         QString newTabTitle;
 signals:
