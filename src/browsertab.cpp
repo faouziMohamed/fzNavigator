@@ -71,14 +71,14 @@ void BrowserTab::initializeMainToolbarAction()
 void BrowserTab::configureURLField()
 {
     m_urlField = new QLineEdit(defaultHomePage);
-    m_urlIconAct = new QAction(m_urlField);
+    m_url_field_favIconAct = new QAction(m_urlField);
     m_urlField->setFocus(Qt::OtherFocusReason);
     m_urlField->setClearButtonEnabled(true);
 
     m_submit->setIcon(QIcon(":/fznavigator_icones/search_62.svg"));
-    m_urlIconAct->setIcon(webView->favIcon());
-    m_urlField->addAction(m_urlIconAct,QLineEdit::LeadingPosition);
-    m_urlField->addAction(m_submit,QLineEdit::TrailingPosition);
+    m_url_field_favIconAct->setIcon(webView->favIcon());
+    m_urlField->addAction(m_url_field_favIconAct, QLineEdit::LeadingPosition);
+    m_urlField->addAction(m_submit, QLineEdit::TrailingPosition);
 }
 void BrowserTab::insertActionInToTheToolbar()
 {
@@ -102,8 +102,8 @@ void BrowserTab::linkToolbarActionsWithTheirIcons()
 
 void BrowserTab::configureConnectionsForToolbarActions()
 {
-    makeActionConnected(m_backHistoryAction,WebPage::Back);
-    makeActionConnected(m_nextHistoryAction,WebPage::Forward);
+    makeActionConnected(m_backHistoryAction, WebPage::Back);
+    makeActionConnected(m_nextHistoryAction, WebPage::Forward);
     webViewConnections();
     actionsConnections();
 }
@@ -199,7 +199,7 @@ void BrowserTab::webViewConnections()
     connect(webView,&WebPageView::favIconChanged,
             webView,[this](const QIcon &icon){
             emit favIconSent(icon);
-            m_urlIconAct->setIcon(icon);});
+            m_url_field_favIconAct->setIcon(icon);});
 }
 void BrowserTab::actionsConnections()
 {
@@ -233,7 +233,7 @@ void BrowserTab::handleLoadProgress(int progress)
         m_stopReloadAction->setToolTip(tr("Reload the current page"));
         m_progress->setValue(0);
     }
-    m_urlIconAct->setIcon(webView->favIcon());
+    m_url_field_favIconAct->setIcon(webView->favIcon());
     int stopReloadWebAct = m_stopReloadAction->data().toInt();
     makeActionConnected(m_stopReloadAction,WebPage::WebAction(stopReloadWebAct));
 }
