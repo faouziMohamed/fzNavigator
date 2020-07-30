@@ -35,7 +35,7 @@ void BrowserTab::addStatusBar()
     m_progress->reset();
     m_progress->setVisible(false);
     statusBar()->addWidget(m_progress,1);
-    statusBar()->setVisible(true);
+    statusBar()->setVisible(false);
 }
 void BrowserTab::setUpOppeningWindow()
 {
