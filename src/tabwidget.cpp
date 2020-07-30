@@ -35,18 +35,6 @@ void TabWidget::setUpMainConnexions()
         }
 
     });
-
-    /*connect(this,&TabWidget::tabBarClicked,
-            [this](int index){
-         WebPageView *view = currentTab()->view();
-         QIcon icon = view->favIcon();
-         emit currentTab()->favIconSent(icon);
-
-        emit currentChanged(-1);
-        setCurrentIndex(index);
-        setCurrentWidget(widget(index));
-        qDebug()<<QString("Currnt %1, index %2").arg(currentIndex()).arg(index);
-    });*/
 }
 
 
@@ -60,7 +48,7 @@ BrowserTab* TabWidget::addNewTab()
    setTabIcon(index,view->favIcon());
 
    setUpTabConnexions(newTab);
-   themeDarkAurore(newTab);
+   setUserTheme("://style/userTheme.css");
    return newTab;
 }
 
@@ -103,15 +91,12 @@ void TabWidget::setupTabsBehavior()
     this->setWindowIcon(QIcon(":/fznavigator_icones/web.png"));
 }
 
-QString TabWidget::themeDarkAurore(BrowserTab* btab)
+QString TabWidget::setUserTheme(const QString &cssFile)
 {
-    setStyleSheet("background-color:#253545;"
-                  "color:#bea;");
-    btab->setStyleSheet("QAction{border:1px red solid;}");
-    btab->setStyleSheet("QLineEdit{padding-left:10px;"
-                                   "border-radius:12%;"
-                                   "height:25px;"
-                                   "border:1px solid #06a58a}");
+    QFile styleFile(cssFile);
+    styleFile.open(QFile::ReadOnly);
+    QString qssStyle = QLatin1String(styleFile.readAll());
+    setStyleSheet(qssStyle);
     return styleSheet();
 }
 
