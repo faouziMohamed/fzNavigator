@@ -1,0 +1,24 @@
+*{ background-color:#253545; color:#bea;}
+QTabBar::tab { height: 35px; }
+QToolBar{padding:3px;}
+QToolBar>QWidget{
+    height:30px;
+    width:25px;
+    icon-size:20px;
+}
+QToolBar>QWidget:hover{
+    background:#051525;
+    border-radius:3px;
+    border:none;
+}
+QLineEdit{
+    padding-left:10px;
+    border-radius:12%;
+    height:30px;
+    border:1px solid #06a58a;
+}
+QToolBar QLineEdit:hover{
+    background : initial;
+    border-radius:12%;
+    border:1px solid #06a58a;
+}
