@@ -2,128 +2,155 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="fr_FR">
 <context>
-    <name>MainWindow</name>
+    <name>BrowserTab</name>
     <message>
-        <location filename="MainWindow.cpp" line="64"/>
-        <source>New window</source>
-        <translation>Nouvelle fenêtre</translation>
+        <location filename="../../src/browsertab.cpp" line="57"/>
+        <source>Navigation</source>
+        <translation>Navigation</translation>
     </message>
     <message>
-        <location filename="MainWindow.cpp" line="65"/>
-        <source>Quit</source>
-        <translation>Quitter</translation>
+        <location filename="../../src/browsertab.cpp" line="58"/>
+        <source>Previous page</source>
+        <translation>Page précédente</translation>
     </message>
     <message>
-        <location filename="MainWindow.cpp" line="66"/>
-        <source>New tab</source>
-        <translation>Nouvel onglet</translation>
+        <location filename="../../src/browsertab.cpp" line="59"/>
+        <source>Next Page</source>
+        <translation>Page suivante</translation>
     </message>
     <message>
-        <location filename="MainWindow.cpp" line="67"/>
-        <source>Close tab</source>
-        <translation>Fermer l&apos;onglet</translation>
+        <location filename="../../src/browsertab.cpp" line="61"/>
+        <source>Home</source>
+        <translation>Page d&apos;acceuil</translation>
     </message>
     <message>
-        <location filename="MainWindow.cpp" line="69"/>
-        <source>File</source>
-        <translation>Fichier</translation>
-    </message>
-    <message>
-        <location filename="MainWindow.cpp" line="75"/>
-        <source>Back</source>
-        <translation>Précédent</translation>
-    </message>
-    <message>
-        <location filename="MainWindow.cpp" line="76"/>
-        <source>Forward</source>
-        <translation>Suivant</translation>
-    </message>
-    <message>
-        <location filename="MainWindow.cpp" line="77"/>
-        <source>Reload</source>
-        <translation>Actualiser</translation>
-    </message>
-    <message>
-        <location filename="MainWindow.cpp" line="78"/>
-        <source>Stop</source>
-        <translation>Arrêter</translation>
-    </message>
-    <message>
-        <location filename="MainWindow.cpp" line="79"/>
+        <location filename="../../src/browsertab.cpp" line="62"/>
         <source>Go</source>
         <translation>Aller</translation>
+    </message>
+    <message>
+        <location filename="../../src/browsertab.cpp" line="124"/>
+        <source>Context menu</source>
+        <translation>Contexte menu</translation>
+    </message>
+    <message>
+        <location filename="../../src/browsertab.cpp" line="227"/>
+        <source>Stop loading the current page</source>
+        <translation>Arrêter de charger la page courante</translation>
+    </message>
+    <message>
+        <location filename="../../src/browsertab.cpp" line="233"/>
+        <source>Reload the current page</source>
+        <translation>Recharger la page courante</translation>
+    </message>
+</context>
+<context>
+    <name>MainWindow</name>
+    <message>
+        <source>New window</source>
+        <translation type="vanished">Nouvelle fenêtre</translation>
+    </message>
+    <message>
+        <source>Quit</source>
+        <translation type="vanished">Quitter</translation>
+    </message>
+    <message>
+        <source>New tab</source>
+        <translation type="vanished">Nouvel onglet</translation>
+    </message>
+    <message>
+        <source>Close tab</source>
+        <translation type="vanished">Fermer l&apos;onglet</translation>
+    </message>
+    <message>
+        <source>File</source>
+        <translation type="vanished">Fichier</translation>
+    </message>
+    <message>
+        <source>Back</source>
+        <translation type="vanished">Précédent</translation>
+    </message>
+    <message>
+        <source>Forward</source>
+        <translation type="vanished">Suivant</translation>
+    </message>
+    <message>
+        <source>Reload</source>
+        <translation type="vanished">Actualiser</translation>
+    </message>
+    <message>
+        <source>Stop</source>
+        <translation type="vanished">Arrêter</translation>
+    </message>
+    <message>
+        <source>Go</source>
+        <translation type="vanished">Aller</translation>
     </message>
     <message>
         <source>Home</source>
         <translation type="vanished">Page d&apos;acceuil</translation>
     </message>
     <message>
-        <location filename="MainWindow.cpp" line="81"/>
-        <source>Navigation</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="MainWindow.cpp" line="88"/>
         <source>Help</source>
-        <translation>Aide</translation>
+        <translation type="vanished">Aide</translation>
     </message>
     <message>
-        <location filename="MainWindow.cpp" line="114"/>
         <source>About:blank</source>
-        <translation>Nouvel onglet</translation>
-    </message>
-    <message>
-        <location filename="MainWindow.cpp" line="157"/>
-        <source>FzNavigator</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="MainWindow.cpp" line="159"/>
-        <source> - fzNavigator</source>
-        <translation></translation>
+        <translation type="vanished">Nouvel onglet</translation>
     </message>
 </context>
 <context>
     <name>WebEngineTools</name>
     <message>
-        <location filename="webEngineTools.cpp" line="102"/>
         <source>Ready</source>
-        <translation>Prêt</translation>
+        <translation type="vanished">Prêt</translation>
     </message>
     <message>
-        <location filename="webEngineTools.cpp" line="116"/>
         <source>Previous page</source>
-        <translation>Page précédente</translation>
+        <translation type="vanished">Page précédente</translation>
     </message>
     <message>
-        <location filename="webEngineTools.cpp" line="117"/>
         <source>Next Page</source>
-        <translation>Page suivante</translation>
+        <translation type="vanished">Page suivante</translation>
     </message>
     <message>
-        <location filename="webEngineTools.cpp" line="118"/>
         <source>Refresh</source>
-        <translation>Actualiser</translation>
+        <translation type="vanished">Actualiser</translation>
     </message>
     <message>
-        <location filename="webEngineTools.cpp" line="119"/>
         <source>Stop</source>
-        <translation>Arrêter</translation>
+        <translation type="vanished">Arrêter</translation>
     </message>
     <message>
-        <location filename="webEngineTools.cpp" line="120"/>
         <source>Home</source>
-        <translation>Page d&apos;acceuil</translation>
+        <translation type="vanished">Page d&apos;acceuil</translation>
     </message>
     <message>
-        <location filename="webEngineTools.cpp" line="122"/>
-        <source>Navigation</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="webEngineTools.cpp" line="134"/>
         <source>Go</source>
-        <translation>Aller</translation>
+        <translation type="vanished">Aller</translation>
+    </message>
+</context>
+<context>
+    <name>WebPageView</name>
+    <message>
+        <location filename="../../src/webPageView.cpp" line="7"/>
+        <source>Find selected text</source>
+        <translation>Chercher le texte séléctionné</translation>
+    </message>
+    <message>
+        <location filename="../../src/webPageView.cpp" line="85"/>
+        <source>Find</source>
+        <translation>Trouver</translation>
+    </message>
+    <message>
+        <location filename="../../src/webPageView.cpp" line="87"/>
+        <source>Find text</source>
+        <translation>Trouver le texte</translation>
+    </message>
+    <message>
+        <location filename="../../src/webPageView.cpp" line="99"/>
+        <source>Copy link text</source>
+        <translation>Copier le lien du texte</translation>
     </message>
 </context>
 </TS>
