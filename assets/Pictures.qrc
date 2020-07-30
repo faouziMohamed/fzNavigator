@@ -1,7 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>fznavigator_icones/web.png</file>
-        <file>lang/fzNavigator_fr.qm</file>
         <file>web.ico</file>
         <file>fznavigator_icones/loader.gif</file>
         <file>fznavigator_icones/home_43.svg</file>
@@ -11,5 +10,6 @@
         <file>fznavigator_icones/search_62.svg</file>
         <file>fznavigator_icones/right_empty.svg</file>
         <file>fznavigator_icones/danger.svg</file>
+        <file>style/userTheme.css</file>
     </qresource>
 </RCC>
