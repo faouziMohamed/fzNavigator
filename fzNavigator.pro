@@ -29,3 +29,6 @@ SOURCES += \
 RESOURCES += assets/Pictures.qrc
 TRANSLATIONS += assets/lang/fzNavigator_fr.ts
 RC_ICONS = assets/web.ico
+
+DISTFILES += \
+    assets/style/userTheme.css
