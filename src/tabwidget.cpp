@@ -70,6 +70,7 @@ void TabWidget::setUpTabConnexions(BrowserTab* newTab)
         emit customWindowTitleChanged(winTitle);
       }
   });
+  
 }
 
 
