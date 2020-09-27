@@ -18,7 +18,7 @@ signals:
     void customWindowTitleChanged(const QString &title);
 public slots:
     //void handleContextMenuRequested();
-    BrowserTab *addNewTab();
+    BrowserTab *addNewTab(WebPageView *view = nullptr);
 protected:
     BrowserTab* tab;
     QWebEngineProfile* m_profile;

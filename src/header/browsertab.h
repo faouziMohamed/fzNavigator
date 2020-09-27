@@ -8,6 +8,8 @@
 #include "FzGlobal.h"
 #include "webPageView.h"
 #include "webpage.h"
+#include "webPageView.h"
+
 class TabWidget;
 
 class BrowserTab : public QMainWindow
@@ -15,14 +17,21 @@ class BrowserTab : public QMainWindow
     Q_OBJECT
 public:
     explicit BrowserTab(QWidget *parent
+                        , WebPageView *view=nullptr
                         , QWebEngineProfile *profile = new QWebEngineProfile
                         , QString url="");
     WebPageView *view();
     WebPage* page();
+    void setView(WebPageView* view);
 
 signals:
     void loadProgress(int progress);
     void favIconSent(const QIcon& icon);
+    void newFgTabRequired(BrowserTab*);
+    void newBgTabRequired(BrowserTab*);
+    void newWindowTabRequired(BrowserTab*);
+    void newDialogTabRequired(WebPageView*);
+    
 protected:
     QString preconfigureUrl(QString url);
     void insertWebPageView(QString url);
@@ -50,6 +59,10 @@ private:
     void configureToolbarActionsShortcuts();
     void configureConnectionsForToolbarActions();
     void setUpOppeningWindow();
+    void configureWebPageView();
+    void handleReceivedSignal();
+    void addViewToLayout();
+    QWidget *addWebViewToLayout();
     QWidget *createWebPageLayout();
     void setUpCustomContexteMenu();
     void webViewConnections();

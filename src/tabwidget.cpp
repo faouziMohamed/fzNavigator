@@ -13,16 +13,16 @@ TabWidget::TabWidget(QWebEngineProfile *profile, QWidget * parent)
 
 void TabWidget::setUpMainConnexions()
 {
-    QShortcut *newtabShortcut = new QShortcut(QKeySequence::AddTab,this);
-    connect(newtabShortcut,SIGNAL(activated()),this,SLOT(addNewTab()));
-    connect(this,&QTabWidget::currentChanged,[this](int index){
+    QShortcut *newtabShortcut = new QShortcut(QKeySequence("CTRL+T"),this);
+    connect(newtabShortcut, SIGNAL(activated()), this, SLOT(addNewTab()));
+    connect(this, &QTabWidget::currentChanged,[this](int index){
         if(index!=-1){
             QString winTitle = tabText(index) + " - " + fznavName;
             emit customWindowTitleChanged(winTitle);
         }
     });
 
-    connect(this,&TabWidget::customWindowTitleChanged,
+    connect(this, &TabWidget::customWindowTitleChanged,
             [this](const QString &title){setWindowTitle(title);});
     connect(this,&TabWidget::tabCloseRequested,[this](int index){
         removeTab(index);
@@ -35,40 +35,41 @@ void TabWidget::setUpMainConnexions()
         }
 
     });
+    
 }
 
 
 
-BrowserTab* TabWidget::addNewTab()
+BrowserTab* TabWidget::addNewTab(WebPageView *webView)
 {
-   BrowserTab *newTab = new BrowserTab(this,m_profile);
+   BrowserTab *newTab = new BrowserTab(this, webView, m_profile);
    WebPageView* view = newTab->view();
-   int index = addTab(newTab,newTabTitle);
+   int index = addTab(newTab, newTabTitle);
    setCurrentIndex(index);
    setTabIcon(index,view->favIcon());
 
    setUpTabConnexions(newTab);
    setUserTheme("://style/userTheme.css");
+   //newTab->view();
    return newTab;
 }
 
 void TabWidget::setUpTabConnexions(BrowserTab* newTab)
 {
-    WebPageView *view = newTab->view();
-    //int index = indexOf(newTab);
-    connect(newTab,&BrowserTab::favIconSent,[this,newTab](const QIcon& icon){
-        setTabIcon(indexOf(newTab),icon);});
-
-    connect(view,&WebPageView::titleChanged,[this,newTab](const QString &title){
-        setTabText(indexOf(newTab),title.left(25));
-        setTabToolTip(indexOf(newTab),title);
-    });
-    connect(view,&WebPageView::titleChanged,[this, newTab](const QString &title){
-        if(currentIndex()==indexOf(newTab)){
-            QString winTitle = title + " - " + fznavName;
-            emit customWindowTitleChanged(winTitle);
-        }
-    });
+  WebPageView *view = newTab->view();
+  //int index = indexOf(newTab);
+  connect(newTab,&BrowserTab::favIconSent,[this,newTab](const QIcon& icon){
+      setTabIcon(indexOf(newTab),icon);});
+  connect(view,&WebPageView::titleChanged,[this,newTab](const QString &title){
+      setTabText(indexOf(newTab),title.left(25));
+      setTabToolTip(indexOf(newTab),title);
+  });
+  connect(view,&WebPageView::titleChanged,[this, newTab](const QString &title){
+      if(currentIndex()==indexOf(newTab)){
+        QString winTitle = title + " - " + fznavName;
+        emit customWindowTitleChanged(winTitle);
+      }
+  });
 }
 
 

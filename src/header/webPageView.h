@@ -9,8 +9,11 @@
 #include <QContextMenuEvent>
 #include "src/header/webpage.h"
 #include "src/header/FzGlobal.h"
+#include <functional>
 
 typedef QList<QAction*>::const_iterator constIterator;
+class BrowserTab;
+
 class WebPageView : public QWebEngineView
 {
     Q_OBJECT
@@ -26,6 +29,7 @@ public slots:
     void initProgressBar();
     void pageOnLoad(int progress);
     void pageLodingIsFinished(bool succes);
+    //void newTabRequested();
 
 signals:
     void favIconChanged(const QIcon &icon);
@@ -37,21 +41,31 @@ signals:
     void findSelectedTextRequested(QAction* findSelectedText);
     void linkTextRequested(const QString& text);
     void textSelected(const QString &text);
+    
+    void newFgTabRequested(BrowserTab*);
+    void newBgTabRequested(BrowserTab*);
+    void newWindowRequested(BrowserTab*);
+    void newDialogRequested(WebPageView*);
+
 
 protected:
    //static QMenu *contexteMenu;
+   
 protected:
-    //QWebEngineView *createWindow(WebPage::WebWindowType type);
+    WebPageView *createWindow(QWebEnginePage::WebWindowType type) override;
     void contextMenuEvent(QContextMenuEvent *event) override;
     constIterator findAnAction(QAction *anAction, QList<QAction *> actions);
     constIterator findAnAction(WebPage::WebAction anAction, QList<QAction *> actions);
+    
 protected slots:
     void insertFindATextGroup(QMenu *menu);
+
 private:
     int m_progress;
     QWebEngineProfile *profile;
     QMenu* m_contexteMenu;
     QAction *findSelectedText;
+    
 private:
     QMenu* newContexteMenu() const;
     void setUpDefaultInnerConnection();

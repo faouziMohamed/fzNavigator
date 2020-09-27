@@ -1,9 +1,13 @@
 #include "header/browsertab.h"
 #include "header/tabwidget.h"
 
-BrowserTab::BrowserTab(QWidget *parent, QWebEngineProfile *profile, QString url)
+BrowserTab::BrowserTab(QWidget *parent
+                       , WebPageView *view
+                       , QWebEngineProfile *profile
+                       , QString url)
     : QMainWindow(parent)
     , m_Profile(profile)
+    , webView(view)
 {
     insertWebPageView(url);
     addToolbar();
@@ -11,10 +15,13 @@ BrowserTab::BrowserTab(QWidget *parent, QWebEngineProfile *profile, QString url)
     setUpOppeningWindow();
 }
 
-/*Fucntion called in the Constructor */
+/*Fucntions called in the Constructor */
 void BrowserTab::insertWebPageView(QString url)
 {
-    if(url.isEmpty ()){
+    if(webView!=nullptr){
+        url = webView->url().toString();
+    }
+    else if(url.isEmpty()){
         url = defaultHomePage;
     }
     createNewWebPageView(url);
@@ -47,6 +54,7 @@ BrowserTab *BrowserTab::createNewWebPageView(QString url)
 {
     createWebPageLayout();
     url = preconfigureUrl(url);
+    webView->reload();
     webView->load(QUrl(url));
     //configureEngineConnection();
     return this;
@@ -131,12 +139,46 @@ void BrowserTab::ShowContextMenu(const QPoint &pos)
 }
 
 /*Function called in the createNewWebPageView() function*/
+
+
 QWidget* BrowserTab::createWebPageLayout()
 {
-    QWidget *centralWidget = new QWidget(this);
-    webView = new WebPageView(this);
+    configureWebPageView();
+    handleReceivedSignal();
+    return addWebViewToLayout();
+}
+
+void BrowserTab::configureWebPageView()
+{
+    if(webView == nullptr) {
+        webView = new WebPageView(this);
+    }
     webPage = new WebPage(webView);
-    webView->setPage(webPage);
+    webView->setPage(webPage);    
+}
+
+void BrowserTab::handleReceivedSignal()
+{
+  connect(webView, &WebPageView::newFgTabRequested,   [this](BrowserTab* tab){
+      emit this->newFgTabRequired(tab);
+  });
+
+  connect(webView, &WebPageView::newBgTabRequested,   [this](BrowserTab* tab){
+      emit this->newBgTabRequired(tab);
+  });
+
+  connect(webView, &WebPageView::newWindowRequested,  [this](BrowserTab* tab){
+      emit this->newWindowTabRequired(tab);
+  });
+
+  connect(webView, &WebPageView::newDialogRequested, [this](WebPageView* view){
+      emit this->newDialogTabRequired(view);
+  });    
+}
+
+QWidget* BrowserTab::addWebViewToLayout()
+{
+    QWidget *centralWidget = new QWidget(this);
     QVBoxLayout *mainLayout = new QVBoxLayout(centralWidget);
     mainLayout->setContentsMargins(0,0,0,0);
     mainLayout->setSpacing(0);
@@ -147,6 +189,7 @@ QWidget* BrowserTab::createWebPageLayout()
     setCentralWidget(centralWidget);
     return centralWidget;
 }
+
 QString BrowserTab::preconfigureUrl(QString url)
 {
     url = url.replace('%',"%25");
@@ -257,5 +300,10 @@ WebPageView* BrowserTab::view()
 WebPage *BrowserTab::page()
 {
     return webPage;
+}
+
+void BrowserTab::setView(WebPageView *view)
+{
+    this->webView = view;
 }
 /*Public setters*/

@@ -4,6 +4,9 @@ FzGlobal::FzGlobal()
 
 }
 
+/**
+* @brief return the text contained in the action, the text is translatable
+*/
 const QString FzGlobal::tr(const QAction *act)
 {
     return QTranslator::tr(qPrintable(act->text()));

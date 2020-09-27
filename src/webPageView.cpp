@@ -1,4 +1,5 @@
 #include "header/webPageView.h"
+#include "header/tabwidget.h"
 
 WebPageView::WebPageView(QWidget *parent)
     : QWebEngineView(parent)
@@ -6,7 +7,7 @@ WebPageView::WebPageView(QWidget *parent)
 {
     findSelectedText = new QAction(tr("Find selected text"),this);
     findSelectedText->setEnabled(false);
-    this->load(QUrl("http://duckduckgo.com/"));
+    //this->reload(/*QUrl("https://duckduckgo.com/")*/);
     setUpDefaultInnerConnection();
 }
 
@@ -15,12 +16,14 @@ void WebPageView::setUpDefaultInnerConnection()
     handleLoadProgress();
     handlePageProperties();
 }
+
 void WebPageView::handleLoadProgress()
 {
     connect(this,SIGNAL(loadStarted()),this,SLOT(initProgressBar()));
     connect(this,SIGNAL(loadProgress(int)),this, SLOT(pageOnLoad(int)));
     connect(this,SIGNAL(loadFinished(bool)),this,SLOT(pageLodingIsFinished(bool)));
 }
+
 void WebPageView::handlePageProperties()
 {
     connect(this,&QWebEngineView::iconChanged,[this](){emit favIconChanged(favIcon());});
@@ -40,10 +43,12 @@ void WebPageView::initProgressBar()
     m_progress = 0;
     emit favIconChanged(favIcon());
 }
+
 void WebPageView::pageOnLoad(int progress)
 {
     m_progress = progress;
 }
+
 void WebPageView::pageLodingIsFinished(bool succes)
 {
     m_progress = succes ? 100:-1;
@@ -61,8 +66,9 @@ void WebPageView::contextMenuEvent(QContextMenuEvent *event)
     insertCopyTextLink(menu);
     makeDefaultContexteMenuTranslatable();
     menu->popup(event->globalPos());
-
 }
+
+
 QMenu* WebPageView::newContexteMenu() const
 {
     return page()->createStandardContextMenu();
@@ -155,10 +161,6 @@ void WebPageView::makeDefaultContexteMenuTranslatable()
     findAndTranslate(WebPage::SavePage);
     findAndTranslate(WebPage::ViewSource);
     findAndTranslate(WebPage::ExitFullScreen);
-    findAndTranslate(WebPage::ExitFullScreen);
-    findAndTranslate(WebPage::ExitFullScreen);
-    findAndTranslate(WebPage::ExitFullScreen);
-    findAndTranslate(WebPage::ExitFullScreen);
 }
 void WebPageView::findAndTranslate(WebPage::WebAction webAction)
 {
@@ -168,6 +170,30 @@ void WebPageView::findAndTranslate(WebPage::WebAction webAction)
         auto text = Fz::tr(act);
         act->setText(text);
     }
+}
+
+WebPageView *WebPageView::createWindow(QWebEnginePage::WebWindowType type){
+    WebPageView *view = new WebPageView(nullptr);
+    BrowserTab  *tab = new BrowserTab(nullptr, view);
+    view->show();
+        
+    if(type == WebPage::WebBrowserTab){
+        emit newFgTabRequested(tab);
+        return view;
+    }
+    else if(type == WebPage::WebBrowserBackgroundTab){
+        emit newBgTabRequested(tab);
+        return view;
+    }
+    else if(type == WebPage::WebBrowserWindow){
+        emit newWindowRequested(tab);
+        return view;
+    }
+    else if(type == WebPage::WebDialog){
+        emit newDialogRequested(view);
+        return view;
+    }
+    return nullptr;
 }
 
 int  WebPageView::progress() const
