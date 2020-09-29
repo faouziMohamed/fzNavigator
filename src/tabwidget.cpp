@@ -1,4 +1,5 @@
 #include "header/tabwidget.h"
+static QHash<TabWidget::Window, TabWidget::newWindowTab> dict;
 
 TabWidget::TabWidget(QWebEngineProfile *profile, QWidget * parent)
     : QTabWidget(parent)
@@ -38,21 +39,56 @@ void TabWidget::setUpMainConnexions()
     
 }
 
-
-
-BrowserTab* TabWidget::addNewTab(WebPageView *webView)
+BrowserTab* TabWidget::addNewTab(WebPageView *webView, TabWidget::Window type)
 {
    BrowserTab *newTab = new BrowserTab(this, webView, m_profile);
-   WebPageView* view = newTab->view();
-   int index = addTab(newTab, newTabTitle);
-   setCurrentIndex(index);
-   setTabIcon(index,view->favIcon());
-
-   setUpTabConnexions(newTab);
-   setUserTheme("://style/userTheme.css");
-   //newTab->view();
-   return newTab;
+   return addNewTab(newTab, type);
 }
+
+
+BrowserTab* TabWidget::addNewTab(BrowserTab *newTab, TabWidget::Window type)
+{
+   if(type == TabWidget::ForegroundTab){
+       return newForeground(newTab);
+   }
+   return configureNewTab(newTab);
+}
+
+
+BrowserTab *TabWidget::newForeground(BrowserTab *newTab)
+{
+    int index = addTab(newTab, newTabTitle);
+    setCurrentIndex(index);
+    WebPageView* view = newTab->view();
+    setTabIcon(index,view->favIcon());
+    return configureNewTab(newTab);
+}
+
+BrowserTab *TabWidget::newBackgroundTab(BrowserTab *newTab)
+{
+    int index = addTab(newTab, newTabTitle);
+    WebPageView* view = newTab->view();
+    setTabIcon(index,view->favIcon());
+    return configureNewTab(newTab);
+}
+
+TabWidget *TabWidget::newBrowserWindow(BrowserTab *window)
+{
+    TabWidget *newWindow = new TabWidget(this->m_profile, nullptr);
+    newWindow->addNewTab(window, TabWidget::ForegroundTab);
+    return newWindow;
+}
+
+
+
+BrowserTab* TabWidget::configureNewTab(BrowserTab* newTab)
+{
+    setUpTabConnexions(newTab);
+    setUserTheme("://style/userTheme.css");
+    return newTab;  
+}
+
+
 
 void TabWidget::setUpTabConnexions(BrowserTab* newTab)
 {
@@ -71,6 +107,9 @@ void TabWidget::setUpTabConnexions(BrowserTab* newTab)
       }
   });
   
+  connect(newTab, &BrowserTab::newFgTabRequired, [this](BrowserTab* tab){
+    this->addNewTab(tab, TabWidget::ForegroundTab);
+  });
 }
 
 
