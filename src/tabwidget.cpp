@@ -34,6 +34,8 @@ void TabWidget::setUpMainConnexions()
             [this](const QString &title){setWindowTitle(title);});
     connect(this,&TabWidget::tabCloseRequested,[this](int index){
         removeTab(index);
+        //TODO:deleteLater() the removed widget and backup it url 
+        //if user need to reopen in later
         if(count()>0){
             currentTab()->setFocus();
         }
