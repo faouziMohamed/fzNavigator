@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
     BrowserTab tab(nullptr);
     //tab.show();
 
-    TabWidget browser(nullptr);
+    TabWidget browser(QWebEngineProfile::defaultProfile());
     browser.show();
     return app.exec();
 }

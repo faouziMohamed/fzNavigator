@@ -1,14 +1,19 @@
 #include "header/tabwidget.h"
 
-TabWidget::TabWidget(QWebEngineProfile *profile, QWidget * parent)
+TabWidget::TabWidget(QWebEngineProfile *profile
+                     , TabsBehavior::Tabs how
+                     , QWidget * parent)
     : QTabWidget(parent)
     , fznavName(tr("Fz Navigator"))
     , newTabTitle(tr("New Tab - Fz Navigo"))
     , m_profile(profile)
 {
-    addNewTab();
+    if(how == TabsBehavior::NewTab){
+        addNewTab();
+    }
     setupTabsBehavior();
     setUpMainConnexions();
+    //setAttribute(Qt::WA_DeleteOnClose, true);
 }
 void TabWidget::setupTabsBehavior()
 {
@@ -33,6 +38,7 @@ void TabWidget::setUpMainConnexions()
     connect(this, &TabWidget::customWindowTitleChanged,
             [this](const QString &title){setWindowTitle(title);});
     connect(this,&TabWidget::tabCloseRequested,[this](int index){
+        BrowserTab *tab = tabAt(index);
         removeTab(index);
         if(count()>0){
             currentTab()->setFocus();
@@ -41,9 +47,25 @@ void TabWidget::setUpMainConnexions()
         {
             this->close();
         }
+        tab->view()->deleteLater();
 
     });
     
+}
+
+void TabWidget::closeEvent(QCloseEvent *event)
+{
+    if (count() > 1) {
+        int ret = QMessageBox::warning(this, tr("Confirm close"),
+                                       tr("Are you sure you want to close the window ?\n"
+                                          "There are %1 tabs open.").arg(count()),
+                                       QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+        if (ret == QMessageBox::No) {
+            event->ignore();
+            return;
+        }
+    }
+    event->accept();
 }
 
 QWidget* TabWidget::addNewTab(WebPageView *webView, TabWidget::Window type)
@@ -90,7 +112,7 @@ BrowserTab *TabWidget::newBackgroundTab(BrowserTab *newTab)
 
 TabWidget *TabWidget::newBrowserWindow(BrowserTab *window)
 {
-    TabWidget *newWindow = new TabWidget(this->m_profile, nullptr);
+    TabWidget *newWindow = new TabWidget(this->m_profile, TabsBehavior::NoNewTab, nullptr);
     newWindow->addNewTab(window, TabWidget::ForegroundTab);
     newWindow->show();
     return newWindow;
@@ -163,7 +185,7 @@ BrowserTab* TabWidget::currentTab()
     return  qobject_cast<BrowserTab*>(currentWidget());
 }
 
-BrowserTab* TabWidget::widget(int index)
+BrowserTab* TabWidget::tabAt(int index)
 {
     return  qobject_cast<BrowserTab*>(QTabWidget::widget(index));
 }

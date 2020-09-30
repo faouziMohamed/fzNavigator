@@ -13,7 +13,14 @@ BrowserTab::BrowserTab(QWidget *parent
     addToolbar();
     addStatusBar();
     setUpOppeningWindow();
+    setAttribute(Qt::WA_DeleteOnClose, true);
 }
+
+BrowserTab::~BrowserTab()
+{
+    delete m_Profile;
+}
+
 
 /*Fucntions called in the Constructor */
 void BrowserTab::insertWebPageView(QString url)

@@ -5,7 +5,19 @@
 #include "webpage.h"
 #include "webPageView.h"
 #include "browsertab.h"
+class TabsBehavior{
+public:
+    enum Tabs{
+        NoNewTab      ,
+        NewTab        ,
+        CloseTab      ,
+        closeAllTabs  ,
+        ReloadAllTabs ,
+        OnlyThisTab   ,
+        ExceptThisTab
+    };
 
+};
 
 class TabWidget : public QTabWidget
 {
@@ -14,7 +26,6 @@ public:
     enum Window{
         PinTab    = -2   ,
         UnPinTab         ,
-        NoNewTab         ,
         ForegroundTab    ,
         BackgroundTab    ,
         BrowserWindow    ,
@@ -30,7 +41,10 @@ public:
     typedef BrowserTab* (TabWidget::*newWindowTab)(BrowserTab*);
     
 public:
-    TabWidget(QWebEngineProfile* profile, QWidget *parent=nullptr);
+    TabWidget(QWebEngineProfile* profile
+              , TabsBehavior::Tabs how=TabsBehavior::NewTab
+              , QWidget *parent=nullptr
+              );
     QString setUserTheme(const QString& cssFile);
         QString fznavName;
         QString newTabTitle;
@@ -45,7 +59,9 @@ protected:
     BrowserTab* tab;
     QWebEngineProfile* m_profile;
     BrowserTab *currentTab();
-    BrowserTab *widget(int index);
+    BrowserTab *tabAt(int index);
+    void closeEvent(QCloseEvent *event);
+    
 private:
     void setupTabsBehavior();
     void setUpTabConnexions(BrowserTab *newTab);
