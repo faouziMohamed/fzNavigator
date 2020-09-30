@@ -57,10 +57,8 @@ QWidget* TabWidget::addNewTab(WebPageView *webView, TabWidget::Window type)
 
 QWidget* TabWidget::addNewTab(BrowserTab *newTab, TabWidget::Window type)
 {
-   if(type == TabWidget::ForegroundTab){
-       return newForeground(newTab);
-   }
-   
+
+
    switch (type) {
      case TabWidget::ForegroundTab: return newForeground(newTab);
      case TabWidget::BackgroundTab: return newBackgroundTab(newTab);
