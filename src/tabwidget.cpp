@@ -40,6 +40,8 @@ void TabWidget::setUpMainConnexions()
     connect(this,&TabWidget::tabCloseRequested,[this](int index){
         BrowserTab *tab = tabAt(index);
         removeTab(index);
+        //TODO:deleteLater() the removed widget and backup it url 
+        //if user need to reopen in later
         if(count()>0){
             currentTab()->setFocus();
         }
@@ -77,10 +79,8 @@ QWidget* TabWidget::addNewTab(WebPageView *webView, TabWidget::Window type)
 
 QWidget* TabWidget::addNewTab(BrowserTab *newTab, TabWidget::Window type)
 {
-   if(type == TabWidget::ForegroundTab){
-       return newForeground(newTab);
-   }
-   
+
+
    switch (type) {
      case TabWidget::ForegroundTab: return newForeground(newTab);
      case TabWidget::BackgroundTab: return newBackgroundTab(newTab);
