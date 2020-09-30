@@ -1,15 +1,22 @@
 #include "header/tabwidget.h"
-static QHash<TabWidget::Window, TabWidget::newWindowTab> dict;
 
 TabWidget::TabWidget(QWebEngineProfile *profile, QWidget * parent)
     : QTabWidget(parent)
-    , fznavName("Fz Navigator")
-    , newTabTitle("About:Blank - Fz Navigo")
+    , fznavName(tr("Fz Navigator"))
+    , newTabTitle(tr("New Tab - Fz Navigo"))
     , m_profile(profile)
 {
     addNewTab();
     setupTabsBehavior();
     setUpMainConnexions();
+}
+void TabWidget::setupTabsBehavior()
+{
+    setMovable(true);
+    setTabsClosable(true);
+    setFocus(Qt::MouseFocusReason);
+    resize(900,530);
+    this->setWindowIcon(QIcon(":/fznavigator_icones/web.png"));
 }
 
 void TabWidget::setUpMainConnexions()
@@ -39,17 +46,26 @@ void TabWidget::setUpMainConnexions()
     
 }
 
-BrowserTab* TabWidget::addNewTab(WebPageView *webView, TabWidget::Window type)
+QWidget* TabWidget::addNewTab(WebPageView *webView, TabWidget::Window type)
 {
    BrowserTab *newTab = new BrowserTab(this, webView, m_profile);
    return addNewTab(newTab, type);
 }
 
 
-BrowserTab* TabWidget::addNewTab(BrowserTab *newTab, TabWidget::Window type)
+QWidget* TabWidget::addNewTab(BrowserTab *newTab, TabWidget::Window type)
 {
    if(type == TabWidget::ForegroundTab){
        return newForeground(newTab);
+   }
+   
+   switch (type) {
+     case TabWidget::ForegroundTab: return newForeground(newTab);
+     case TabWidget::BackgroundTab: return newBackgroundTab(newTab);
+     case TabWidget::BrowserWindow: return newBrowserWindow(newTab);
+     case TabWidget::DialogWindow : return newDialogWindow(newTab->view());
+     default: break; //Added only to suppress Warning : Enumeration value 
+                     //                             not handled in switch
    }
    return configureNewTab(newTab);
 }
@@ -76,9 +92,16 @@ TabWidget *TabWidget::newBrowserWindow(BrowserTab *window)
 {
     TabWidget *newWindow = new TabWidget(this->m_profile, nullptr);
     newWindow->addNewTab(window, TabWidget::ForegroundTab);
+    newWindow->show();
     return newWindow;
 }
 
+WebPageView *TabWidget::newDialogWindow(WebPageView *pageView)
+{
+    // TODO: Replace with a BrowserTab but url tab not editable and no toolbar
+    pageView->show();
+    return pageView;
+}
 
 
 BrowserTab* TabWidget::configureNewTab(BrowserTab* newTab)
@@ -89,28 +112,50 @@ BrowserTab* TabWidget::configureNewTab(BrowserTab* newTab)
 }
 
 
-
 void TabWidget::setUpTabConnexions(BrowserTab* newTab)
 {
-  WebPageView *view = newTab->view();
-  //int index = indexOf(newTab);
-  connect(newTab,&BrowserTab::favIconSent,[this,newTab](const QIcon& icon){
-      setTabIcon(indexOf(newTab),icon);});
-  connect(view,&WebPageView::titleChanged,[this,newTab](const QString &title){
-      setTabText(indexOf(newTab),title.left(25));
-      setTabToolTip(indexOf(newTab),title);
-  });
-  connect(view,&WebPageView::titleChanged,[this, newTab](const QString &title){
-      if(currentIndex()==indexOf(newTab)){
-        QString winTitle = title + " - " + fznavName;
-        emit customWindowTitleChanged(winTitle);
-      }
-  });
-  
-  connect(newTab, &BrowserTab::newFgTabRequired, [this](BrowserTab* tab){
-    this->addNewTab(tab, TabWidget::ForegroundTab);
-  });
+    WebPageView *view = newTab->view();
+    //int index = indexOf(newTab);
+    connect(newTab,&BrowserTab::favIconSent,
+        [this,newTab](const QIcon& icon){setTabIcon(indexOf(newTab),icon);});
+   
+    connect(view,&WebPageView::titleChanged,
+        [this,newTab](const QString &title)
+        {
+            setTabText(indexOf(newTab),title.left(25));
+            setTabToolTip(indexOf(newTab),title);
+        });
+          
+    connect(view,&WebPageView::titleChanged,
+        [this, newTab](const QString &title)
+        {
+            if(currentIndex()==indexOf(newTab)){
+                QString winTitle = title + " - " + fznavName;
+                emit customWindowTitleChanged(winTitle);
+            }
+        });
+    
+    connect(newTab, &BrowserTab::newFgTabRequired, [this](BrowserTab* tab){
+        this->addNewTab(tab, TabWidget::ForegroundTab);
+    });
+    
+    connect(newTab, &BrowserTab::newBgTabRequired, [this](BrowserTab* tab){
+        this->addNewTab(tab, TabWidget::BackgroundTab);
+    });
+    
+    connect(newTab, &BrowserTab::newWindowTabRequired, [this](BrowserTab* tab){
+        this->addNewTab(tab, TabWidget::BrowserWindow);
+    });
+
+    connect(newTab, &BrowserTab::newDialogTabRequired, 
+        [this](WebPageView* pageView)
+        {
+            this->addNewTab(pageView, TabWidget::DialogWindow);
+        });
+
+
 }
+
 
 
 BrowserTab* TabWidget::currentTab()
@@ -121,15 +166,6 @@ BrowserTab* TabWidget::currentTab()
 BrowserTab* TabWidget::widget(int index)
 {
     return  qobject_cast<BrowserTab*>(QTabWidget::widget(index));
-}
-
-void TabWidget::setupTabsBehavior()
-{
-    setMovable(true);
-    setTabsClosable(true);
-    setFocus(Qt::MouseFocusReason);
-    resize(900,530);
-    this->setWindowIcon(QIcon(":/fznavigator_icones/web.png"));
 }
 
 QString TabWidget::setUserTheme(const QString &cssFile)

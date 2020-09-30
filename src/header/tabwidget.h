@@ -14,6 +14,7 @@ public:
     enum Window{
         PinTab    = -2   ,
         UnPinTab         ,
+        NoNewTab         ,
         ForegroundTab    ,
         BackgroundTab    ,
         BrowserWindow    ,
@@ -37,9 +38,9 @@ signals:
     void customWindowTitleChanged(const QString &title);
 public slots:
     //void handleContextMenuRequested();
-    BrowserTab *addNewTab(WebPageView *view = nullptr, 
+    QWidget *addNewTab(WebPageView *view = nullptr, 
                           TabWidget::Window type=Window::ForegroundTab);
-    BrowserTab *addNewTab(BrowserTab *tab, Window type);
+    QWidget *addNewTab(BrowserTab *tab, Window type);
 protected:
     BrowserTab* tab;
     QWebEngineProfile* m_profile;
@@ -54,7 +55,7 @@ private:
     BrowserTab *newForeground(BrowserTab* newTab);
     BrowserTab *newBackgroundTab(BrowserTab* newTab);
     TabWidget  *newBrowserWindow(BrowserTab* window);
-    BrowserTab *newDialogWindow(BrowserTab* dialogWindow);
+    WebPageView *newDialogWindow(WebPageView *pageView);
     BrowserTab *openDevToolWindow(BrowserTab* devTool);
     BrowserTab *openDevToolBuiltinTab(BrowserTab* devTool);
     BrowserTab *newPrivateTab(BrowserTab* privateTab);
