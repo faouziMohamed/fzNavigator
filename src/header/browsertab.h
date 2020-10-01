@@ -20,10 +20,10 @@ public:
                         , WebPageView *view=nullptr
                         , QWebEngineProfile *profile = QWebEngineProfile::defaultProfile()
                         , QString url="");
-    ~BrowserTab();
     WebPageView *view();
     WebPage* page();
     void setView(WebPageView* view);
+    const QString &defaultHomePage();
 
 signals:
     void loadProgress(int progress);
@@ -46,6 +46,7 @@ public slots:
     void emitProgress();
     void handleLoadProgress(int progress);
     void handleWebActionChanged(WebPage::WebAction webAct, bool state);
+    void closeEvent(QCloseEvent *event) override;
 
 private:
     void addToolbar();
@@ -69,9 +70,10 @@ private:
     void webViewConnections();
     void actionsConnections();
 
+public:
 
 protected:
-    const QString defaultHomePage = "http://duckduckgo.com/";
+    QString m_defaultHomePage = "http://duckduckgo.com/";
     QWebEngineProfile* m_Profile;
     WebPageView * webView;
     WebPage * webPage;

@@ -5,11 +5,12 @@ TabWidget::TabWidget(QWebEngineProfile *profile
                      , QWidget * parent)
     : QTabWidget(parent)
     , fznavName(tr("Fz Navigator"))
-    , newTabTitle(tr("New Tab - Fz Navigo"))
+    , newTabTitle(tr("New Tab - Fz Navigator"))
     , m_profile(profile)
 {
     if(how == TabsBehavior::NewTab){
         addNewTab();
+        //addFirstTab(TabWidget::ForegroundTab);
     }
     setupTabsBehavior();
     setUpMainConnexions();
@@ -26,8 +27,17 @@ void TabWidget::setupTabsBehavior()
 
 void TabWidget::setUpMainConnexions()
 {
-    QShortcut *newtabShortcut = new QShortcut(QKeySequence("CTRL+T"),this);
-    connect(newtabShortcut, SIGNAL(activated()), this, SLOT(addNewTab()));
+    //QShortcut *newTab = new QShortcut(QKeySequence::AddTab,this);
+    QShortcut *newTab;
+    QShortcut *newWindow;
+    
+    newTab = new QShortcut(QKeySequence(Qt::CTRL|Qt::Key_T), this);
+    newWindow = new QShortcut(QKeySequence(Qt::CTRL|Qt::Key_N), this);
+    connect(newTab, SIGNAL(activated()), this, SLOT(addNewTab()));
+    connect(newWindow,&QShortcut::activated, [this](){
+        WebPageView *pageView = new WebPageView(nullptr); 
+        addNewTab(pageView, TabWidget::BrowserWindow);});
+        
     connect(this, &QTabWidget::currentChanged,[this](int index){
         if(index!=-1){
             QString winTitle = tabText(index) + " - " + fznavName;
@@ -41,23 +51,20 @@ void TabWidget::setUpMainConnexions()
         BrowserTab *tab = tabAt(index);
         removeTab(index);
         //TODO:deleteLater() the removed widget and backup it url 
-        //if user need to reopen in later
-        if(count()>0){
-            currentTab()->setFocus();
-        }
-        else
-        {
-            this->close();
-        }
-        tab->view()->deleteLater();
-
+        //if user need to reopen later
+        if(count()>0)
+        {currentTab()->setFocus();}
+        else 
+        {this->close();}
+        (tab->view())->deleteLater();
     });
     
 }
 
 void TabWidget::closeEvent(QCloseEvent *event)
 {
-    if (count() > 1) {
+    if (count() > 1) 
+    {
         int ret = QMessageBox::warning(this, tr("Confirm close"),
                                        tr("Are you sure you want to close the window ?\n"
                                           "There are %1 tabs open.").arg(count()),
@@ -68,6 +75,14 @@ void TabWidget::closeEvent(QCloseEvent *event)
         }
     }
     event->accept();
+    //deleteLater();
+}
+
+QWidget* TabWidget::addFirstTab(TabWidget::Window type)
+{
+   WebPageView * view = new WebPageView(nullptr);
+   view->setUrl(QUrl(view->homePage()));
+   return addNewTab(view, type);
 }
 
 QWidget* TabWidget::addNewTab(WebPageView *webView, TabWidget::Window type)
@@ -76,16 +91,18 @@ QWidget* TabWidget::addNewTab(WebPageView *webView, TabWidget::Window type)
    return addNewTab(newTab, type);
 }
 
-
 QWidget* TabWidget::addNewTab(BrowserTab *newTab, TabWidget::Window type)
 {
-
-
    switch (type) {
      case TabWidget::ForegroundTab: return newForeground(newTab);
      case TabWidget::BackgroundTab: return newBackgroundTab(newTab);
      case TabWidget::BrowserWindow: return newBrowserWindow(newTab);
-     case TabWidget::DialogWindow : return newDialogWindow(newTab->view());
+     case TabWidget::DialogWindow : {
+                                        WebPageView* view = newTab->view();
+                                        view->setParent(nullptr);
+                                        newTab->deleteLater();
+                                        return newDialogWindow(view);
+                                    }
      default: break; //Added only to suppress Warning : Enumeration value 
                      //                             not handled in switch
    }
@@ -95,10 +112,8 @@ QWidget* TabWidget::addNewTab(BrowserTab *newTab, TabWidget::Window type)
 
 BrowserTab *TabWidget::newForeground(BrowserTab *newTab)
 {
-    int index = addTab(newTab, newTabTitle);
-    setCurrentIndex(index);
-    WebPageView* view = newTab->view();
-    setTabIcon(index,view->favIcon());
+    newBackgroundTab(newTab);
+    setCurrentWidget(newTab);
     return configureNewTab(newTab);
 }
 
@@ -110,10 +125,12 @@ BrowserTab *TabWidget::newBackgroundTab(BrowserTab *newTab)
     return configureNewTab(newTab);
 }
 
-TabWidget *TabWidget::newBrowserWindow(BrowserTab *window)
+TabWidget *TabWidget::newBrowserWindow(BrowserTab *aNewTab)
 {
-    TabWidget *newWindow = new TabWidget(this->m_profile, TabsBehavior::NoNewTab, nullptr);
-    newWindow->addNewTab(window, TabWidget::ForegroundTab);
+    TabWidget *newWindow; 
+    newWindow = new TabWidget(m_profile, TabsBehavior::NoNewTab, nullptr);
+    aNewTab->setParent(newWindow);
+    newWindow->addNewTab(aNewTab, TabWidget::ForegroundTab);
     newWindow->show();
     return newWindow;
 }

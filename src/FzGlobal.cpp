@@ -18,6 +18,5 @@ bool FzGlobal::currentActionIsNotNull(QAction *action){
 bool FzGlobal::isNotAnUrlSyntaxe(QString url)
 {
     QChar dot = '.', space = ' ';
-    return  url.contains(space)||
-            (!url.contains(dot));
+    return  url.contains(space)|| (!url.contains(dot));
 }

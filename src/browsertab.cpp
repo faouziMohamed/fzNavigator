@@ -13,23 +13,24 @@ BrowserTab::BrowserTab(QWidget *parent
     addToolbar();
     addStatusBar();
     setUpOppeningWindow();
-    setAttribute(Qt::WA_DeleteOnClose, true);
-}
-
-BrowserTab::~BrowserTab()
-{
-    delete m_Profile;
+    //setAttribute(Qt::WA_DeleteOnClose, true);
 }
 
 
-/*Fucntions called in the Constructor */
+void BrowserTab::closeEvent(QCloseEvent *event){
+    event->accept();
+    //view()->deleteLater();
+}
+
+
+/*Functions called in the Constructor */
 void BrowserTab::insertWebPageView(QString url)
 {
     if(webView!=nullptr){
         url = webView->url().toString();
     }
     else if(url.isEmpty()){
-        url = defaultHomePage;
+        url = m_defaultHomePage;
     }
     createNewWebPageView(url);
 }
@@ -61,9 +62,7 @@ BrowserTab *BrowserTab::createNewWebPageView(QString url)
 {
     createWebPageLayout();
     url = preconfigureUrl(url);
-    webView->reload();
     webView->load(QUrl(url));
-    //configureEngineConnection();
     return this;
 }
 /*Function called in the function addToolbar*/
@@ -85,7 +84,7 @@ void BrowserTab::initializeMainToolbarAction()
 }
 void BrowserTab::configureURLField()
 {
-    m_urlField = new QLineEdit(defaultHomePage);
+    m_urlField = new QLineEdit(m_defaultHomePage);
     m_url_field_favIconAct = new QAction(m_urlField);
     m_urlField->setFocus(Qt::OtherFocusReason);
     m_urlField->setClearButtonEnabled(true);
@@ -141,13 +140,10 @@ void BrowserTab::ShowContextMenu(const QPoint &pos)
    QAction action1("Remove Data Point", this);
    connect(&action1, SIGNAL(triggered()), this, SLOT(removeDataPoint()));
    contextMenu.addAction(&action1);
-
    contextMenu.exec(mapToGlobal(pos));
 }
 
 /*Function called in the createNewWebPageView() function*/
-
-
 QWidget* BrowserTab::createWebPageLayout()
 {
     configureWebPageView();
@@ -158,10 +154,12 @@ QWidget* BrowserTab::createWebPageLayout()
 void BrowserTab::configureWebPageView()
 {
     if(webView == nullptr) {
-        webView = new WebPageView(this);
+        webView = new WebPageView(nullptr);
     }
     webPage = new WebPage(webView);
-    webView->setPage(webPage);    
+    webView->setHomePage(defaultHomePage());
+    webView->setParent(this);
+    webView->setPage(webPage);
 }
 
 void BrowserTab::handleReceivedSignal()
@@ -239,6 +237,7 @@ void BrowserTab::webViewConnections()
     connect(webView,&WebPageView::webActionChanged,this,&BrowserTab::emitProgress);
     connect(webView,&WebPageView::shortcutActivated,
             webView,&WebPageView::triggerPageAction);
+            
     connect(webView,&QWebEngineView::loadProgress,[this](int progress){
             emit loadProgress(progress);});
     connect(webView,&WebPageView::webActionChanged,this,
@@ -246,10 +245,14 @@ void BrowserTab::webViewConnections()
     connect(webView,&QWebEngineView::urlChanged,[this](const QUrl &url){
         m_urlField->setText(url.url());});
 
-    connect(webView,&WebPageView::favIconChanged,
-            webView,[this](const QIcon &icon){
+    connect(webView,&WebPageView::favIconChanged,[this](const QIcon &icon){
             emit favIconSent(icon);
             m_url_field_favIconAct->setIcon(icon);});
+            
+    connect(webView, &WebPageView::linkTextRequested, [](const QString& text){
+        QClipboard *clipBoard = QApplication::clipboard();
+        clipBoard->setText(text);
+    });
 }
 void BrowserTab::actionsConnections()
 {
@@ -295,7 +298,7 @@ void BrowserTab::loadUrl()
 }
 void BrowserTab::goToHomePage()
 {
-   webView->load(QUrl(defaultHomePage));
+   webView->load(QUrl(m_defaultHomePage));
 }
 
 
@@ -312,5 +315,10 @@ WebPage *BrowserTab::page()
 void BrowserTab::setView(WebPageView *view)
 {
     this->webView = view;
+}
+
+const QString &BrowserTab::defaultHomePage()
+{
+    return m_defaultHomePage;
 }
 /*Public setters*/

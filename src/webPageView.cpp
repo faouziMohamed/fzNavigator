@@ -54,6 +54,16 @@ void WebPageView::pageLodingIsFinished(bool succes)
     m_progress = succes ? 100:-1;
     emit favIconChanged(favIcon());
 }
+
+void WebPageView::setHomePage(const QString &url)
+{
+    m_homePage = url;
+}
+
+const QString &WebPageView::homePage()
+{
+    return m_homePage;
+}
 /**
  * Override of the inherit function to diplay the contexte menu
 */
@@ -67,7 +77,6 @@ void WebPageView::contextMenuEvent(QContextMenuEvent *event)
     makeDefaultContexteMenuTranslatable();
     menu->popup(event->globalPos());
 }
-
 
 QMenu* WebPageView::newContexteMenu() const
 {
@@ -110,6 +119,7 @@ void WebPageView::insertCopyTextLink(QMenu* menu)
         });
     }
 }
+
 void WebPageView::emitSignalIfTriggered(QAction* findText,QAction* findSelectedText)
 {
     connect(findText,&QAction::triggered,[this,findText]{
@@ -231,9 +241,10 @@ void WebPageView::setUpPageActionConnections(WebPage* page)
 void WebPageView::setUpPageActionShortcuts(WebPage* page)
 {
     setUpShortcut(QKeySequence::Back,page,WebPage::Forward);
-    setUpShortcut(QKeySequence::Forward,page,WebPage::Back);
+    setUpShortcut(QKeySequence::Forward, page,WebPage::Back);
+    setUpShortcut(QKeySequence::Refresh, page,WebPage::Reload);
     setUpShortcut(QKeySequence("CTRL+R"),page,WebPage::Reload);
-    setUpShortcut(QKeySequence::Cancel,page,WebPage::Stop);
+    setUpShortcut(QKeySequence::Cancel,  page,WebPage::Stop);
 }
 void WebPageView::setupConnexion(WebPage *page, WebPage::WebAction webAction)
 {
@@ -247,7 +258,7 @@ void WebPageView::setUpShortcut(QKeySequence seq,WebPage *page,
 {
     QAction *action = page->action(webAction);
     action->setShortcut(seq);
-    connect(new QShortcut(seq,this),&QShortcut::activated,[seq,this,action]{
+    connect(new QShortcut(seq,this),&QShortcut::activated, [seq,this,action]{
         emit shortcutActivated(WebPage::Reload, action->isEnabled());});
 }
 

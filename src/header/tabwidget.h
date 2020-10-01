@@ -52,6 +52,7 @@ signals:
     void customWindowTitleChanged(const QString &title);
 public slots:
     //void handleContextMenuRequested();
+    QWidget *addFirstTab(TabWidget::Window type=Window::ForegroundTab);
     QWidget *addNewTab(WebPageView *view = nullptr, 
                           TabWidget::Window type=Window::ForegroundTab);
     QWidget *addNewTab(BrowserTab *tab, Window type);

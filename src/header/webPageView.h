@@ -29,6 +29,8 @@ public slots:
     void initProgressBar();
     void pageOnLoad(int progress);
     void pageLodingIsFinished(bool succes);
+    void setHomePage(const QString & url);
+    const QString& homePage();
     //void newTabRequested();
 
 signals:
@@ -50,6 +52,7 @@ signals:
 
 protected:
    //static QMenu *contexteMenu;
+   QString m_homePage ;
    
 protected:
     WebPageView *createWindow(QWebEnginePage::WebWindowType type) override;
@@ -59,6 +62,7 @@ protected:
     
 protected slots:
     void insertFindATextGroup(QMenu *menu);
+    
 
 private:
     int m_progress;
