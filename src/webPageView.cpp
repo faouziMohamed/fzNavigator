@@ -3,6 +3,7 @@
 
 WebPageView::WebPageView(QWidget *parent)
     : QWebEngineView(parent)
+    , m_homePage("https://duckduckgo.com/")
     , m_progress(100)
 {
     findSelectedText = new QAction(tr("Find selected text"),this);
@@ -240,11 +241,11 @@ void WebPageView::setUpPageActionConnections(WebPage* page)
 }
 void WebPageView::setUpPageActionShortcuts(WebPage* page)
 {
-    setUpShortcut(QKeySequence::Back,page,WebPage::Forward);
-    setUpShortcut(QKeySequence::Forward, page,WebPage::Back);
-    setUpShortcut(QKeySequence::Refresh, page,WebPage::Reload);
-    setUpShortcut(QKeySequence("CTRL+R"),page,WebPage::Reload);
-    setUpShortcut(QKeySequence::Cancel,  page,WebPage::Stop);
+    setUpShortcut(QKeySequence::Back,               page, WebPage::Forward);
+    setUpShortcut(QKeySequence::Forward,            page,    WebPage::Back);
+    setUpShortcut(QKeySequence::Refresh,            page,  WebPage::Reload);
+    setUpShortcut(QKeySequence(Qt::CTRL|Qt::Key_R), page,  WebPage::Reload);
+    setUpShortcut(QKeySequence::Cancel,             page,    WebPage::Stop);
 }
 void WebPageView::setupConnexion(WebPage *page, WebPage::WebAction webAction)
 {
