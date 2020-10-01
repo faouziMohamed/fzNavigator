@@ -73,7 +73,7 @@ private:
 public:
 
 protected:
-    QString m_defaultHomePage = "http://duckduckgo.com/";
+    QString m_defaultHomePage = "https://duckduckgo.com/";
     QWebEngineProfile* m_Profile;
     WebPageView * webView;
     WebPage * webPage;

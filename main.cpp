@@ -11,10 +11,10 @@ int main(int argc, char *argv[])
     QTranslator translator;
     translator.load(QString(":/lang/fzNavigator_fr"));
     app.installTranslator(&translator);
-    BrowserTab tab(nullptr);
+    //BrowserTab tab(nullptr);
     //tab.show();
     
-    WebPageView p(nullptr);
+    //WebPageView p(nullptr);
     //p.setPage(new WebPage(&p));
     //p.load(QUrl("https://faouzimohamed.github.io/"));
     //p.show();

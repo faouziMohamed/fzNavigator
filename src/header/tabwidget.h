@@ -56,6 +56,7 @@ public slots:
     QWidget *addNewTab(WebPageView *view = nullptr, 
                           TabWidget::Window type=Window::ForegroundTab);
     QWidget *addNewTab(BrowserTab *tab, Window type);
+ 
 protected:
     BrowserTab* tab;
     QWebEngineProfile* m_profile;
