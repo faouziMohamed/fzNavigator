@@ -9,8 +9,8 @@ TabWidget::TabWidget(QWebEngineProfile *profile
     , m_profile(profile)
 {
     if(how == TabsBehavior::NewTab){
-        addNewTab();
-        //addFirstTab(TabWidget::ForegroundTab);
+        //addNewTab();
+        addFirstTab(TabWidget::ForegroundTab);
     }
     setupTabsBehavior();
     setUpMainConnexions();
@@ -56,7 +56,7 @@ void TabWidget::setUpMainConnexions()
         {currentTab()->setFocus();}
         else 
         {this->close();}
-        (tab->view())->deleteLater();
+        tab->deleteLater();
     });
     
 }
@@ -82,12 +82,14 @@ QWidget* TabWidget::addFirstTab(TabWidget::Window type)
 {
    WebPageView * view = new WebPageView(nullptr);
    view->setUrl(QUrl(view->homePage()));
+   qDebug()<<view->homePage() + "------ "<<__LINE__;
    return addNewTab(view, type);
 }
 
 QWidget* TabWidget::addNewTab(WebPageView *webView, TabWidget::Window type)
 {
    BrowserTab *newTab = new BrowserTab(this, webView, m_profile);
+   qDebug()<<newTab->defaultHomePage() + "------ "<<__LINE__;
    return addNewTab(newTab, type);
 }
 
@@ -96,43 +98,42 @@ QWidget* TabWidget::addNewTab(BrowserTab *newTab, TabWidget::Window type)
    switch (type) {
      case TabWidget::ForegroundTab: return newForeground(newTab);
      case TabWidget::BackgroundTab: return newBackgroundTab(newTab);
-     case TabWidget::BrowserWindow: return newBrowserWindow(newTab);
+     case TabWidget::BrowserWindow: {return newBrowserWindow(newTab);}
      case TabWidget::DialogWindow : {
-                                        WebPageView* view = newTab->view();
-                                        view->setParent(nullptr);
-                                        newTab->deleteLater();
-                                        return newDialogWindow(view);
-                                    }
+                                          WebPageView* view = newTab->view();
+                                          view->setParent(nullptr);
+                                          newTab->deleteLater();
+                                          return newDialogWindow(view);
+                                        }   
      default: break; //Added only to suppress Warning : Enumeration value 
                      //                             not handled in switch
    }
-   return configureNewTab(newTab);
+   return nullptr;
 }
-
 
 BrowserTab *TabWidget::newForeground(BrowserTab *newTab)
 {
     newBackgroundTab(newTab);
     setCurrentWidget(newTab);
-    return configureNewTab(newTab);
+    return newTab;
 }
 
 BrowserTab *TabWidget::newBackgroundTab(BrowserTab *newTab)
 {
     int index = addTab(newTab, newTabTitle);
     WebPageView* view = newTab->view();
-    setTabIcon(index,view->favIcon());
+    setTabIcon(index, view->favIcon());
     return configureNewTab(newTab);
 }
 
 TabWidget *TabWidget::newBrowserWindow(BrowserTab *aNewTab)
 {
-    TabWidget *newWindow; 
-    newWindow = new TabWidget(m_profile, TabsBehavior::NoNewTab, nullptr);
-    aNewTab->setParent(newWindow);
+    TabWidget *newWindow;
+    QWebEngineProfile *profil = QWebEngineProfile::defaultProfile();
+    newWindow = new TabWidget(profil, TabsBehavior::NoNewTab, nullptr);
     newWindow->addNewTab(aNewTab, TabWidget::ForegroundTab);
     newWindow->show();
-    return newWindow;
+    return nullptr;
 }
 
 WebPageView *TabWidget::newDialogWindow(WebPageView *pageView)
@@ -182,20 +183,17 @@ void TabWidget::setUpTabConnexions(BrowserTab* newTab)
         this->addNewTab(tab, TabWidget::BackgroundTab);
     });
     
-    connect(newTab, &BrowserTab::newWindowTabRequired, [this](BrowserTab* tab){
-        this->addNewTab(tab, TabWidget::BrowserWindow);
-    });
+    connect(newTab, &BrowserTab::newWindowTabRequired,
+        [this](BrowserTab* tab){
+            this->addNewTab(tab, TabWidget::BrowserWindow);
+        });
 
     connect(newTab, &BrowserTab::newDialogTabRequired, 
         [this](WebPageView* pageView)
         {
             this->addNewTab(pageView, TabWidget::DialogWindow);
         });
-
-
 }
-
-
 
 BrowserTab* TabWidget::currentTab()
 {

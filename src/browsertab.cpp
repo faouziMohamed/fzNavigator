@@ -156,24 +156,25 @@ void BrowserTab::configureWebPageView()
     if(webView == nullptr) {
         webView = new WebPageView(nullptr);
     }
-    webPage = new WebPage(webView);
-    webView->setHomePage(defaultHomePage());
-    webView->setParent(this);
+    
+    m_Profile = new QWebEngineProfile(m_Profile);
+    webPage = new WebPage(webView, m_Profile);
     webView->setPage(webPage);
+    webView->setHomePage(defaultHomePage());
 }
 
 void BrowserTab::handleReceivedSignal()
 {
-  connect(webView, &WebPageView::newFgTabRequested,   [this](BrowserTab* tab){
+  connect(webView, &WebPageView::newFgTabRequested, [this](BrowserTab* tab){
       emit this->newFgTabRequired(tab);
   });
 
-  connect(webView, &WebPageView::newBgTabRequested,   [this](BrowserTab* tab){
+  connect(webView, &WebPageView::newBgTabRequested, [this](BrowserTab* tab){
       emit this->newBgTabRequired(tab);
   });
 
-  connect(webView, &WebPageView::newWindowRequested,  [this](BrowserTab* tab){
-      emit this->newWindowTabRequired(tab);
+  connect(webView, &WebPageView::newWindowRequested, [this](BrowserTab* tab){
+      emit newWindowTabRequired(tab);
   });
 
   connect(webView, &WebPageView::newDialogRequested, [this](WebPageView* view){
@@ -191,7 +192,6 @@ QWidget* BrowserTab::addWebViewToLayout()
     centralWidget->setLayout(mainLayout);
     setCentralWidget(centralWidget);
     setDocumentMode(true);
-    setCentralWidget(centralWidget);
     return centralWidget;
 }
 
@@ -256,11 +256,11 @@ void BrowserTab::webViewConnections()
 }
 void BrowserTab::actionsConnections()
 {
-    QShortcut *reloadShortcut = new QShortcut(QKeySequence("CTRL+L"),this);
+    QShortcut *selectUrlField = new QShortcut(QKeySequence("CTRL+L"),this);
     connect(this,&BrowserTab::loadProgress,this,&BrowserTab::handleLoadProgress);
     connect(m_submit,&QAction::triggered,this,&BrowserTab::loadUrl);
     connect(m_urlField,&QLineEdit::returnPressed,this,&BrowserTab::loadUrl);
-    connect(reloadShortcut,&QShortcut::activated,[this]{m_urlField->selectAll();
+    connect(selectUrlField,&QShortcut::activated,[this]{m_urlField->selectAll();
             m_urlField->setFocus(Qt::OtherFocusReason);});
     connect(m_homeAction,&QAction::triggered,this,&BrowserTab::goToHomePage);
 }
@@ -300,7 +300,6 @@ void BrowserTab::goToHomePage()
 {
    webView->load(QUrl(m_defaultHomePage));
 }
-
 
 /*Public getters*/
 WebPageView* BrowserTab::view()
