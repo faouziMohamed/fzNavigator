@@ -5,6 +5,9 @@
 #include "webpage.h"
 #include "webPageView.h"
 #include "browsertab.h"
+#include "browser.h"
+
+//class Browser;
 class TabsBehavior{
 public:
     enum Tabs{
@@ -50,6 +53,8 @@ public:
         QString newTabTitle;
 signals:
     void customWindowTitleChanged(const QString &title);
+    void windowRequired(TabWidget* newWindow);
+
 public slots:
     //void handleContextMenuRequested();
     QWidget *addFirstTab(TabWidget::Window type=Window::ForegroundTab);
@@ -69,7 +74,6 @@ private:
     void setUpTabConnexions(BrowserTab *newTab);
     void setUpMainConnexions();
     BrowserTab *configureNewTab(BrowserTab *newTab);
-    
     BrowserTab *newForeground(BrowserTab* newTab);
     BrowserTab *newBackgroundTab(BrowserTab* newTab);
     TabWidget  *newBrowserWindow(BrowserTab* window);
@@ -78,6 +82,7 @@ private:
     BrowserTab *openDevToolBuiltinTab(BrowserTab* devTool);
     BrowserTab *newPrivateTab(BrowserTab* privateTab);
     BrowserTab *newPrivateWindow(BrowserTab* windowTab);
+    friend class Browser;
 };
 
 #endif // TABWIDGETS_H 

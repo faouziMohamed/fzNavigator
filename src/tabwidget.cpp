@@ -14,15 +14,13 @@ TabWidget::TabWidget(QWebEngineProfile *profile
     }
     setupTabsBehavior();
     setUpMainConnexions();
-    //setAttribute(Qt::WA_DeleteOnClose, true);
+    setAttribute(Qt::WA_DeleteOnClose, true);
 }
 void TabWidget::setupTabsBehavior()
 {
     setMovable(true);
     setTabsClosable(true);
     setFocus(Qt::MouseFocusReason);
-    resize(900,530);
-    this->setWindowIcon(QIcon(":/fznavigator_icones/web.png"));
 }
 
 void TabWidget::setUpMainConnexions()
@@ -55,7 +53,13 @@ void TabWidget::setUpMainConnexions()
         if(count()>0)
         {currentTab()->setFocus();}
         else 
-        {this->close();}
+        {
+            this->close();
+            Browser *parent = qobject_cast<Browser*>(this->parent()); 
+            if(parent != nullptr){
+                parent->close();
+            }
+        }
         tab->deleteLater();
     });
     
@@ -74,7 +78,7 @@ void TabWidget::closeEvent(QCloseEvent *event)
             return;
         }
     }
-    event->accept();
+    //event->accept();
     //deleteLater();
 }
 
@@ -130,7 +134,7 @@ TabWidget *TabWidget::newBrowserWindow(BrowserTab *aNewTab)
     QWebEngineProfile *profil = QWebEngineProfile::defaultProfile();
     newWindow = new TabWidget(profil, TabsBehavior::NoNewTab, nullptr);
     newWindow->addNewTab(aNewTab, TabWidget::ForegroundTab);
-    newWindow->show();
+    //newWindow->show();
     return nullptr;
 }
 
@@ -183,7 +187,9 @@ void TabWidget::setUpTabConnexions(BrowserTab* newTab)
     
     connect(newTab, &BrowserTab::newWindowTabRequired,
         [this](BrowserTab* tab){
-            this->addNewTab(tab, TabWidget::BrowserWindow);
+            //this->addNewTab(tab, TabWidget::BrowserWindow);
+            TabWidget* aWindow = newBrowserWindow(tab);
+            emit windowRequired(aWindow);
         });
 
     connect(newTab, &BrowserTab::newDialogTabRequired, 
