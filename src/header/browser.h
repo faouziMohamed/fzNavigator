@@ -10,10 +10,20 @@ class Browser : public QMainWindow
 {
     Q_OBJECT
 public:
-    explicit Browser(QWidget *parent = nullptr);
-    
+    Browser(QWidget *parent=nullptr, TabWidget* browserWindow=nullptr);
+
+public slots:
+    TabWidget* newBrowserinstance(TabWidget *browser=nullptr);
+
 signals:
     
+protected:
+    void closeEvent(QCloseEvent *event) override;
+    
+private:
+    TabWidget* instance;
+    
+    friend class TabWidget;
 };
 
 #endif // BROWSER_H
