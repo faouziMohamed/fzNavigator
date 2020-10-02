@@ -16,10 +16,10 @@ class BrowserTab : public QMainWindow
 {
     Q_OBJECT
 public:
-    explicit BrowserTab(QWidget *parent
-                        , WebPageView *view=nullptr
-                        , QWebEngineProfile *profile = QWebEngineProfile::defaultProfile()
-                        , QString url="");
+    BrowserTab(QWidget *parent
+              , WebPageView *view=nullptr
+              , QWebEngineProfile *profile = QWebEngineProfile::defaultProfile()
+              , QString url="");
     WebPageView *view();
     WebPage* page();
     void setView(WebPageView* view);

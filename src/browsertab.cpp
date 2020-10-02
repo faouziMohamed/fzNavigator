@@ -22,7 +22,6 @@ void BrowserTab::closeEvent(QCloseEvent *event){
     //view()->deleteLater();
 }
 
-
 /*Functions called in the Constructor */
 void BrowserTab::insertWebPageView(QString url)
 {
