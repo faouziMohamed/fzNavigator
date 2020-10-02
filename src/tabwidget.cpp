@@ -82,14 +82,12 @@ QWidget* TabWidget::addFirstTab(TabWidget::Window type)
 {
    WebPageView * view = new WebPageView(nullptr);
    view->setUrl(QUrl(view->homePage()));
-   qDebug()<<view->homePage() + "------ "<<__LINE__;
    return addNewTab(view, type);
 }
 
 QWidget* TabWidget::addNewTab(WebPageView *webView, TabWidget::Window type)
 {
    BrowserTab *newTab = new BrowserTab(this, webView, m_profile);
-   qDebug()<<newTab->defaultHomePage() + "------ "<<__LINE__;
    return addNewTab(newTab, type);
 }
 
