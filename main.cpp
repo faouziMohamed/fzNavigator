@@ -1,6 +1,5 @@
 #include <QApplication>
-#include "src/header/browsertab.h"
-#include "src/header/tabwidget.h"
+#include "src/header/browser.h"
 #include <QTranslator>
 #include <QTabWidget>
 int main(int argc, char *argv[])
@@ -13,13 +12,7 @@ int main(int argc, char *argv[])
     app.installTranslator(&translator);
     //BrowserTab tab(nullptr);
     //tab.show();
-    
-    //WebPageView p(nullptr);
-    //p.setPage(new WebPage(&p));
-    //p.load(QUrl("https://faouzimohamed.github.io/"));
-    //p.show();
-
-    TabWidget browser(QWebEngineProfile::defaultProfile());
-    browser.show();
+    Browser b(nullptr);
+    b.show();
     return app.exec();
 }
