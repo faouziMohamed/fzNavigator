@@ -7,7 +7,7 @@
 #include "browsertab.h"
 #include "browser.h"
 
-//class Browser;
+
 class TabsBehavior{
 public:
     enum Tabs{

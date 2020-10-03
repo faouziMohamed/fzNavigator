@@ -43,8 +43,6 @@ void TabWidget::setUpMainConnexions()
         }
     });
 
-    connect(this, &TabWidget::customWindowTitleChanged,
-            [this](const QString &title){setWindowTitle(title);});
     connect(this,&TabWidget::tabCloseRequested,[this](int index){
         BrowserTab *tab = tabAt(index);
         removeTab(index);
@@ -62,7 +60,6 @@ void TabWidget::setUpMainConnexions()
         }
         tab->deleteLater();
     });
-    
 }
 
 void TabWidget::closeEvent(QCloseEvent *event)
