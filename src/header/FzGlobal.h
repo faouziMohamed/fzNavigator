@@ -9,6 +9,8 @@ class EngineView;
 class FzGlobal;
 typedef FzGlobal Fz;
 
+#define ICON_PATH (QString(":/fznavigator_icones/"))
+
 class FzGlobal
 {
 public:
@@ -16,7 +18,6 @@ public:
     static const QString tr(const QAction* act);
     static bool currentActionIsNotNull(QAction *action);
     static bool isNotAnUrlSyntaxe(QString url);
-
 
 
 public : //Set Icons method
@@ -41,6 +42,14 @@ public : //Set Icons method
     static const QIcon   &submitIcon();
     static const QString &submitIconName();
     
+    static const QIcon   &dangerIcon();
+    static const QString &dangerIconName();
+    
+    static const QIcon   &loaderIcon();
+    static const QString &loaderIconName();
+    
+    static const QIcon   &defaultFavIcon();
+    static const QString &defaultFavIconName();
 };
 
 #endif // GLOBALFUNCTIONS_H

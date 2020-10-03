@@ -8,48 +8,48 @@ FzGlobal::FzGlobal()
 
 const QIcon& FzGlobal::windowIcon()
 {
-    static QIcon FZ_WIN_ICON(":/fznavigator_icones/web.png");
+    static QIcon FZ_WIN_ICON(ICON_PATH+"web.png");
     return FZ_WIN_ICON;
 }
 const QString &FzGlobal::windowIconName()
 {
-    const static QString path(":/fznavigator_icones/web.png");
+    const static QString path(ICON_PATH+"web.png");
     return path;
 }
 
 
 const QIcon &FzGlobal::backIcon()
 {
-    static QIcon BACK_ICON(":/fznavigator_icones/left_full.svg");
+    static QIcon BACK_ICON(ICON_PATH+"left_full.svg");
     return BACK_ICON;
 }
 const QString &FzGlobal::backIconName()
 {
-    const static QString path(":/fznavigator_icones/left_full.svg");
+    const static QString path(ICON_PATH+"left_full.svg");
     return path;
 }
 
 
 const QIcon &FzGlobal::forwardIcon()
 {
-    static QIcon FORWARD_ICON(":/fznavigator_icones/right_empty.svg");
+    static QIcon FORWARD_ICON(ICON_PATH+"right_empty.svg");
     return FORWARD_ICON;
 }
 const QString &FzGlobal::forwardIconName()
 {
-    const static QString path(":/fznavigator_icones/right_empty.svg");
+    const static QString path(ICON_PATH+"right_empty.svg");
     return path;
 }
 
 
 const QIcon &FzGlobal::stopLoadIcon()
 {
-    static QIcon STOP_LOAD_ICON(":/fznavigator_icones/cancel.svg");
+    static QIcon STOP_LOAD_ICON(ICON_PATH+"cancel.svg");
     return STOP_LOAD_ICON;
 }
 const QString &FzGlobal::stopLoadIconName()
 {
-    const static QString path(":/fznavigator_icones/cancel.svg");
+    const static QString path(ICON_PATH+"cancel.svg");
     return path;
 }
 
@@ -57,38 +57,74 @@ const QString &FzGlobal::stopLoadIconName()
 
 const QIcon &FzGlobal::reloadIcon()
 {
-    static QIcon RELOAD_ICON(":/fznavigator_icones/Reload.svg");
+    static QIcon RELOAD_ICON(ICON_PATH+"Reload.svg");
     return RELOAD_ICON;
 }
 const QString &FzGlobal::reloadIconName()
 {
-    const static QString path(":/fznavigator_icones/Reload.svg");
+    const static QString path(ICON_PATH+"Reload.svg");
     return path;
 }
 
 
 const QIcon &FzGlobal::homeIcon()
 {
-    static QIcon HOME_ICON(":/fznavigator_icones/home_43.svg");
+    static QIcon HOME_ICON(ICON_PATH+"home_43.svg");
     return HOME_ICON;
 }
 const QString &FzGlobal::homeIconName()
 {
-    const static QString path(":/fznavigator_icones/home_43.svg");
+    const static QString path(ICON_PATH+"home_43.svg");
     return path;
 }
 
 
 const QIcon &FzGlobal::submitIcon()
 {
-    static QIcon SUBMIT_ICON(":/fznavigator_icones/search_62.svg");
+    static QIcon SUBMIT_ICON(ICON_PATH+"search_62.svg");
     return SUBMIT_ICON;
 }
 const QString &FzGlobal::submitIconName()
 {
-    const static QString path(":/fznavigator_icones/search_62.svg");
+    const static QString path(ICON_PATH+"search_62.svg");
     return path;
 }
+
+
+const QIcon &FzGlobal::dangerIcon()
+{
+    static QIcon SUBMIT_ICON(ICON_PATH+"danger.svg");
+    return SUBMIT_ICON;
+}
+const QString &FzGlobal::dangerIconName()
+{
+    const static QString path(ICON_PATH+"danger.svg");
+    return path;
+}
+
+const QIcon &FzGlobal::loaderIcon()
+{
+    static QIcon SUBMIT_ICON(ICON_PATH+"loader.gif");
+    return SUBMIT_ICON;
+}
+const QString &FzGlobal::loaderIconName()
+{
+    const static QString path(ICON_PATH+"loader.gif");
+    return path;
+}
+
+const QIcon &FzGlobal::defaultFavIcon()
+{
+    static QIcon SUBMIT_ICON(ICON_PATH+"web.png");
+    return SUBMIT_ICON;
+}
+const QString &FzGlobal::defaultFavIconName()
+{
+    const static QString path(ICON_PATH+"web.png");
+    return path;
+}
+
+
 
 
 
