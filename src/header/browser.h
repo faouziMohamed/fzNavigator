@@ -34,8 +34,7 @@ protected:
     static QVector<Browser*> all_instances;
     
 private:
-    TabWidget* tabwidget_instance;
-    
+    TabWidget* tabwidget_instance;   
     friend class TabWidget;
 };
 

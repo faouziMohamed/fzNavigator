@@ -33,7 +33,7 @@ void TabWidget::setUpMainConnexions()
     newWindow = new QShortcut(QKeySequence(Qt::CTRL|Qt::Key_N), this);
     connect(newTab, SIGNAL(activated()), this, SLOT(addNewTab()));
     connect(newWindow,&QShortcut::activated, [this](){
-        WebPageView *pageView = new WebPageView(nullptr); 
+        WebPageView *pageView = new WebPageView(nullptr, m_profile); 
         addNewTab(pageView, TabWidget::BrowserWindow);});
         
     connect(this, &QTabWidget::currentChanged,[this](int index){
@@ -81,14 +81,14 @@ void TabWidget::closeEvent(QCloseEvent *event)
 
 QWidget* TabWidget::addFirstTab(TabWidget::Window type)
 {
-   WebPageView * view = new WebPageView(nullptr);
+   WebPageView * view = new WebPageView(nullptr, m_profile);
    view->setUrl(QUrl(view->homePage()));
    return addNewTab(view, type);
 }
 
 QWidget* TabWidget::addNewTab(WebPageView *webView, TabWidget::Window type)
 {
-   BrowserTab *newTab = new BrowserTab(this, webView, m_profile);
+   BrowserTab *newTab = new BrowserTab(this, m_profile, webView);
    return addNewTab(newTab, type);
 }
 
@@ -184,7 +184,6 @@ void TabWidget::setUpTabConnexions(BrowserTab* newTab)
     
     connect(newTab, &BrowserTab::newWindowTabRequired,
         [this](BrowserTab* tab){
-            //this->addNewTab(tab, TabWidget::BrowserWindow);
             TabWidget* aWindow = newBrowserWindow(tab);
             emit windowRequired(aWindow);
         });

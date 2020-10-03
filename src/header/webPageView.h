@@ -18,7 +18,7 @@ class WebPageView : public QWebEngineView
 {
     Q_OBJECT
 public:
-    WebPageView(QWidget *parent);
+    WebPageView(QWidget *parent, QWebEngineProfile *profile);
 
 public:
     int progress() const;
@@ -64,9 +64,12 @@ protected slots:
     void insertFindATextGroup(QMenu *menu);
     
 
+private slots:
+    void handleSelectionChanged();
+    
 private:
     int m_progress;
-    QWebEngineProfile *profile;
+    QWebEngineProfile *m_profile;
     QMenu* m_contexteMenu;
     QAction *findSelectedText;
     

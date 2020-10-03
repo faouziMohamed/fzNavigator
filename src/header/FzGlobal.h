@@ -17,6 +17,7 @@ public:
     FzGlobal();
     static const QString tr(const QAction* act);
     static bool currentActionIsNotNull(QAction *action);
+    static void addActionsToTheToolbar(QToolBar *aToolbar...);
     static bool isNotAnUrlSyntaxe(QString url);
 
 

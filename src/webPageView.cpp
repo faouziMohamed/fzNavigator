@@ -1,14 +1,14 @@
 #include "header/webPageView.h"
 #include "header/tabwidget.h"
 
-WebPageView::WebPageView(QWidget *parent)
+WebPageView::WebPageView(QWidget *parent, QWebEngineProfile* profile)
     : QWebEngineView(parent)
     , m_homePage("https://duckduckgo.com/")
     , m_progress(100)
+    , m_profile(profile)
 {
     findSelectedText = new QAction(tr("Find selected text"),this);
     findSelectedText->setEnabled(false);
-    //this->reload(/*QUrl("https://duckduckgo.com/")*/);
     setUpDefaultInnerConnection();
 }
 
@@ -25,17 +25,24 @@ void WebPageView::handleLoadProgress()
     connect(this,SIGNAL(loadFinished(bool)),this,SLOT(pageLodingIsFinished(bool)));
 }
 
+void WebPageView::handleSelectionChanged()
+{
+    if(selectedText().isEmpty())
+    {   findSelectedText->setEnabled(false);}
+    else
+    {   
+        findSelectedText->setEnabled(true);
+        emit textSelected(selectedText());
+    }    
+}
+
 void WebPageView::handlePageProperties()
 {
     connect(this,&QWebEngineView::iconChanged,[this](){emit favIconChanged(favIcon());});
     connect(this,&QWebEngineView::titleChanged, [this](){
         emit titleChanged(title());});
     connect(this,&QWebEngineView::selectionChanged,[this]{
-            if(selectedText().isEmpty())
-                {   findSelectedText->setEnabled(false);}
-            else{   findSelectedText->setEnabled(true);
-                    emit textSelected(selectedText());
-                }
+            handleSelectionChanged();
     });
 }
 
@@ -184,8 +191,8 @@ void WebPageView::findAndTranslate(WebPage::WebAction webAction)
 }
 
 WebPageView *WebPageView::createWindow(QWebEnginePage::WebWindowType type){
-    WebPageView *view = new WebPageView(nullptr);
-    BrowserTab  *tab = new BrowserTab(nullptr, view);
+    WebPageView *view = new WebPageView(nullptr, m_profile);
+    BrowserTab  *tab = new BrowserTab(nullptr, m_profile, view);
     view->show();
         
     if(type == WebPage::WebBrowserTab){
@@ -222,13 +229,13 @@ QIcon WebPageView::favIcon() const
     if (!favIcon.isNull())
         return favIcon;
     if (m_progress < 0) {
-        static QIcon errorIcon(QIcon(":/fznavigator_icones/danger.svg"));
+        static QIcon errorIcon(Fz::dangerIcon());
         return errorIcon;
     } else if (m_progress < 100) {
-        static QIcon loadingIcon(QIcon(":/fznavigator_icones/loader.gif"));
+        static QIcon loadingIcon(Fz::loaderIcon());
         return loadingIcon;
     } else {
-        static QIcon defaultIcon(QIcon(":/fznavigator_icones/web.png"));
+        static QIcon defaultIcon(Fz::defaultFavIcon());
         return defaultIcon;
     }
 }

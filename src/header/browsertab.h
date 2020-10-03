@@ -17,8 +17,8 @@ class BrowserTab : public QMainWindow
     Q_OBJECT
 public:
     BrowserTab(QWidget *parent
+              , QWebEngineProfile *profile
               , WebPageView *view=nullptr
-              , QWebEngineProfile *profile = QWebEngineProfile::defaultProfile()
               , QString url="");
     WebPageView *view();
     WebPage* page();
@@ -53,17 +53,14 @@ private:
     void addStatusBar();
     void initializeMainToolbarAction();
     void configureURLField();
-    void insertActionInToTheToolbar();
-    void addActionsToTheToolbar(QToolBar *aToolbar...);
-    void insertURLFIeldInToTheToolbar();
+    void addActionsInTheToolbar();
+    void addURLFieldToTheToolbar();
     void linkToolbarActionsWithTheirIcons();
-    void setToolBarBehavior();
-    void configureToolbarActionsShortcuts();
-    void configureConnectionsForToolbarActions();
-    void setUpOppeningWindow();
+    void setUpToolBarBehavior();
+    void setUpConnectionsForToolbarActions();
+    void addCustomContexteMenu();
     void configureWebPageView();
-    void handleReceivedSignal();
-    void addViewToLayout();
+    void handleReceivedSignals();
     QWidget *addWebViewToLayout();
     QWidget *createWebPageLayout();
     void setUpCustomContexteMenu();
@@ -82,14 +79,13 @@ protected:
 
 private:
     QToolBar  *m_toolbar;
-    QAction   *m_backHistoryAction;
-    QAction   *m_nextHistoryAction;
-    QAction   *m_stopReloadAction;
-    QAction   *m_homeAction;
+    QAction   *m_back;
+    QAction   *m_next;
+    QAction   *m_stop_relod;
+    QAction   *m_home;
     QAction   *m_submit;
     QLineEdit *m_urlField;
     QProgressBar *m_progress;
-    QList<QAction*> separators;
 
     friend class TabWidget;
 };

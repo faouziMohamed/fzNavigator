@@ -139,6 +139,20 @@ const QString FzGlobal::tr(const QAction *act)
 bool FzGlobal::currentActionIsNotNull(QAction *action){
     return action != nullptr;
 }
+
+void FzGlobal::addActionsToTheToolbar(QToolBar* aToolbar,...)
+{
+    va_list listOfvariableArguments;
+    va_start(listOfvariableArguments, aToolbar);
+    QAction *currentAction = va_arg(listOfvariableArguments, QAction *);
+    while(Fz::currentActionIsNotNull(currentAction))
+    {
+        aToolbar->addAction(currentAction);
+        currentAction = va_arg(listOfvariableArguments, QAction *);
+    }
+    va_end(listOfvariableArguments);
+}
+
 bool FzGlobal::isNotAnUrlSyntaxe(QString url)
 {
     QChar dot = '.', space = ' ';
