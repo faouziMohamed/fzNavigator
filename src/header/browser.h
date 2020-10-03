@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include "browsertab.h"
 #include "tabwidget.h"
+#include "FzGlobal.h"
 
 class Browser : public QMainWindow
 {

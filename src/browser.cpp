@@ -13,7 +13,7 @@ Browser::Browser(QWidget *parent, TabWidget* browserWindow)
     resize(900, 530);
     setDocumentMode(true);
     setContentsMargins(0,0,0,0);
-    setWindowIcon(QIcon(":/fznavigator_icones/web.png"));
+    setWindowIcon(Fz::windowIcon());
 }
 
 TabWidget* Browser::newInstance(TabWidget* browser){
