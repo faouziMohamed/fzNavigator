@@ -88,7 +88,7 @@ void BrowserTab::configureURLField()
     m_urlField->setFocus(Qt::OtherFocusReason);
     m_urlField->setClearButtonEnabled(true);
 
-    m_submit->setIcon(QIcon(":/fznavigator_icones/search_62.svg"));
+    m_submit->setIcon(Fz::submitIcon());
     m_url_field_favIconAct->setIcon(webView->favIcon());
     m_urlField->addAction(m_url_field_favIconAct, QLineEdit::LeadingPosition);
     m_urlField->addAction(m_submit, QLineEdit::TrailingPosition);
@@ -107,10 +107,10 @@ void BrowserTab::insertURLFIeldInToTheToolbar()
 }
 void BrowserTab::linkToolbarActionsWithTheirIcons()
 {
-    m_backHistoryAction->setIcon(QIcon(":/fznavigator_icones/left_full.svg"));
-    m_nextHistoryAction->setIcon(QIcon(":/fznavigator_icones/right_empty.svg"));
-    m_stopReloadAction->setIcon(QIcon(":/fznavigator_icones/Reload.svg"));
-    m_homeAction->setIcon(QIcon(":/fznavigator_icones/home_43.svg"));
+    m_backHistoryAction->setIcon(Fz::backIcon());
+    m_nextHistoryAction->setIcon(Fz::forwardIcon());
+    m_stopReloadAction->setIcon(Fz::stopLoadIcon());
+    m_homeAction->setIcon(Fz::homeIcon());
 }
 
 void BrowserTab::configureConnectionsForToolbarActions()
@@ -255,7 +255,8 @@ void BrowserTab::webViewConnections()
 }
 void BrowserTab::actionsConnections()
 {
-    QShortcut *selectUrlField = new QShortcut(QKeySequence("CTRL+L"),this);
+    QShortcut *selectUrlField;
+    selectUrlField = new QShortcut(QKeySequence("CTRL+L"),this);
     connect(this,&BrowserTab::loadProgress,this,&BrowserTab::handleLoadProgress);
     connect(m_submit,&QAction::triggered,this,&BrowserTab::loadUrl);
     connect(m_urlField,&QLineEdit::returnPressed,this,&BrowserTab::loadUrl);
@@ -277,11 +278,11 @@ void BrowserTab::handleLoadProgress(int progress)
     if(0<progress && progress<100){
         m_stopReloadAction->setData(WebPage::Stop);
         m_stopReloadAction->setToolTip(tr("Stop loading the current page"));
-        m_stopReloadAction->setIcon(QIcon(":/fznavigator_icones/cancel.svg"));
+        m_stopReloadAction->setIcon(Fz::stopLoadIcon());
         m_progress->setValue(progress);
     }else{
         m_stopReloadAction->setData(WebPage::Reload);
-        m_stopReloadAction->setIcon(QIcon(":/fznavigator_icones/Reload.svg"));
+        m_stopReloadAction->setIcon(Fz::reloadIcon());
         m_stopReloadAction->setToolTip(tr("Reload the current page"));
         m_progress->setValue(0);
     }
