@@ -51,6 +51,8 @@ public : //Set Icons method
     
     static const QIcon   &defaultFavIcon();
     static const QString &defaultFavIconName();
+    static const QIcon   &menuOptIcon();
+    static const QString &menuOptIconName();
 };
 
 #endif // GLOBALFUNCTIONS_H
