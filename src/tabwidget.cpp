@@ -33,9 +33,15 @@ void TabWidget::setUpMainConnexions()
     newWindow = new QShortcut(QKeySequence(Qt::CTRL|Qt::Key_N), this);
     connect(newTab, SIGNAL(activated()), this, SLOT(addNewTab()));
     connect(newWindow,&QShortcut::activated, [this](){
-        WebPageView *pageView = new WebPageView(nullptr, m_profile); 
-        addNewTab(pageView, TabWidget::BrowserWindow);});
-        
+        //WebPageView *pageView = new WebPageView(nullptr, m_profile); 
+        //BrowserTab* tab;
+        //addNewTab(pageView, TabWidget::BrowserWindow);
+        //TODO : select a profile that the use ask!!
+        BrowserTab *aNewTab = new BrowserTab(nullptr, nullptr);
+        TabWidget *tab = newBrowserWindow(aNewTab);
+        emit windowRequired(tab);
+        });
+
     connect(this, &QTabWidget::currentChanged,[this](int index){
         if(index!=-1){
             QString winTitle = tabText(index) + " - " + fznavName;
