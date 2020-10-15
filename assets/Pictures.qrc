@@ -11,5 +11,6 @@
         <file>fznavigator_icones/right_empty.svg</file>
         <file>fznavigator_icones/danger.svg</file>
         <file>style/userTheme.css</file>
+        <file>fznavigator_icones/menu.png</file>
     </qresource>
 </RCC>
