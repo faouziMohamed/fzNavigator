@@ -33,13 +33,11 @@ void BrowserTab::insertWebPageView(QString url)
 }
 void BrowserTab::addToolbar()
 {
-    initializeMainToolbarAction();
-    configureURLField();
-    addActionsInTheToolbar();
-    addURLFieldToTheToolbar();
-    linkToolbarActionsWithTheirIcons();
-    setUpConnectionsForToolbarActions();
-    setUpToolBarBehavior();
+    addActions();
+    addURLField();
+    addOptionsMenu();
+    setUpActConnection();
+    configureToolBar();
 }
 void BrowserTab::addStatusBar()
 {
@@ -51,7 +49,7 @@ void BrowserTab::addStatusBar()
 }
 void BrowserTab::addCustomContexteMenu()
 {
-    setUpCustomContexteMenu();
+    configContextMenu();
 }
 
 BrowserTab *BrowserTab::createNewWebPageView(QString url)
@@ -62,7 +60,7 @@ BrowserTab *BrowserTab::createNewWebPageView(QString url)
     return this;
 }
 /*Function called in the function addToolbar*/
-void BrowserTab::initializeMainToolbarAction()
+void BrowserTab::initializeActions()
 {
     m_toolbar =  this->addToolBar(tr("Navigation"));
     m_back = new QAction(tr("Previous page"));
@@ -88,18 +86,39 @@ void BrowserTab::configureURLField()
     m_urlField->addAction(m_url_field_favIconAct, QLineEdit::LeadingPosition);
     m_urlField->addAction(m_submit, QLineEdit::TrailingPosition);
 }
-void BrowserTab::addActionsInTheToolbar()
+void BrowserTab::addActions()
 {
+    initializeActions();
+    linkActWithIcons();
     Fz::addActionsToTheToolbar(
          m_toolbar, m_back, m_next, m_stop_relod, m_home, nullptr);
     m_toolbar->insertSeparator(m_home);
-
 }
-void BrowserTab::addURLFieldToTheToolbar()
+void BrowserTab::addURLField()
 {
+    configureURLField();
     m_toolbar->addWidget(m_urlField);
 }
-void BrowserTab::linkToolbarActionsWithTheirIcons()
+
+void BrowserTab::addOptionsMenu(){
+    configOptionMenu();
+    m_toolbar->addWidget(m_toolButton);
+}
+void BrowserTab::configOptionMenu()
+{
+    m_optionMenu = new QMenu("&Options");
+    m_toolButton = new QToolButton(m_toolbar);
+    m_toolButton->setMenu(m_optionMenu);
+    m_toolButton->setPopupMode(QToolButton::InstantPopup);
+    m_toolButton->setIcon(Fz::menuOptIcon());
+    m_toolButton->setLayoutDirection(Qt::LeftToRight);
+
+    QAction *dev = m_optionMenu->addAction(tr("Open &Developer Tool"));
+    QAction *setting = m_optionMenu->addAction(tr("&Preferences"));
+    m_optionMenu->addSeparator();
+    QAction *quit = m_optionMenu->addAction(tr("&Quit"));    
+}
+void BrowserTab::linkActWithIcons()
 {
     m_back->setIcon(Fz::backIcon());
     m_next->setIcon(Fz::forwardIcon());
@@ -107,20 +126,20 @@ void BrowserTab::linkToolbarActionsWithTheirIcons()
     m_home->setIcon(Fz::homeIcon());
 }
 
-void BrowserTab::setUpConnectionsForToolbarActions()
+void BrowserTab::setUpActConnection()
 {
     makeActionConnected(m_back, WebPage::Back);
     makeActionConnected(m_next, WebPage::Forward);
     webViewConnections();
     actionsConnections();
 }
-void BrowserTab::setUpToolBarBehavior()
+void BrowserTab::configureToolBar()
 {
     m_toolbar->setMovable(false);
     m_toolbar->setFloatable(false);
     m_toolbar->toggleViewAction()->setVisible(false);
 }
-void BrowserTab::setUpCustomContexteMenu()
+void BrowserTab::configContextMenu()
 {
     setContextMenuPolicy(Qt::CustomContextMenu);
     connect(this, SIGNAL(customContextMenuRequested(const QPoint &)),
@@ -206,7 +225,7 @@ QString BrowserTab::preconfigureUrl(QString url)
 }
 
 
-/*Called in setUpConnectionsForToolbarActions() function*/
+/*Called in setUpActConnection() function*/
 void BrowserTab::makeActionConnected(QAction* act, WebPage::WebAction webAction)
 {
     connect(act,&QAction::triggered,[this,webAction]{

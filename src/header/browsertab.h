@@ -51,19 +51,20 @@ public slots:
 private:
     void addToolbar();
     void addStatusBar();
-    void initializeMainToolbarAction();
+    void initializeActions();
     void configureURLField();
-    void addActionsInTheToolbar();
-    void addURLFieldToTheToolbar();
-    void linkToolbarActionsWithTheirIcons();
-    void setUpToolBarBehavior();
-    void setUpConnectionsForToolbarActions();
+    void addActions();
+    void addURLField();
+    void addOptionsMenu();
+    void linkActWithIcons();
+    void configureToolBar();
+    void setUpActConnection();
     void addCustomContexteMenu();
     void configureWebPageView();
     void handleReceivedSignals();
     QWidget *addWebViewToLayout();
     QWidget *createWebPageLayout();
-    void setUpCustomContexteMenu();
+    void configContextMenu();
     void webViewConnections();
     void actionsConnections();
 
@@ -86,8 +87,12 @@ private:
     QAction   *m_submit;
     QLineEdit *m_urlField;
     QProgressBar *m_progress;
+    
+    QToolButton* m_toolButton;
+    QMenu* m_optionMenu;
 
     friend class TabWidget;
+    void configOptionMenu();
 };
 
 #endif // BROWSERTAB_H
