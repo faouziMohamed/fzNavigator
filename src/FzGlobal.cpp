@@ -48,7 +48,7 @@ const QIcon &FzGlobal::stopLoadIcon()
     return STOP_LOAD_ICON;
 }
 const QString &FzGlobal::stopLoadIconName()
-{
+{ //://fznavigator_icones/menu.png
     const static QString path(ICON_PATH+"cancel.svg");
     return path;
 }
@@ -124,6 +124,16 @@ const QString &FzGlobal::defaultFavIconName()
     return path;
 }
 
+const QIcon &FzGlobal::menuOptIcon()
+{
+    static QIcon STOP_LOAD_ICON(ICON_PATH+"menu.png");
+    return STOP_LOAD_ICON;
+}
+const QString &FzGlobal::menuOptIconName()
+{ //:/fznavigator_icones/menu.png
+    const static QString path(ICON_PATH+"menu.png");
+    return path;
+}
 
 
 
