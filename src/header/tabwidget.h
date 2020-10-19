@@ -54,6 +54,7 @@ public:
 signals:
     void customWindowTitleChanged(const QString &title);
     void windowRequired(TabWidget* newWindow);
+    void exitWIndowsRequested();
 
 public slots:
     //void handleContextMenuRequested();

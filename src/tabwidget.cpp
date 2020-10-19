@@ -193,6 +193,10 @@ void TabWidget::setUpTabConnexions(BrowserTab* newTab)
             TabWidget* aWindow = newBrowserWindow(tab);
             emit windowRequired(aWindow);
         });
+        
+    connect(newTab, &BrowserTab::exitRequested, this, [this](){
+        emit exitWIndowRequested();
+    });
 
     connect(newTab, &BrowserTab::newDialogTabRequired, 
         [this](WebPageView* pageView)
