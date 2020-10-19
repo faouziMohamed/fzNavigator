@@ -10,6 +10,7 @@ class FzGlobal;
 typedef FzGlobal Fz;
 
 #define ICON_PATH (QString(":/fznavigator_icones/"))
+#define FZ_NAV_NAME (QString("Fz Navigator"))
 
 class FzGlobal
 {
