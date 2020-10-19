@@ -90,6 +90,10 @@ void BrowserTab::addActions()
 {
     initializeActions();
     linkActWithIcons();
+    
+    //TODO : Wrap these QAction in a QToolButton, 
+    //then setup their icon and connection with every QToolButton
+    
     Fz::addActionsToTheToolbar(
          m_toolbar, m_back, m_next, m_stop_relod, m_home, nullptr);
     m_toolbar->insertSeparator(m_home);
@@ -102,8 +106,30 @@ void BrowserTab::addURLField()
 
 void BrowserTab::addOptionsMenu(){
     configOptionMenu();
+    addOptions();
     m_toolbar->addWidget(m_toolButton);
 }
+void BrowserTab::addOptions()
+{
+    QAction *newTab    = m_optionMenu->addAction(tr("New &Tab"));
+    QAction *newWindow = m_optionMenu->addAction(tr("New &Window"));
+    QAction *pWindow   = m_optionMenu->addAction(tr("New &private Window"));
+    m_optionMenu->addSeparator();
+    
+    /*QAction *newTab    = */m_optionMenu->addAction(tr("&History"));
+    /*QAction *newTab    = */m_optionMenu->addAction(tr("&Bookmarks"));
+    /*QAction *newTab    = */m_optionMenu->addAction(tr("&Downloads"));
+    m_optionMenu->addSeparator();
+    
+    /*QAction *settings = */m_optionMenu->addAction(tr("&Settings"));
+    /*QAction *about = */m_optionMenu->addAction(tr("&About %1").arg(FZ_NAV_NAME));
+    m_optionMenu->addSeparator();
+    QAction *quit = m_optionMenu->addAction(tr("&Exit"));
+    
+    connect(quit, &QAction::triggered, this, [this](bool tri){
+        emit closeWindowRequested(); });
+}
+
 void BrowserTab::configOptionMenu()
 {
     m_optionMenu = new QMenu("&Options");
@@ -112,11 +138,6 @@ void BrowserTab::configOptionMenu()
     m_toolButton->setPopupMode(QToolButton::InstantPopup);
     m_toolButton->setIcon(Fz::menuOptIcon());
     m_toolButton->setLayoutDirection(Qt::LeftToRight);
-
-    QAction *dev = m_optionMenu->addAction(tr("Open &Developer Tool"));
-    QAction *setting = m_optionMenu->addAction(tr("&Preferences"));
-    m_optionMenu->addSeparator();
-    QAction *quit = m_optionMenu->addAction(tr("&Quit"));    
 }
 void BrowserTab::linkActWithIcons()
 {
@@ -189,8 +210,13 @@ void BrowserTab::handleReceivedSignals()
 
   connect(webView, &WebPageView::newDialogRequested, [this](WebPageView* view){
       emit this->newDialogTabRequired(view);
-  });    
+  });
+  
+  QFrame *frambox = new QFrame(this);
+  //connect(webView->page(), &WebPage::ho)
+  
 }
+
 
 QWidget* BrowserTab::addWebViewToLayout()
 {

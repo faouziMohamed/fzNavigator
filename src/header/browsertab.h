@@ -32,6 +32,7 @@ signals:
     void newBgTabRequired(BrowserTab*);
     void newWindowTabRequired(BrowserTab*);
     void newDialogTabRequired(WebPageView*);
+    void exitRequested();
     
 protected:
     QString preconfigureUrl(QString url);
@@ -78,6 +79,8 @@ protected:
     QAction *m_url_field_favIconAct;
     QMap<WebPage::WebAction, QAction*> toolbarAction;
 
+    void addOptions();
+    
 private:
     QToolBar  *m_toolbar;
     QAction   *m_back;
