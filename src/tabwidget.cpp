@@ -195,7 +195,7 @@ void TabWidget::setUpTabConnexions(BrowserTab* newTab)
         });
         
     connect(newTab, &BrowserTab::exitRequested, this, [this](){
-        emit exitWIndowRequested();
+        emit exitWindowsRequested();
     });
 
     connect(newTab, &BrowserTab::newDialogTabRequired, 
