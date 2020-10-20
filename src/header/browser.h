@@ -10,8 +10,9 @@ class Browser : public QMainWindow
 {
     Q_OBJECT
 public:
-    Browser(QWidget *parent=nullptr, TabWidget* browserWindow=nullptr);
-
+    Browser(TabWidget* browserWindow, QWidget *parent=nullptr);
+    Browser();
+    
 public slots:
     TabWidget* newInstance(TabWidget *browser=nullptr);
 
@@ -20,22 +21,20 @@ signals:
 protected:
     void closeEvent(QCloseEvent *event) override;
     static int  count();
-    static int  incrementNbInstances(Browser *instance);
-    static int  decrementNbInstances(Browser *instance);
-    static void removeInstance(Browser* instance);
+    static int  addInstance(Browser *instance);
+    static int  removeInstance(Browser *instance);
+    static void deleteInstance(Browser* instance);
     static void closeAllInstances();
     static void closeAllInstancesExcept(Browser* instance);
     static void closeAllInstancesExcept(int  instance_num);
 
-
 protected:
-    int instance_num;
-    static int nb_instances;
     static QVector<Browser*> all_instances;
     
 private:
-    TabWidget* tabwidget_instance;   
+    TabWidget* tabwidget_instance;
     friend class TabWidget;
+    void configureWindow();
 };
 
 
