@@ -9,13 +9,13 @@ A simple web Navigator based on [Chromium](https://wiki.qt.io/QtWebEngine), writ
 ## Requirements  
 * C++11
 
- - ### On Windows  
+ ### On Windows  
 
   - [_Qt5_](https://download.qt.io/official_releases/qt/) or higher  
 
   - MSVC2017 ([Microsoft windows sdk](https://developer.microsoft.com/en-US/windows/downloads/windows-10-sdk/))or higher (_The Web Engine compile only with Microsoft's compiler_), it doesn't compile with Mingw compiler.  
 
- - ### On Linux (Ubuntu 18.04 LTS)
+ ### On Linux (Ubuntu 18.04 LTS)
 
   - [_Qt5_](https://download.qt.io/official_releases/qt/) or higher  
    
