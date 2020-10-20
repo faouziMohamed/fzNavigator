@@ -1,15 +1,10 @@
 *{ background-color:#253545; color:#bea;}
-QTabBar::tab { height: 35px; }
-QToolBar{padding:3px;}
-QToolBar>QWidget{
-    height:30px;
-    width:25px;
-    icon-size:20px;
-}
+QTabBar::tab { height: 29px; }
+/*QToolBar{padding:3px;}*/
+
 QToolBar>QWidget:hover{
-    background:#051525;
     border-radius:3px;
-    border:none;
+    background:#051525;
 }
 QLineEdit{
     padding-left:10px;
@@ -25,4 +20,27 @@ QToolBar QLineEdit:hover{
 
 QToolButton::menu-indicator {
     image: unset;
+}
+
+
+QPushButton {
+    height:30px;
+    width:25px;
+    icon-size:25px;
+    border:none;
+    padding:3px;
+    background-color: #253545;
+}
+
+QPushButton:pressed {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #dadbde, stop: 1 #f6f7fa);
+}
+
+QPushButton:flat {
+    border: none; /* no border for a flat push button */
+}
+
+QPushButton:default {
+    border-color: navy; /* make the default button prominent */
 }
