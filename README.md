@@ -17,9 +17,9 @@ A simple web Navigator based on [Chromium](https://wiki.qt.io/QtWebEngine), writ
 
  ### On Linux (Ubuntu 18.04 LTS)
 
-  - [_Qt5_](https://download.qt.io/official_releases/qt/) or higher  
+  - [_Qt5_](https://www.qt.io/download-open-source) or higher  
    
- - [_Qt Creator 4.11.1 (Comunity)_](https://download.qt.io/official_releases/qtcreator/4.11/4.11.1/)
+ - [_Qt Creator _Latest version_ (recommended)_](https://download.qt.io/official_releases/qtcreator/4.11/)
    
 ## Download the binary File  
 - For windows  
