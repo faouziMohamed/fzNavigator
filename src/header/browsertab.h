@@ -36,9 +36,9 @@ signals:
     
 protected:
     QString preconfigureUrl(QString url);
-    void insertWebPageView(QString url);
+    void addWebPageView(QString url);
     BrowserTab *createNewWebPageView(QString url);
-    void makeActionConnected(QAction *act, WebPage::WebAction webAction);
+    void makeActionConnected(QPushButton *act, WebPage::WebAction webAction);
 
 public slots:
     void ShowContextMenu(const QPoint &pos);
@@ -54,10 +54,9 @@ private:
     void addStatusBar();
     void initializeActions();
     void configureURLField();
-    void addActions();
+    void addBtnActions();
     void addURLField();
     void addOptionsMenu();
-    void linkActWithIcons();
     void configureToolBar();
     void setUpActConnection();
     void addCustomContexteMenu();
@@ -83,11 +82,15 @@ protected:
     
 private:
     QToolBar  *m_toolbar;
-    QAction   *m_back;
-    QAction   *m_next;
-    QAction   *m_stop_relod;
-    QAction   *m_home;
-    QAction   *m_submit;
+    QPushButton *m_btnBack;
+    QPushButton *m_btnNext;
+    QPushButton *m_stop_relod;
+    QPushButton *m_home;
+    
+    QAction *m_actBack;
+    QAction *m_actNext;
+    QAction *m_actStopReload;
+    QAction *m_submit;
     QLineEdit *m_urlField;
     QProgressBar *m_progress;
     

@@ -9,7 +9,7 @@ BrowserTab::BrowserTab(QWidget *parent
     , m_Profile(profile)
     , webView(view)
 {
-    insertWebPageView(url);
+    addWebPageView(url);
     addToolbar();
     addStatusBar();
     addCustomContexteMenu();
@@ -21,7 +21,7 @@ void BrowserTab::closeEvent(QCloseEvent *event){
 }
 
 /*Functions called in the Constructor */
-void BrowserTab::insertWebPageView(QString url)
+void BrowserTab::addWebPageView(QString url)
 {
     if(webView!=nullptr){
         url = webView->url().toString();
@@ -33,7 +33,7 @@ void BrowserTab::insertWebPageView(QString url)
 }
 void BrowserTab::addToolbar()
 {
-    addActions();
+    addBtnActions();
     addURLField();
     addOptionsMenu();
     setUpActConnection();
@@ -62,17 +62,7 @@ BrowserTab *BrowserTab::createNewWebPageView(QString url)
 /*Function called in the function addToolbar*/
 void BrowserTab::initializeActions()
 {
-    m_toolbar =  this->addToolBar(tr("Navigation"));
-    m_back = new QAction(tr("Previous page"));
-    m_next = new QAction(tr("Next Page"));
-    m_stop_relod  = new QAction(this);
-    m_home        = new QAction(tr("Home"));
-    m_submit            = new QAction(tr("Go"));
-
-    m_back->setEnabled(false);
-    m_next->setEnabled(false);
-    toolbarAction.insert(WebPage::Back,m_back);
-    toolbarAction.insert(WebPage::Forward, m_next);
+    
 }
 void BrowserTab::configureURLField()
 {
@@ -86,17 +76,31 @@ void BrowserTab::configureURLField()
     m_urlField->addAction(m_url_field_favIconAct, QLineEdit::LeadingPosition);
     m_urlField->addAction(m_submit, QLineEdit::TrailingPosition);
 }
-void BrowserTab::addActions()
+void BrowserTab::addBtnActions()
 {
-    initializeActions();
-    linkActWithIcons();
+    //initializeActions();
     
-    //TODO : Wrap these QAction in a QToolButton, 
-    //then setup their icon and connection with every QToolButton
+    m_toolbar =  this->addToolBar(tr("Navigation"));
+
+    m_btnBack = new QPushButton(Fz::backIcon(), "");
+    m_btnNext = new QPushButton(Fz::forwardIcon(),"");
+    m_stop_relod  = new QPushButton(Fz::stopLoadIcon(),"");
+    m_home        = new QPushButton(Fz::homeIcon(),"");
+    m_submit      = new QAction(tr("Go"));
     
-    Fz::addActionsToTheToolbar(
-         m_toolbar, m_back, m_next, m_stop_relod, m_home, nullptr);
-    m_toolbar->insertSeparator(m_home);
+    m_actBack = m_toolbar->addWidget(m_btnBack);
+    m_actNext = m_toolbar->addWidget(m_btnNext);
+    m_toolbar->addSeparator();
+    m_actStopReload = m_toolbar->addWidget(m_stop_relod);
+    m_toolbar->addWidget(m_home);
+    
+    m_actBack->setEnabled(false);
+    m_actNext->setEnabled(false);
+    toolbarAction.insert(WebPage::Back, m_actBack);
+    toolbarAction.insert(WebPage::Forward, m_actNext);
+
+    /*Fz::addActionsToTheToolbar(
+         m_toolbar, m_back, m_next, m_stop_relod, m_home, nullptr);*/
 }
 void BrowserTab::addURLField()
 {
@@ -126,8 +130,8 @@ void BrowserTab::addOptions()
     m_optionMenu->addSeparator();
     QAction *quit = m_optionMenu->addAction(tr("&Exit"));
     
-    connect(quit, &QAction::triggered, this, [this](bool tri){
-        emit closeWindowRequested(); });
+    connect(quit, &QAction::triggered, this, [this](){
+        emit exitRequested(); });
 }
 
 void BrowserTab::configOptionMenu()
@@ -139,18 +143,11 @@ void BrowserTab::configOptionMenu()
     m_toolButton->setIcon(Fz::menuOptIcon());
     m_toolButton->setLayoutDirection(Qt::LeftToRight);
 }
-void BrowserTab::linkActWithIcons()
-{
-    m_back->setIcon(Fz::backIcon());
-    m_next->setIcon(Fz::forwardIcon());
-    m_stop_relod->setIcon(Fz::stopLoadIcon());
-    m_home->setIcon(Fz::homeIcon());
-}
 
 void BrowserTab::setUpActConnection()
 {
-    makeActionConnected(m_back, WebPage::Back);
-    makeActionConnected(m_next, WebPage::Forward);
+    makeActionConnected(m_btnBack, WebPage::Back);
+    makeActionConnected(m_btnNext, WebPage::Forward);
     webViewConnections();
     actionsConnections();
 }
@@ -212,11 +209,10 @@ void BrowserTab::handleReceivedSignals()
       emit this->newDialogTabRequired(view);
   });
   
-  QFrame *frambox = new QFrame(this);
+  //QFrame *frambox = new QFrame(this);
   //connect(webView->page(), &WebPage::ho)
   
 }
-
 
 QWidget* BrowserTab::addWebViewToLayout()
 {
@@ -252,9 +248,9 @@ QString BrowserTab::preconfigureUrl(QString url)
 
 
 /*Called in setUpActConnection() function*/
-void BrowserTab::makeActionConnected(QAction* act, WebPage::WebAction webAction)
+void BrowserTab::makeActionConnected(QPushButton* btn, WebPage::WebAction webAction)
 {
-    connect(act,&QAction::triggered,[this,webAction]{
+    connect(btn,&QPushButton::clicked,[this,webAction](){
              webView->triggerPageAction(webAction);});
 }
 void BrowserTab::webViewConnections()
@@ -288,7 +284,7 @@ void BrowserTab::actionsConnections()
     connect(m_urlField,&QLineEdit::returnPressed,this,&BrowserTab::loadUrl);
     connect(selectUrlField,&QShortcut::activated,[this]{m_urlField->selectAll();
             m_urlField->setFocus(Qt::OtherFocusReason);});
-    connect(m_home,&QAction::triggered,this,&BrowserTab::goToHomePage);
+    connect(m_home,&QPushButton::clicked,this,&BrowserTab::goToHomePage);
 }
 void BrowserTab::emitProgress()
 {
@@ -302,19 +298,19 @@ void BrowserTab::handleWebActionChanged(WebPage::WebAction webAct, bool state)
 void BrowserTab::handleLoadProgress(int progress)
 {
     if(0<progress && progress<100){
-        m_stop_relod->setData(WebPage::Stop);
+        m_actStopReload->setData(WebPage::Stop);
         m_stop_relod->setToolTip(tr("Stop loading the current page"));
         m_stop_relod->setIcon(Fz::stopLoadIcon());
         m_progress->setValue(progress);
     }else{
-        m_stop_relod->setData(WebPage::Reload);
+        m_actStopReload->setData(WebPage::Reload);
         m_stop_relod->setIcon(Fz::reloadIcon());
         m_stop_relod->setToolTip(tr("Reload the current page"));
         m_progress->setValue(0);
     }
     m_url_field_favIconAct->setIcon(webView->favIcon());
-    int stopReloadWebAct = m_stop_relod->data().toInt();
-    makeActionConnected(m_stop_relod,WebPage::WebAction(stopReloadWebAct));
+    int stopReloadWebAct = m_actStopReload->data().toInt();
+    makeActionConnected(m_stop_relod, WebPage::WebAction(stopReloadWebAct));
 }
 void BrowserTab::loadUrl()
 {
