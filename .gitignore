@@ -58,12 +58,5 @@ compile_commands.json
 
 # QtCreator local machine specific files for imported projects
 *creator.user*
-.idea/.gitignore
-.idea/.name
-.idea/FzNavigator.iml
-.idea/codeStyles/
-.idea/dictionaries/
-.idea/misc.xml
-.idea/modules.xml
-.idea/vcs.xml
+.idea/**
 _build/**
