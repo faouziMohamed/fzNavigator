@@ -1,8 +1,4 @@
-MainWindow.cpp
-webEngineTools.cpp
-webEngineTools.h
-MainWindow.h
-fzNavigator
+_build
 *.yml
 
 # C++ objects and libs
@@ -58,3 +54,11 @@ compile_commands.json
 
 # QtCreator local machine specific files for imported projects
 *creator.user*
+.idea/.gitignore
+.idea/.name
+.idea/FzNavigator.iml
+.idea/codeStyles/
+.idea/dictionaries/
+.idea/misc.xml
+.idea/modules.xml
+.idea/vcs.xml
