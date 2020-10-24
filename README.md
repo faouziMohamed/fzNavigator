@@ -6,6 +6,13 @@ A simple web Navigator based on [Chromium](https://wiki.qt.io/QtWebEngine), writ
  - [Requirements](#requirements)  
  - [Download the binary File](#download-the-binary-file)  
  - [Download Microsoft Windows Sdk Tool](#download-microsoft-windows-sdk-tool)   
+
+You can compile the project using `qmake` tool : So go to the **`master`** branch, instruction is in there :
+
+```bash
+git checkout master
+```
+
 ## Requirements  
 * C++11 or higher
 
