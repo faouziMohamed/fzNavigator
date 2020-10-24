@@ -9,7 +9,7 @@ A simple web Navigator based on [Chromium](https://wiki.qt.io/QtWebEngine), writ
 
 You can compile the project using `qmake` tool : So go to the **`master`** branch, instruction is in there :
 
-```bash
+```git
 git checkout master
 ```
 
