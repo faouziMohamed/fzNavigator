@@ -7,15 +7,23 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
+set(CMAKE_INSTALL_PREFIX _build/install)
 
-#You must setup the CMAKE_PREFIX_PATH variable to the Qt5|6's path installation
-#It's recommended to set it in your IDE setting or use it in the CLI
-#Not directly in the CMakeLists.txt file. Here an example of setting up
-#set(CMAKE_PREFIX_PATH /media/faouzi/HOSTED/QT/Lin/5.15.1/gcc_64)
+# CMAKE_PREFIX_PATH variable need to be set to be able to compile the project
+# It's recommended to set it in your IDE setting or use in the CLI
+# Not directly in the CMakeLists.txt file. Here an example of setting up
+# set(CMAKE_PREFIX_PATH  /media/faouzi/HOSTED/QT/Lin/5.15.2/gcc_64)
+
+set(CMAKE_DIR ${CMAKE_PREFIX_PATH}/lib/cmake)
+set(Qt5_DIR ${CMAKE_DIR}/Qt5)
+set(Qt5Gui_DIR ${CMAKE_DIR}/Qt5Gui)
+set(Qt5Core_DIR ${CMAKE_DIR}/Qt5Core)
+set(Qt5Widgets_DIR ${CMAKE_DIR}/Qt5Widgets)
+set(Qt5WebEngineWidgets_DIR ${CMAKE_DIR}/Qt5WebEngineWidgets)
 
 set(MODULES_COMPONENTS Widgets WebEngineWidgets)
 project(${PROJECT_NAME} LANGUAGES CXX)
-find_package(QT NAMES Qt6 Qt5 COMPONENTS ${MODULES_COMPONENTS} REQUIRED)
+find_package(QT NAMES Qt5 Qt6 COMPONENTS ${MODULES_COMPONENTS} REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS ${MODULES_COMPONENTS} REQUIRED)
 
 set(SOURCE_FILES
