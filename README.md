@@ -5,15 +5,7 @@ A simple web Navigator based on [Chromium](https://wiki.qt.io/QtWebEngine), writ
 ## Sections of this documentation  
  - [Requirements](#requirements)  
  - [Download the binary File](#download-the-binary-file)  
- - [Download Microsoft Windows Sdk Tool](#download-microsoft-windows-sdk-tool)   
-
-You can compile the project using CMake tool : So go to the **`dev`** branch, instruction is in there :
-
-```bash
-git checkout dev
-```
-
-  
+ - [Download Microsoft Windows Sdk Tool](#download-microsoft-windows-sdk-tool)
 
 ## Requirements  
 
@@ -39,8 +31,54 @@ git checkout dev
  - For [Windows8](https://support.microsoft.com/en-us/help/2780680/an-update-is-available-for-windows-sdk-for-windows-8)  
  - For [Windows10](https://developer.microsoft.com/en-US/windows/downloads/windows-10-sdk/)  
 
-### QT
+
+## Build and run
+### Easiest way
+ Use Qt Creator and open the `fzNavigator.pro` file the hit the run button<img src="assets/images/run_button.png" width=20 alt="run button" /> to build and run.
+
+### The CMake way (Linux/Unix only)
+
+##### Generate a Makefile
+
+ - You'll need to set the `CMAKE_PREFIX_PATH` variable the value must be the path to the Qt compiler  
+   here an example :  
+   
+   ```bash
+   # For me QT is installed on /home/me/Qt5/ and I use the gcc_64 compiler
+   # So The Cmake Prefix path will be /home/me/Qt5/[the qt version]/gcc_64
+   # for me the qt version is 5.15.2, so we have :↓
+   $ cmake -DCMAKE_PREFIX_PATH=/home/me/Qt5/5.15.2/gcc_64
+   ```
+ - In order to have a project directory clean, we recommend to use the `-B ` option to specify 
+   where to generate the Makefile file.
+   Example : 
+   
+   ```bash
+   # Here _build is the path to generate the Makefile
+   $ cmake -DCMAKE_PREFIX_PATH=/home/me/Qt5/gcc_64 -B _build
+   ```
+
+For more option : [Cmake doc](https://cmake.org/cmake/help/latest/manual/cmake.1.html)
+
+Finally use this command to compile with CMake :  
+
+```bash
+cmake -DCMAKE_PREFIX_PATH=/home/me/Qt5/gcc_64 -B _build
+```
+
+#### Build and run
+
+Assuming that the Makefile is generated into the `_build` folder 
+```bash
+$ cd _build
+$ make
+# Run the program with 
+$ ./FzNavigator
+```
+
+### QT 5
+
  - Download [Qt5 Framwork](https://download.qt.io/official_releases/qt/)  
  - Qt [Documentation](https://doc.qt.io/)  
  #### How to Install MSVC (In Qt Creator) ?  
- Here a [thread](https://stackoverflow.com/questions/47773289/debugging-in-qtcreator-using-msvc2017-compiler#answers) on stackoverflow that answer the question and that show how to proceed  
+ Here a [thread](https://stackoverflow.com/questions/47773289/debugging-in-qtcreator-using-msvc2017-compiler#answers) on stackoverflow that show how to proceed  

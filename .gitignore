@@ -1,8 +1,3 @@
-MainWindow.cpp
-webEngineTools.cpp
-webEngineTools.h
-MainWindow.h
-fzNavigator
 *.yml
 
 # C++ objects and libs
@@ -60,3 +55,8 @@ compile_commands.json
 *creator.user*
 .idea/**
 _build/**
+.run/**
+*build/**
+install/**
+.cmake/**
+FzNavigator

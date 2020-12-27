@@ -17,7 +17,7 @@ signals:
     void tabRequested(QString);            
 
 protected:
-    void contextMenuEvent(QContextMenuEvent *event);
+    //void contextMenuEvent(QContextMenuEvent *event);
     //WebPage *createWindow(WebPage::WebWindowType type) override;
 };
 

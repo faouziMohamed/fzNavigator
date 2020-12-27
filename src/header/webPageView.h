@@ -7,8 +7,8 @@
 #include <QMessageBox>
 #include <QMenu>
 #include <QContextMenuEvent>
-#include "src/header/webpage.h"
-#include "src/header/FzGlobal.h"
+#include "webpage.h"
+#include "FzGlobal.h"
 #include <functional>
 
 typedef QList<QAction*>::const_iterator constIterator;
