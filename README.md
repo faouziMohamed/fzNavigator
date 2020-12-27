@@ -6,8 +6,8 @@ A simple web Navigator based on [Chromium](https://wiki.qt.io/QtWebEngine), writ
  - [Requirements](#requirements)  
  - [Download the binary File](#download-the-binary-file)  
  - [Download Microsoft Windows Sdk Tool](#download-microsoft-windows-sdk-tool)
- - [Build and run](#Build and run)
- - [QT 5](#QT 5)
+ - [Build and run](#build-and-run)
+ - [QT 5](#qt-5)
 
 ## Requirements  
 
